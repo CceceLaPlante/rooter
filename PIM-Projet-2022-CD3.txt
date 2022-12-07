@@ -1,0 +1,305 @@
+﻿PIM-Projet-2022-CD-03
+
+
+
+
+Raffinage Programme principal (main)
+
+
+R0 : “Transmettre les paquets qu’il reçoit sur une interface d’entrée vers la bonne interface de sortie en fonction des informations qui sont stockées dans sa table de routage”
+
+
+R1 : Comment “Transmettre les paquets qu’il reçoit sur une interface d’entrée vers la bonne interface de sortie en fonction des informations qui sont stockées dans sa table de routage” ?         
+        Identifier le type de cache
+Récupérer la ligne de commande 
+(type_cache : out chaine de caractères, fichier_sortie : in out chaine de caractères, fichier_entrée : in chaine de caractères, fichier_table : in out chaine de caractères, taille_cache : in out entier, statistique : out bool)
+        Traiter la ligne
+        Ecrire dans le fichier sortie
+
+
+R2 : Comment : “Traiter la ligne” ?
+Pour ligne dans fichier_entrée
+        Identifier les commandes et les adresses_IP 
+(ligne : in chaine de charactère, commande : out booléen)
+        Si ligne = commande  Alors
+                Traiter la commande 
+        Sinon Si          
+                Ecrire dans le cache 
+(type_cache : in chaine de caractères) 
+Localiser les adresses destination 
+(type_cache : in chaine de caractères)
+Fin Si
+        Ecrire dans le fichier (selon statistique) 
+(statistique : in booléen)
+        Fin Pour
+
+
+R3 : Comment : “Traiter la commande” ?
+        Selon commande 
+                fin => Fin de l’exécution
+                cache => afficher le cache
+                table => afficher la table
+                stat => afficher stat
+        Fin Selon
+
+
+
+
+R3 : Comment : “Localiser les adresses dans le cache” ?
+        Selon type_cache 
+                FIFO => Utiliser un cache de type FIFO
+                LRU => Utiliser un cache de type LRU
+                LFU => Utiliser un cache de type LFU
+        Fin Selon
+
+
+
+
+Politique FIFO
+(stockage de cache : LL)
+
+
+R0: "Afficher cache || table || stat” 
+        #pas de statistique pour ce cache… si stat : renvoyer chaine vide
+R0 : ‘supprimer l’adresse la moins utilisée”
+        supprimer la première adresse de la pile
+
+
+R0: "Ajouter une adresse dans le cache”
+
+
+R0: "rechercher une interface”
+
+
+R1 :  Comment : “rechercher une interface”
+parcourir le cache
+si l’adresse est présente, renvoyer l’interface
+si l’adresse n’est pas présente, renvoyer la chaîne de caractère vide
+
+
+
+
+Politique LRU:
+On implémente le stockage en LL et en LA dans le même code.
+
+
+
+
+R2 : Comment afficher stat 
+parcourir le cache récursivement selon le type de cache, et stocker les différentes statistique pour chaques adresse ip, puis les afficher
+
+
+R0: “Supprimer l’adresse la moins récemment dans une liste chaînée" 
+
+
+
+
+R1: Comment : “Supprimer l’adresse la moins récemment utilisée dans une liste chaînée ?
+        Trouver l’adresse IP la moins récemment utilisée
+        Supprimer cette adresse
+
+
+
+
+R2 : Comment : “Trouver l’adresse IP la moins récemment utilisée” ?
+        si liste_chaînée alors
+                l’adresse la moins récemment utilisée est la dernière de la liste
+        sinon si arbre alors
+parcourir récursivement l’arbre, et trouver le maximum de clock, et renvoyer l’adresse associée.
+
+
+
+
+R0 : Comment : “ajouter un couple adresse ip / interface ?
+        ajouter un couple adresse ip / interface (package A_LA) ou (package LL)
+        mettre à jour l’utilisation de l’adresse ip dans le cache
+
+
+
+
+R0  “mettre à jour l’utilisation d’une adresse Ip dans le cache
+
+
+R1: Comment : “mettre à jour l’utilisation d’une adresse Ip dans le cache” ?
+        Si liste_chaînée Alors
+                déplacer le maillon de l’adresse IP en haut de la pile
+        Sinon Si arbre Alors
+                mettre à jour l’horloge (clock) de la feuille de l’adresse IP.
+        Fin Si
+        
+
+
+Politique LFU :
+
+
+
+
+R0 : Comment afficher stat 
+parcourir le cache récursivement, et stocker les différentes statistique pour chaques adresse ip, puis les afficher
+
+
+R0: “Supprimer l’adresse la moins utilisée dans une liste chaînée” 
+
+
+
+
+R1: Comment : “Supprimer l’adresse la moins utilisée dans une liste chaînée” ?
+        Trouver l’adresse IP la moins utilisée
+        Supprimer cette adresse
+
+
+R2 : Comment : “Trouver l’adresse IP la moins utilisée” ?
+        On initialise la valeur de l’adresse IP la moins utilisée avec la première valeur de la liste et la fréquence de référence avec sa valeur de fréquence. On parcourt la liste chaînée. Si la valeur de la fréquence d’utilisation est inférieure à celle de référence, on affecte à l’adresse IP la moins utilisée l’adresse IP actuelle et à la fréquence de référence, la fréquence actuelle. On renvoie alors l’adresse IP la moins utilisée.
+
+
+
+
+R0 : Comment : “Ajouter un couple adresse ip / interface” ?
+        ajouter un couple adresse ip / interface (package A_LA)
+        
+
+
+
+
+
+
+Raffinage du Package : Arbre_prefixe
+
+
+Type T_LA est 
+        Enregistrement : 
+                pointeur_droit : pointeur
+                pointeur_gauche : pointeur
+                interface : chaine de caractère
+                adresse_IP : nombre binaire
+                nombre_utilisation : entier
+                clock : temps 
+Fin Enregistrement 
+                
+R0: “Calculer la taille d’un cache de type arbre préfixe” 
+
+
+R1 : Comment :  “Calculer la taille d’un cache de type arbre préfixe” ?
+On décide de définir la taille comme le nombre de noeuds
+Tant que l’on n’a pas parcouru tout l’arbre
+Parcourir l’arbre 
+(fichier_cache : in chaîne de caractères)
+                Incrémenter la taille à chaque noeud et chaque feuille 
+(taille_cache : out entier) 
+Fin Tantque
+
+
+
+
+R0 : “Tester si l’arbre est vide”
+        (arbre_prefixe : in T_LA, test : out booléen) 
+
+
+R0 : “Ajouter une nouvelle adresse IP dans l’arbre préfixe” 
+
+
+R1: Comment : “Ajouter une nouvelle adresse IP dans l’arbre préfixe” ?
+        Convertir l’adresse IP en un seul nombre binaire
+        Tant que non Arrivée_fin_binaire 
+(Arrivée_fin_binaire : in booléen) 
+                Lire la valeur du bit de poids fort 
+(bit : out entier)
+Avancer dans l’arbre en fonction de la valeur du bit de poids fort 
+(arbre_prefixe : in out T_LA)
+Décaler le bit de poids fort
+        Fin Tantque
+
+
+R2 : Comment :  “Avancer dans l’arbre en fonction de la valeur du bit de poids fort” 
+        Si (bit /= 0) et (bit /= 1) Alors  
+(bit : in entier)
+                Lever une exception
+        Sinon si bit = 0 Alors  
+(bit : in entier)
+                Parcourir l’arbre de gauche 
+(branche_gauche : in out T_LA)
+        Sinon 
+                Parcourir l’arbre de droite 
+(branche_droite : in out T_LA)
+        FinSi
+
+
+R3 : Comment : “Parcourir l’arbre de gauche”
+        Si Est_Vide(branche_gauche) Alors  
+(branche_gauche : in T_LA)
+                Créer un nouveau noeud à gauche 
+(branche_gauche : in out T_LA)
+        Sinon 
+                Rien
+        Fin Si
+
+
+R3 : Comment :  “Parcourir l’arbre de droite”
+        Si Est_Vide(branche_droite) Alors   
+(branche_droite : in T_LA)
+                Créer un nouveau noeud à droite 
+(branche_droite : in T_LA)
+        Sinon 
+                Rien
+        Fin Si
+
+
+
+
+R0: “Calculer le nombre d’utilisations d’utilisation d’une adresse dans un arbre préfixe” 
+
+
+R1: Comment : “Calculer le nombre d’utilisations d’une adresse dans un arbre préfixe” ?
+Incrémenter nombre_utilisation de l’adresse IP
+
+
+R0: “Obtenir l’adresse IP depuis un arbre préfixe” 
+On parcourt l’arbre de manière récursive et on renvoie l’adresse IP / passerelle de communication (eth0…)
+
+
+R1 : Comment : “Obtenir l’adresse IP depuis un arbre préfixe”  ?
+Décoder l’adresse IP
+
+
+
+
+
+
+Raffinage du Package : Liste Chaînée
+
+
+Type T_LL est :
+        Enregistrement est :
+                adresse_IP : entier
+                interface : chaîne de caractère
+                suivant : pointeur
+Fin Enregistrement
+
+
+
+
+R0 : “Ajouter une adresse dans la liste”
+(liste_LL : T_LL in out, adresse : Entier in, interface : Chaine de caractère in)
+
+
+R0 : “Supprimer  la 1ere adresse de la liste”
+ (liste_LL : T_LL in out)
+
+
+R0 : “Supprimer la dernière adresse de la liste”
+ (liste_LL : T_LL in out)
+
+
+R0 : “Afficher liste”
+ (liste_LL : T_LL in, liste_a_afficher : Chaine de caractère out) 
+
+
+R1 : Comment “Afficher liste” : 
+        liste_a_afficher : Chaine de charactère
+        Parcourir récursivement la liste
+        Ajouter à liste_a_afficher, l’adresse ip et la passerelle
+        Renvoyer “liste_a_afficher”
+
+
+R0 : “Tester si la liste est vide”
+ (liste_LL : T_LL in)
