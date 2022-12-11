@@ -1,9 +1,9 @@
 # rooter
-Projet 3 de PIM ou on dois créer un rooter
+Projet 3 de PIM ou on doit créer un routeur
 
 Arborescence :  
-Main -> Router LA / Router LL  
-Routeur LA et Router LL -> LCA (sert à stocker la table de routage)  
+Main -> Routeur LA / Routeur LL  
+Routeur LA et Routeur LL -> LCA (sert à stocker la table de routage)  
 Routeur LL -> LCA (on stockera le cache sous forme de LCA)  
 Routeur LA -> Arbre (stockage du cache)  
 
