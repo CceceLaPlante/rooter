@@ -16,7 +16,7 @@ procedure Ecrire_table is
     Valeur : String ;
 begin
     Info_entree := To_Unbounded_String(Argument(1));
-    Info_sortie := To_Unbounded_String("info_sortie.txt");
+    Info_sortie := To_Unbounded_String("fichier_sortie.txt");
     Create(Sortie, Out_File, To_String(Info_Sortie));
     Open(Entree, In_File, To_String(Info_Entree));
     begin
