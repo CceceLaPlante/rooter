@@ -12,6 +12,13 @@ procedure Routeur_Simple is
         cle : Integer;
     end record;
 
+    Type T_liste_IP is access T_IP;
+    Type T_IP is record 
+        IP : String;
+        Suivant : T_IP;
+    end record;
+
+
         -- Fonction qui convertie les adresses IP en entier.
     function Convertir_IP2I(Adresse_IP : in String) return Integer is
         begin
@@ -53,14 +60,20 @@ procedure Routeur_Simple is
         begin
     end;
 
-    procedure Ecrire(fichier : String, a_ecrire : String) is
+    procedure Ecrire(fichier : String; a_ecrire : String) is
         begin
+    end;
+
+    function Lire(fichier : String) return T_liste_IP is 
+    begin
+        return Null;
     end;
     
      table : T_Liste;
     begin
-       table := Null;
-       Chargement_Table(table);
+        table := Null;
+        Chargement_Table(table);
+
 
 
 
