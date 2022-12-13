@@ -72,13 +72,16 @@ procedure Routeur_Simple is
     
      table : T_Liste;
      ligne_a_lire : Unbunded_String;
+     fichier_destination : String := "destination.txt";
+     fichier_interface : String := "interface.txt";
     begin
         table := Null;
         Chargement_Table(table);
-        ligne_a_lire := Lire("destination.txt");
+        ligne_a_lire := Lire(fichier_destination);
+        
         while (ligne_a_lire is not Null) loop
-            Ecrire('interface.txt', Meilleur_Masque(table, ligne_a_lire).interface);
-            ligne_a_lire := Lire("destination.txt");
+            Ecrire(fichier_interface, Meilleur_Masque(table, ligne_a_lire).interface);
+            ligne_a_lire := Lire(fichier_destination);
         end loop;
 
 
