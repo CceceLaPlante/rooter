@@ -1,3 +1,12 @@
+with Ada.Strings;               use Ada.Strings;	-- pour Both utilisé par Trim
+with Ada.Text_IO;               use Ada.Text_IO;
+with Ada.Integer_Text_IO;       use Ada.Integer_Text_IO;
+with Ada.Strings.Unbounded;     use Ada.Strings.Unbounded;
+with Ada.Text_IO.Unbounded_IO;  use Ada.Text_IO.Unbounded_IO;
+with Ada.Command_Line;          use Ada.Command_Line;
+with Ada.Exceptions;            use Ada.Exceptions;	-- pour Exception_Message
+
+
 procedure Ecrire_table is
     Info_entree : Unbounded_String ;
     Info_sortie : Unbounded_String ;
@@ -19,9 +28,13 @@ begin
             Put(Sortie, " " & Texte & " ");
             Put(Sortie);
             New_Line(Sortie);
-            exit when End_Of_File(Entree);
+            exit when End_Of_File(Entree)| Texte == 'Fin';
         end loop;
     exception
         when End_Error =>
                 Put ("Blancs en surplus à la fin du fichier.");
                 null;
+    end
+    Close(Entree);
+    Close(Sortie);
+end Ecrire_table ;
