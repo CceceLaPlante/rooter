@@ -42,15 +42,15 @@ procedure Routeur_Simple is
     end Masque;
 
     -- Renvoie le masque le plus long qui correspond avec l'adresse.
-    function Meilleur_Masque(LCA : T_LCA) return String is
+    function Meilleur_Masque(Lst : T_Liste; Adresse_IP : in String) return String is
         begin
         return Null;
     end Meilleur_Masque;
 
-    function Chargement_Table()
+    -- permet de charger la table de routage dans une liste chaînée.
+    procedure Chargement_Table(LCA : T_LCA) is
         begin
-
-    end 
+    end;
 
 
     begin
