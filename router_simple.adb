@@ -12,6 +12,10 @@ procedure Routeur_Simple is
         cle : Integer;
     end record;
 
+    Type T_adresse_IP is mod 2 ** 32;
+
+
+
         -- Fonction qui convertie les adresses IP en entier.
     function Convertir_IP2I(Adresse_IP : in String) return Integer is
         begin
@@ -43,7 +47,7 @@ procedure Routeur_Simple is
     end Masque;
 
     -- Renvoie le masque le plus long qui correspond avec l'adresse.
-    function Meilleur_Masque(Lst : T_Liste; Adresse_IP : in String) return Integer is
+    function Meilleur_Masque(Lst : T_Liste; Adresse_IP : in String) return T_Table is
         begin
         return Null;
     end Meilleur_Masque;
@@ -53,16 +57,35 @@ procedure Routeur_Simple is
         begin
     end;
 
-    procedure Ecrire(fichier : String, a_ecrire : String) is
+    --procedure permettant d'écrire dans un fichier.
+    procedure Ecrire(fichier : String; a_ecrire : String) is
         begin
+    end;
+
+    --fonction permettant de lire dans le fichier des destination, il renvoie une ligne puis la suivante
+    --à chaques appels.
+    -- elle renvoie Null si c'est finis.
+    function Lire(fichier : String) return T_liste_IP is 
+    begin
+        return Null;
     end;
     
      table : T_Liste;
+     ligne_a_lire : Unbunded_String;
+     fichier_destination : String := "destination.txt";
+     fichier_interface : String := "interface.txt";
     begin
-       table := Null;
-       Chargement_Table(table);
+        table := Null;
+        Chargement_Table(table);
+        ligne_a_lire := Lire(fichier_destination);
+        
+        while (ligne_a_lire is not Null) loop
+            Ecrire(fichier_interface, Meilleur_Masque(table, ligne_a_lire).interface);
+            ligne_a_lire := Lire(fichier_destination);
+        end loop;
 
 
+        
 
 
     Null;
