@@ -71,12 +71,14 @@ procedure Routeur_Simple is
     end;
     
      table : T_Liste;
+     ligne_a_lire : Unbunded_String;
     begin
         table := Null;
         Chargement_Table(table);
-
-        while Lire('destination.txt') is not Null loop
-            Ecrire('interface.txt', table(Meilleur_Masque(table, Lire('destination.txt'))).interface);
+        ligne_a_lire := Lire("destination.txt");
+        while (ligne_a_lire is not Null) loop
+            Ecrire('interface.txt', Meilleur_Masque(table, ligne_a_lire).interface);
+            ligne_a_lire := Lire("destination.txt");
         end loop;
 
 
