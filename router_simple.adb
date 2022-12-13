@@ -14,17 +14,8 @@ procedure Routeur_Simple is
 
         -- Fonction qui convertie les adresses IP en entier.
     function Convertir_IP2I(Adresse_IP : in String) return Integer is
-        entier : Integer ;
         begin
-        for i in 1..length(Adresse_IP) loop
-            case Adresse_IP(i)
-                when '0'|'1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9' =>
-                    entier := entier + Adresse_IP(i)*(10**i) ;
-                when others =>
-                    null ;
-            end case ;
-        end loop ;
-        return entier ;
+        return Null;
     end Convertir_IP2I;
 
     -- Fonction qui convertie les adresses IP en adresses binaires.
@@ -61,11 +52,16 @@ procedure Routeur_Simple is
     procedure Chargement_Table(LCA : T_LCA) is
         begin
     end;
+
+    procedure Ecrire(fichier : String, a_ecrire : String) is
+        begin
+    end;
     
      table : T_Liste;
     begin
        table := Null;
        Chargement_Table(table);
+
 
 
 
