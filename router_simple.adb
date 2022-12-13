@@ -9,6 +9,7 @@ procedure Routeur_Simple is
         mask : String;
         interface : String;
         Suivant : T_Table;
+        cle : Integer;
     end record;
 
         -- Fonction qui convertie les adresses IP en entier.
@@ -42,7 +43,7 @@ procedure Routeur_Simple is
     end Masque;
 
     -- Renvoie le masque le plus long qui correspond avec l'adresse.
-    function Meilleur_Masque(Lst : T_Liste; Adresse_IP : in String) return String is
+    function Meilleur_Masque(Lst : T_Liste; Adresse_IP : in String) return Integer is
         begin
         return Null;
     end Meilleur_Masque;
@@ -51,9 +52,12 @@ procedure Routeur_Simple is
     procedure Chargement_Table(LCA : T_LCA) is
         begin
     end;
-
-
+    
+     table : T_Liste;
     begin
+       table := Null;
+       Chargement_Table(table);
+
 
 
     Null;
