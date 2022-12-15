@@ -30,8 +30,29 @@ procedure Routeur_Simple is
 
     -- Fonction qui convertie les adresses binaires en adresses IP.
     function Convertir_B2IP(Adresse_IP : in String) return String is
-        begin
-        return Null;
+        puissance : Integer ;
+        nombre_entier : Integer ;
+        nombre : String ;
+        indice : Integer ;
+    begin
+        indice := 1 ;
+        octet := 1 ;
+        while octet /= 4 loop 
+            puissance := 7 ;
+            nombre_entier := 0 ;
+            while puissance /= 0 loop
+                nombre_entier := nombre_entier + (Ord(Adresse_IP(indice))-Ord('0'))*2**puissance ;
+                 puissance := puissance - 1 ;
+                  indice := indice + 1 ;
+         end loop ;
+            if octet /= 1 then
+                nombre := nombre + '.' + "nombre_entier"  ;
+            else
+                nombre := "nombre_entier" ;
+            end if ;
+            octet := octet + 1 ;
+        end loop ;
+        return nombre ;
     end Convertir_B2IP;
 
      --
@@ -47,9 +68,36 @@ procedure Routeur_Simple is
     end Masque;
 
     -- Renvoie le masque le plus long qui correspond avec l'adresse.
-    function Meilleur_Masque(Lst : T_Liste; Adresse_IP : in String) return T_Table is
-        begin
-        return Null;
+     function Meilleur_Masque(Lst : T_Liste; Adresse_IP : in String) return T_Table is
+        indice : Integer ;
+        taille_max : Integer ;
+        current : Integer ;
+        taille_current : Integer ;
+     begin
+        taille_max := 0 ;
+        while indice /= length(Lst) loop
+            taille_current := 0 ;
+            if Masque then
+                current := length(Adresse_IP(indice)) ; // on parcourt l'adresse IP à l'envers pour réduire la complexité
+                while current /= 0 loop
+                    if Adresse_IP(current) == '.' then
+                        null ;
+                  elsif Adresse_IP(current) /= 0 then
+                        taille_current := taille_current + 1 ;
+                  else
+                           null ;
+                  end if ;
+                  current := current - 1 ;
+                end loop ;
+                if taille_current > taille_max then
+                    taille_max := taille current ;
+                      adresse_max := Adresse_IP(indice) ;
+                end if ;
+            else
+                    null ;
+            end if ;
+         end loop ;
+         return adresse_max ;
     end Meilleur_Masque;
 
     -- permet de charger la table de routage dans une liste chaînée.
