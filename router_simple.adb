@@ -14,14 +14,55 @@ procedure Routeur_Simple is
 
     Type T_adresse_IP is mod 2 ** 32;
 
-
+    function lenght(lst : T_Liste) return Integer is
+        begin
+        if lst /= Null then
+            return 1 + lenght(lst.Suivant);
+        else
+            return 0;
+        end if;
+    end lenght;
 
         -- Fonction qui convertie les adresses IP en nombre binaire.
-    function Convertir_IP2B(Adresse_IP : in String) return Integer is
-            
+        -- elle serviras pour appliquer les masques
+
+    function Convertir_IP2B_4 (adr : in Integer) return String is 
+            a_return : String :=("00000000");
         begin
+            for i in 1..8 loop
+                if adr mod 2 == 1 then
+                    a_return(9-i) := '1';
+                else
+                    a_return(9-i) := '0';
+                end if;
+                adr := adr / 2;
+            end loop;
+        return a_return;
+    end Convertir_IP2B_4;
+    
+    function Convertir_IP2B(Adresse_IP : in String) return String is
+        entier : Integer ;
+        type adr4 is array(1..4) of String ;
+        adr : adr4 ;
+        idx : Integer := 1;
         
-    end Convertir_IP2I;
+        begin
+        for i in 1..length(Adresse_IP) loop
+            case Adresse_IP(i) is
+                when '0'|'1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9' =>
+                    entier := entier + Adresse_IP(i)*(10**i) ;
+                when '.' =>
+                    adr(idx) := Convertir_IP2B_4(entier) ;
+                    idx := idx + 1 ;
+                    entier := 0 ;
+                when others =>
+                    null ;
+                
+            end case ;
+        end loop ;
+        return Integer'Image(entier) ;
+        
+    end Convertir_IP2B;
 
     -- Fonction qui convertie les adresses IP en entier.
      function Convertir_IP2I(Adresse_IP : in String) return Integer is
@@ -73,6 +114,7 @@ procedure Routeur_Simple is
 
     -- Fonction qui renvoie True si le masque et l'adresse IP coïncident.
     function Masque(Adresse_IP : in String; ligne : in Integer) return Boolean is 
+            idx : Integer;
         begin
         return Null;
     end Masque;
@@ -88,7 +130,7 @@ procedure Routeur_Simple is
         while indice /= length(Lst) loop
             taille_current := 0 ;
             if Masque then
-                current := length(Adresse_IP(indice)) ; // on parcourt l'adresse IP à l'envers pour réduire la complexité
+                current := length(Adresse_IP(indice)) ; -- on parcourt l'adresse IP à l'envers pour réduire la complexité
                 while current /= 0 loop
                     if Adresse_IP(current) == '.' then
                         null ;
