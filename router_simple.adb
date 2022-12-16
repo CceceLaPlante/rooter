@@ -26,6 +26,7 @@ procedure Routeur_Simple is
         -- Fonction qui convertie les adresses IP en nombre binaire.
         -- elle serviras pour appliquer les masques
 
+    -- d'abord on s'occupe d'une conversion 4bit 
     function Convertir_IP2B_4 (adr : in Integer) return String is 
             a_return : String :=("00000000");
         begin
@@ -40,6 +41,8 @@ procedure Routeur_Simple is
         return a_return;
     end Convertir_IP2B_4;
     
+
+    -- puis on s'occupe de la conversion de l'adresse IP complète
     function Convertir_IP2B(Adresse_IP : in String) return String is
         entier : Integer ;
         type adr4 is array(1..4) of String ;
@@ -57,10 +60,10 @@ procedure Routeur_Simple is
                     entier := 0 ;
                 when others =>
                     null ;
-                
             end case ;
         end loop ;
-        return Integer'Image(entier) ;
+
+        return adr(1) & adr(2) & adr(3) & adr(4) ; -- [!] on ne renvois pas avec des points !!!! 
         
     end Convertir_IP2B;
 
