@@ -28,7 +28,7 @@ begin
             Put(Sortie, " " & Texte & " ");
             Put(Sortie);
             New_Line(Sortie);
-            exit when End_Of_File(Entree)| Texte == 'Fin';
+            exit when End_Of_File(Entree) | Texte = 'Fin';
         end loop;
     exception
         when End_Error =>
