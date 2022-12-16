@@ -1,4 +1,8 @@
 with Ada.Text_IO; use Ada.Text_IO;
+with Ada.Strings.Unbounded.Unbounded_String; use Ada.Strings.Unbounded.Unbounded_String;
+---------------------------
+-- TODO !!rajouter les fonction To_Unbounded_String et To_String !!
+---------------------------
 
 procedure Routeur_Simple is 
 
@@ -112,9 +116,9 @@ procedure Routeur_Simple is
      --fonction prennant une ligne de la table de routage et la convertie en T_Table
      -- attntion cependant, tout est stocké sous forme de Unbounded_String
     function Convertir_L2T(ligne : String,cle : Integer) return T_Table is 
-            destination : String;
-            mask : String;
-            interface : String;
+            destination : Unbounded_String;
+            mask : Unbounded_String;
+            interface : Unbounded_String;
             idx : Integer;
             
         begin
@@ -133,7 +137,7 @@ procedure Routeur_Simple is
                 interface := interface & ligne(idx);
                 idx := idx + 1;
             end loop;
-            return T_Table'(destination => destination, mask => mask, interface => interface, cle => cle);
+            return T_Table'(destination => To_String(destination), mask => To_Stirng(mask), interface => To_String(interface), cle => To_String(cle));
         return Null;
 
     end Convertir_L2T;

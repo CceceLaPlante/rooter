@@ -1,8 +1,11 @@
 with Ada.Text_IO; use Ada.Text_IO;
 
 procedure tests is 
-    e : Integer(range(0..10));
+    b : String(1..10);
+    c : String := "bitch";
+    d : String := "Sensei";
 begin
-    e(2) := 666;
-    Put_Line(Integer'Image(e(2)));
+    b := b&c;
+    Put_Line(b);
+
 end tests;
