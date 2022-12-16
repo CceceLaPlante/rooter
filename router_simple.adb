@@ -1,5 +1,10 @@
-with Ada.Text_IO; use Ada.Text_IO;
-with Ada.Strings.Unbounded.Unbounded_String; use Ada.Strings.Unbounded.Unbounded_String;
+with Ada.Strings;               use Ada.Strings;
+with Ada.Text_IO;               use Ada.Text_IO;
+with Ada.Integer_Text_IO;       use Ada.Integer_Text_IO;
+with Ada.Strings.Unbounded;     use Ada.Strings.Unbounded;
+with Ada.Text_IO.Unbounded_IO;  use Ada.Text_IO.Unbounded_IO;
+with Ada.Command_Line;          use Ada.Command_Line;
+with Ada.Exceptions;            use Ada.Exceptions;
 ---------------------------
 -- TODO !!rajouter les fonction To_Unbounded_String et To_String !!
 ---------------------------
@@ -196,67 +201,88 @@ procedure Routeur_Simple is
 
     --Fonction qui permet de charger la table de routage dans une liste chaînée.
     --La première fois qu'on utilise chargement table, on utilise une liste_table Null.
-    procedure Chargement_Table(liste_table : T_Liste; fichier_table : String) is
+    procedure Chargement_Table(liste_table : T_Liste; fichier_tableT : File_Type) is
         ligne_a_lire : Unbounded_String;
         ligne_L2T : T_Table; 
         liste_table : T_Liste; --Table de routage reformatée
 
     begin
-        ligne_a_lire := Lire(fichier_table);
-        if (ligne_a_lire = Null) then
+        begin 
+            ligne_a_lire := Lire(fichier_tableT);
+        exception
+            when End_Error => 
+                ligne_a_lire := Null;
+        end;
+        if (ligne_a_lire = Null) or (End_Of_File(fichier_tableT)) then
             Null;
         else
             ligne_L2T := convertir_L2T(ligne_a_lire);
             liste_table.all := ligne_L2T; 
-            Chargement_Table(liste_table.all.suivant, fichier_table);
+            Chargement_Table(liste_table.all.suivant, fichier_tableT);
             
         end if;
     end Chargement_Table;
 
     --Procedure permettant d'écrire dans un fichier.
     procedure Ecrire(fichier : String; a_ecrire : String) is
+        fichierT : File_Type;
     begin
-
+        Open(fichierT, fichier, Write_Mode);
+        Put_Line(fichierT, a_ecrire);
+        Close(fichierT);
     end Ecrire;
 
     --Fonction permettant de lire dans le fichier des destinations, il renvoie une ligne puis la suivante
     --à chaque appel.
     --Elle renvoie Null si c'est fini.
-    function Lire(fichier : String) return Unbounded_String is 
+    function Lire(fichier : File_Type) return Unbounded_String is 
         ligne_a_lire : Unbounded_String; 
     begin
-
+        ligne_a_lire := To_Unbounded_String(Get_Line(fichier));
         return ligne_a_lire;
-    end;
+    end Lire;
 
     --Fonction qui traite les commandes telles que "fin", "table"...
-    procedure Traiter_Commande(commande: String) is 
+    procedure Traiter_Commande(commande: String; fichier_tableT : File_Type;fichier_destinationT : File_Type) is 
         begin
         case commande is 
             when "fin" =>
                 Null;
             when "table" =>
-                Ecrire(fichier_destination, Lire(fichier_table));
+                Ecrire(fichier_destinationT, Lire(fichier_tableT));
         end case;
             
     end Traiter_Commande; 
 
-
-
+    ----------------------------------------------MAIN------------------------------------------------
 
     table : T_Liste;
     ligne_a_lire : Unbunded_String;
     fichier_destination : String := "destination.txt";
     fichier_table : String := "table.txt";
+
+    fichier_tableT : File_Type;
+    fichier_destinationT : File_Type;
      
     begin
+        Open(fichier_tableT,In_File,fichier_table);
+        Open(fichier_destinationT,In_File,fichier_destination);
+
         table := Null;
-        Chargement_Table(table, fichier_table);
-        ligne_a_lire := Lire(fichier_destination);
+        Chargement_Table(table, fichier_tableT);
+        ligne_a_lire := Lire(fichier_destinationT);
         
-        while (ligne_a_lire is not Null and not (ligne_a_lire = "fin"))  loop
-            Ecrire(fichier_table, Meilleur_Masque(table, ligne_a_lire).interface);
-            ligne_a_lire := Lire(fichier_destination);
+        while (ligne_a_lire /= Null and not (ligne_a_lire = "fin") and not End_Of_File(fichier_destinationT)) loop
+            begin
+                Ecrire(fichier_table, Meilleur_Masque(table, ligne_a_lire).interface);
+                ligne_a_lire := Lire(fichier_destinationT);
+            exception 
+                when End_Error =>
+                    Null;
+            end;
         end loop;
+
+        Close(fichier_tableT);
+        Close(fichier_destinationT);
 
 end Routeur_Simple;
