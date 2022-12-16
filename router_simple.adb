@@ -222,7 +222,7 @@ procedure Routeur_Simple is
 
 
     end Traiter_Commande; 
-    
+     fichier_table : String := "table.txt";
      table : T_Liste;
      ligne_a_lire : Unbunded_String;
      fichier_destination : String := "destination.txt";
