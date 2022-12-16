@@ -27,8 +27,8 @@ procedure Routeur_Simple is
         end if;
     end lenght;
 
-        -- Fonction qui convertie les adresses IP en nombre binaire.
-        -- elle serviras pour appliquer les masques
+        -- Fonction qui converti les adresses IP en nombre binaire.
+        -- Elle servira à appliquer les masques.
 
     -- d'abord on s'occupe d'une conversion 4bit 
     function Convertir_IP2B_4 (adr : in Integer) return String is 
@@ -67,11 +67,11 @@ procedure Routeur_Simple is
             end case ;
         end loop ;
 
-        return adr(1) & adr(2) & adr(3) & adr(4) ; -- [!] on ne renvois pas avec des points !!!! 
+        return adr(1) & adr(2) & adr(3) & adr(4) ; -- [!] on ne renvoi pas avec des points !!!! 
         
     end Convertir_IP2B;
 
-    -- Fonction qui convertie les adresses IP en entier.
+    -- Fonction qui converti les adresses IP en entier.
      function Convertir_IP2I(Adresse_IP : in String) return Integer is
         entier : Integer ;
         begin
@@ -86,7 +86,7 @@ procedure Routeur_Simple is
         return entier ;
     end Convertir_IP2I;
 
-    -- Fonction qui convertie les adresses binaires en adresses IP.
+    -- Fonction qui converti les adresses binaires en adresses IP.
     function Convertir_B2IP(Adresse_IP : in String) return String is
         puissance : Integer ;
         nombre_entier : Integer ;
@@ -113,9 +113,9 @@ procedure Routeur_Simple is
         return nombre ;
     end Convertir_B2IP;
 
-     --fonction prennant une ligne de la table de routage et la convertie en T_Table
-     -- attntion cependant, tout est stocké sous forme de Unbounded_String
-    function Convertir_L2T(ligne : String,cle : Integer) return T_Table is 
+     --Fonction prenant une ligne de la table de routage et la converti en T_Table.
+     --Attention cependant, tout est stocké sous forme de Unbounded_String.
+    function Convertir_L2T(ligne : String, cle : Integer) return T_Table is 
             destination : Unbounded_String;
             mask : Unbounded_String;
             interface : Unbounded_String;
@@ -161,7 +161,7 @@ procedure Routeur_Simple is
             
     end Masque;
 
-    -- Renvoie le masque le plus long qui correspond avec l'adresse.
+    --Renvoie le masque le plus long qui correspond avec l'adresse.
      function Meilleur_Masque(Lst : T_Liste; Adresse_IP : in String) return T_Table is
         indice : Integer ;
         taille_max : Integer ;
@@ -174,7 +174,7 @@ procedure Routeur_Simple is
             taille_current := 0 ;
             ligne := Lst(indice).all ;
             if Masque(Adresse_IP,ligne) then
-                current := length(Adresse_IP(indice)) ; -- on parcourt l'adresse IP à l'envers pour réduire la complexité
+                current := length(Adresse_IP(indice)) ; -- On parcourt l'adresse IP à l'envers pour réduire la complexité
                 while current /= 0 loop
                     if Adresse_IP(current) == '.' then
                         null ;
@@ -196,23 +196,32 @@ procedure Routeur_Simple is
          return adresse_max ;
     end Meilleur_Masque;
 
-    -- permet de charger la table de routage dans une liste chaînée.
+    --Fonction qui permet de charger la table de routage dans une liste chaînée.
     procedure Chargement_Table(LCA : T_LCA) is
         begin
     end;
 
-    --procedure permettant d'écrire dans un fichier.
+    --Procedure permettant d'écrire dans un fichier.
     procedure Ecrire(fichier : String; a_ecrire : String) is
         begin
     end;
 
-    --fonction permettant de lire dans le fichier des destination, il renvoie une ligne puis la suivante
-    --à chaques appels.
-    -- elle renvoie Null si c'est finis.
+    --Fonction permettant de lire dans le fichier des destinations, il renvoie une ligne puis la suivante
+    --à chaque appel.
+    --Elle renvoie Null si c'est fini.
     function Lire(fichier : String) return T_liste_IP is 
     begin
         return Null;
     end;
+
+    --Fonction qui traite les commandes telles que "fin", "table"...
+    procedure Traiter_Commande(commande: String) is 
+        begin
+        case commande is 
+            when "fin" => 
+
+
+    end Traiter_Commande; 
     
      table : T_Liste;
      ligne_a_lire : Unbunded_String;
@@ -223,7 +232,7 @@ procedure Routeur_Simple is
         Chargement_Table(table);
         ligne_a_lire := Lire(fichier_destination);
         
-        while (ligne_a_lire is not Null) loop
+        while (ligne_a_lire is not Null and not fin ) loop
             Ecrire(fichier_interface, Meilleur_Masque(table, ligne_a_lire).interface);
             ligne_a_lire := Lire(fichier_destination);
         end loop;

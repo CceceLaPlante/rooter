@@ -11,3 +11,4 @@ Politique à coder :
 Dans le routeur LA : unique politique : LFU  
 Dans le routeur LL : politiques : LRU, LFU,FIFO  
 
+yeet
