@@ -35,7 +35,7 @@ procedure Routeur_Simple is
             a_return : String :=("00000000");
         begin
             for i in 1..8 loop
-                if adr mod 2 == 1 then
+                if adr mod 2 = 1 then
                     a_return(9-i) := '1';
                 else
                     a_return(9-i) := '0';
@@ -115,7 +115,7 @@ procedure Routeur_Simple is
 
      --Fonction prenant une ligne de la table de routage et la converti en T_Table.
      --Attention cependant, tout est stocké sous forme de Unbounded_String.
-    function Convertir_L2T(ligne : String, cle : Integer) return T_Table is 
+    function Convertir_L2T(ligne : String ; cle : Integer) return T_Table is 
             destination : Unbounded_String;
             mask : Unbounded_String;
             interface : Unbounded_String;
@@ -152,14 +152,12 @@ procedure Routeur_Simple is
             adr_binaire : String := Convertir_IP2B(Adresse_IP);
         begin
             for idx in 1..length(adr_binaire) loop
-                if msk(idx) == 1 and then adr_binaire(idx) /= dest_binaire(idx) then
+                if msk(idx) = 1 and then adr_binaire(idx) /= dest_binaire(idx) then
                     return False;
                 end if;
             end loop;
             return True;
         end Masque;
-            
-    end Masque;
 
     --Renvoie le masque le plus long qui correspond avec l'adresse.
      function Meilleur_Masque(Lst : T_Liste; Adresse_IP : in String) return T_Table is
@@ -176,7 +174,7 @@ procedure Routeur_Simple is
             if Masque(Adresse_IP,ligne) then
                 current := length(Adresse_IP(indice)) ; -- On parcourt l'adresse IP à l'envers pour réduire la complexité
                 while current /= 0 loop
-                    if Adresse_IP(current) == '.' then
+                    if Adresse_IP(current) = '.' then
                         null ;
                   elsif Adresse_IP(current) /= 0 then
                         taille_current := taille_current + 1 ;
@@ -186,7 +184,7 @@ procedure Routeur_Simple is
                   current := current - 1 ;
                 end loop ;
                 if taille_current > taille_max then
-                    taille_max := taille current ;
+                    taille_max := taille_current ;
                       adresse_max := Adresse_IP(indice) ;
                 end if ;
             else
@@ -198,7 +196,7 @@ procedure Routeur_Simple is
 
     --Fonction qui permet de charger la table de routage dans une liste chaînée.
     --La première fois qu'on utilise chargement table, on utilise une liste_table Null.
-    procedure Chargement_Table(liste_table : T_Liste, fichier_table : String) is
+    procedure Chargement_Table(liste_table : T_Liste; fichier_table : String) is
         ligne_a_lire : Unbounded_String;
         ligne_L2T : T_Table; 
         liste_table : T_Liste; --Table de routage reformatée
@@ -218,15 +216,17 @@ procedure Routeur_Simple is
     --Procedure permettant d'écrire dans un fichier.
     procedure Ecrire(fichier : String; a_ecrire : String) is
     begin
-    
+
     end Ecrire;
 
     --Fonction permettant de lire dans le fichier des destinations, il renvoie une ligne puis la suivante
     --à chaque appel.
     --Elle renvoie Null si c'est fini.
-    function Lire(fichier : String) return T_liste_IP is 
+    function Lire(fichier : String) return Unbounded_String is 
+        ligne_a_lire : Unbounded_String; 
     begin
-        return Null;
+
+        return ligne_a_lire;
     end;
 
     --Fonction qui traite les commandes telles que "fin", "table"...
@@ -244,20 +244,18 @@ procedure Routeur_Simple is
 
 
 
-
-     fichier_table : String := "table.txt";
-     table : T_Liste ;
-     ligne_a_lire : Unbunded_String;
-     fichier_destination : String := "destination.txt";
-     fichier_interface : String := "interface.txt";
+    table : T_Liste;
+    ligne_a_lire : Unbunded_String;
+    fichier_destination : String := "destination.txt";
+    fichier_table : String := "table.txt";
      
     begin
         table := Null;
         Chargement_Table(table, fichier_table);
         ligne_a_lire := Lire(fichier_destination);
         
-        while (ligne_a_lire is not Null and not (ligne_a_lire = "fin") ) loop
-            Ecrire(fichier_interface, Meilleur_Masque(table, ligne_a_lire).interface);
+        while (ligne_a_lire is not Null and not (ligne_a_lire = "fin"))  loop
+            Ecrire(fichier_table, Meilleur_Masque(table, ligne_a_lire).interface);
             ligne_a_lire := Lire(fichier_destination);
         end loop;
 
