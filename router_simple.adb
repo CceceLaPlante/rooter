@@ -18,10 +18,10 @@ procedure Routeur_Simple is
 
     Type T_adresse_IP is mod 2 ** 32;
 
-    function lenght(lst : T_Liste) return Integer is
+    function length(lst : T_Liste) return Integer is
         begin
         if lst /= Null then
-            return 1 + lenght(lst.Suivant);
+            return 1 + length(lst.Suivant);
         else
             return 0;
         end if;
@@ -137,7 +137,7 @@ procedure Routeur_Simple is
                 interface := interface & ligne(idx);
                 idx := idx + 1;
             end loop;
-            return T_Table'(destination => To_String(destination), mask => To_Stirng(mask), interface => To_String(interface), cle => To_String(cle));
+            return T_Table'(destination => To_String(destination), mask => To_Stirng(mask), interface => To_String(interface), cle => To_String(cle),suivant => Null);
         return Null;
 
     end Convertir_L2T;
@@ -197,14 +197,29 @@ procedure Routeur_Simple is
     end Meilleur_Masque;
 
     --Fonction qui permet de charger la table de routage dans une liste chaînée.
-    procedure Chargement_Table(LCA : T_LCA) is
-        begin
-    end;
+    --La première fois qu'on utilise chargement table, on utilise une liste_table Null.
+    procedure Chargement_Table(liste_table : T_Liste, fichier_table : String) is
+        ligne_a_lire : Unbounded_String;
+        ligne_L2T : T_Table; 
+        liste_table : T_Liste; --Table de routage reformatée
+
+    begin
+        ligne_a_lire := Lire(fichier_table);
+        if (ligne_a_lire = Null) then
+            Null;
+        else
+            ligne_L2T := convertir_L2T(ligne_a_lire);
+            liste_table.all := ligne_L2T; 
+            Chargement_Table(liste_table.all.suivant, fichier_table);
+            
+        end if;
+    end Chargement_Table;
 
     --Procedure permettant d'écrire dans un fichier.
     procedure Ecrire(fichier : String; a_ecrire : String) is
-        begin
-    end;
+    begin
+    
+    end Ecrire;
 
     --Fonction permettant de lire dans le fichier des destinations, il renvoie une ligne puis la suivante
     --à chaque appel.
@@ -222,31 +237,28 @@ procedure Routeur_Simple is
                 Null;
             when "table" =>
                 Ecrire(fichier_destination, Lire(fichier_table));
+        end case;
             
-
-
     end Traiter_Commande; 
-    
+
+
+
+
+
      fichier_table : String := "table.txt";
-     table : T_Liste;
+     table : T_Liste ;
      ligne_a_lire : Unbunded_String;
      fichier_destination : String := "destination.txt";
      fichier_interface : String := "interface.txt";
      
     begin
         table := Null;
-        Chargement_Table(table);
+        Chargement_Table(table, fichier_table);
         ligne_a_lire := Lire(fichier_destination);
         
         while (ligne_a_lire is not Null and not (ligne_a_lire = "fin") ) loop
             Ecrire(fichier_interface, Meilleur_Masque(table, ligne_a_lire).interface);
             ligne_a_lire := Lire(fichier_destination);
         end loop;
-
-
-        
-
-
-    Null;
 
 end Routeur_Simple;
