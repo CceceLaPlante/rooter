@@ -1,4 +1,4 @@
-with lca;
+with Ada.Text_IO; use Ada.Text_IO;
 
 procedure Routeur_Simple is 
 
@@ -109,17 +109,52 @@ procedure Routeur_Simple is
         return nombre ;
     end Convertir_B2IP;
 
-     --
-    function Convertir_L2T(ligne : String) return T_Table is 
+     --fonction prennant une ligne de la table de routage et la convertie en T_Table
+     -- attntion cependant, tout est stocké sous forme de Unbounded_String
+    function Convertir_L2T(ligne : String,cle : Integer) return T_Table is 
+            destination : String;
+            mask : String;
+            interface : String;
+            idx : Integer;
+            
         begin
+            idx := 1;
+            while ligne(idx) /= ' ' loop
+                destination := destination & ligne(idx);
+                idx := idx + 1;
+            end loop;
+            idx := idx + 1;
+            while ligne(idx) /= ' ' loop
+                mask := mask & ligne(idx);
+                idx := idx + 1;
+            end loop;
+            idx := idx + 1;
+            while ligne(idx) /= ' ' loop
+                interface := interface & ligne(idx);
+                idx := idx + 1;
+            end loop;
+            return T_Table'(destination => destination, mask => mask, interface => interface, cle => cle);
         return Null;
+
     end Convertir_L2T;
 
     -- Fonction qui renvoie True si le masque et l'adresse IP coïncident.
-    function Masque(Adresse_IP : in String; ligne : in Integer) return Boolean is 
+    function Masque(Adresse_IP : in String; ligne : in T_Table) return Boolean is 
             idx : Integer;
+            msk : ligne.mask;
+            dest : ligne.destination;
+            dest_binaire : String := Convertir_IP2B(dest);
+            msk_binaire : String := Convertir_IP2B(msk);
+            adr_binaire : String := Convertir_IP2B(Adresse_IP);
         begin
-        return Null;
+            for idx in 1..length(adr_binaire) loop
+                if msk(idx) == 1 and then adr_binaire(idx) /= dest_binaire(idx) then
+                    return False;
+                end if;
+            end loop;
+            return True;
+        end Masque;
+            
     end Masque;
 
     -- Renvoie le masque le plus long qui correspond avec l'adresse.
@@ -128,11 +163,13 @@ procedure Routeur_Simple is
         taille_max : Integer ;
         current : Integer ;
         taille_current : Integer ;
+        ligne : T_Table;
      begin
         taille_max := 0 ;
         while indice /= length(Lst) loop
             taille_current := 0 ;
-            if Masque then
+            ligne := Lst(indice).all ;
+            if Masque(Adresse_IP,ligne) then
                 current := length(Adresse_IP(indice)) ; -- on parcourt l'adresse IP à l'envers pour réduire la complexité
                 while current /= 0 loop
                     if Adresse_IP(current) == '.' then
