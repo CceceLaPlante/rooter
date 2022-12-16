@@ -218,21 +218,27 @@ procedure Routeur_Simple is
     procedure Traiter_Commande(commande: String) is 
         begin
         case commande is 
-            when "fin" => 
+            when "fin" =>
+                Null;
+            when "table" =>
+                Ecrire(fichier_destination, Lire(fichier_table));
+            
 
 
     end Traiter_Commande; 
     
+     fichier_table : String := "table.txt";
      table : T_Liste;
      ligne_a_lire : Unbunded_String;
      fichier_destination : String := "destination.txt";
      fichier_interface : String := "interface.txt";
+     
     begin
         table := Null;
         Chargement_Table(table);
         ligne_a_lire := Lire(fichier_destination);
         
-        while (ligne_a_lire is not Null and not fin ) loop
+        while (ligne_a_lire is not Null and not (ligne_a_lire = "fin") ) loop
             Ecrire(fichier_interface, Meilleur_Masque(table, ligne_a_lire).interface);
             ligne_a_lire := Lire(fichier_destination);
         end loop;
