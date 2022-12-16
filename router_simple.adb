@@ -178,51 +178,90 @@ procedure Routeur_Simple is
             return True;
         end Masque;
 
+
+------------
     --Renvoie le masque le plus long qui correspond avec l'adresse.
-    -- TODO corriger meilleur masque (il utilise pas lst correctement)
-     function Meilleur_Masque(Lst : T_Liste; Adresse_IP : in String) return T_Table is
-        indice : Integer ;
-        taille_max : Integer ;
-        current : Integer ;
-        taille_current : Integer ;
-        ligne : T_Table;
-     begin
-        taille_max := 0 ;
 
-        while indice /= length(Lst) loop
-            taille_current := 0 ;
-            ligne := Lst(indice).all ;
+--    function Meilleur_Masque(Lst : T_Liste; Adresse_IP : in String) return T_Table is
+--        indice : Integer ;
+--        taille_max : Integer ;
+--        current : Integer ;
+--        taille_current : Integer ;
+--        ligne : T_Table;
+--    begin
+--        taille_max := 0 ;
+--
+--        while indice /= length(Lst) loop
+--            taille_current := 0 ;
+--            ligne := Lst(indice).all ;
+--
+--            if Masque(Adresse_IP,ligne) then
+--                -- On parcourt l'adresse IP à l'envers pour réduire la complexité
+--                -- ehh je comprend pas pk ça optimise de parcourir à l'envers ? emma i need ansers ;( (céleste)
+--                current := length(Adresse_IP(indice)) ; 
+--
+--                while current /= 0 loop
+--                    if Adresse_IP(current) = '.' then
+--                        null ;
+--                  elsif Adresse_IP(current) /= 0 then
+--                        taille_current := taille_current + 1 ;
+--                  else
+--                           null ;
+--                  end if ;
+--
+--                  current := current - 1 ;
+--                end loop ;
+--
+--                if taille_current > taille_max then
+--                    taille_max := taille_current ;
+--                      adresse_max := Adresse_IP(indice) ;
+--
+--                end if ;
+--            else
+--                    null ;
+--            end if ;
+--
+--        end loop ;
+--
+--        return adresse_max ;
+--
+--    end Meilleur_Masque;
 
-            if Masque(Adresse_IP,ligne) then
-                -- On parcourt l'adresse IP à l'envers pour réduire la complexité
-                -- ehh je comprend pas pk ça optimise de parcourir à l'envers ? emma i need ansers ;( (céleste)
-                current := length(Adresse_IP(indice)) ; 
 
-                while current /= 0 loop
-                    if Adresse_IP(current) = '.' then
-                        null ;
-                  elsif Adresse_IP(current) /= 0 then
-                        taille_current := taille_current + 1 ;
-                  else
-                           null ;
-                  end if ;
+-----------------------
+    -- prend un masque en entrée, et renvoie la somme des 1,ça permet de facilement en quantifier la taille...
+    -- [!] prend un masque BINAIRE en entrée
+    function somme_masque (m : String) return Integer is
+        somme : Integer ;
 
-                  current := current - 1 ;
-                end loop ;
-
-                if taille_current > taille_max then
-                    taille_max := taille_current ;
-                      adresse_max := Adresse_IP(indice) ;
-
-                end if ;
-            else
-                    null ;
+    begin 
+        for indice in 1..length(m) loop
+            if m(indice) = '1' then
+                somme := somme + 1 ;
             end if ;
+        end loop ;
+        return somme ;
 
-         end loop ;
+    end comparaison_masque;
 
-         return adresse_max ;
+    function Meilleur_Masque(lst : T_Liste; Adresse_IP : in String; current : T_Table) return T_Table is --Fonction qui renvoie le masque le plus long qui correspond avec l'adresse.
+    begin 
+        -- condition d'arrêt : si on est arrivé au bout de la liste...
+        if lst = Null then 
+            return current; 
 
+        elsif Masque(Adresse_IP,lst.all.mask) then
+            -- on compare les masques, et on garde le plus long
+            if somme_masque(lst.all.mask) > somme_masque(current.mask) then
+                current := lst.all;
+                return Meilleur_Masque(lst.suivant,Adresse_IP,current);
+            -- dans les autres cas, on continue à chercher
+            else
+                return Meilleur_Masque(lst.suivant,Adresse_IP,current);
+            end if;
+        else 
+            return Meilleur_Masque(lst.suivant,Adresse_IP,current);
+        end if;
     end Meilleur_Masque;
 
     --Fonction qui permet de charger la table de routage dans une liste chaînée.
