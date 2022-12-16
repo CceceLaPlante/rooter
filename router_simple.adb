@@ -16,18 +16,19 @@ procedure Routeur_Simple is
 
 
 
-        -- Fonction qui convertie les adresses IP en entier.
-    function Convertir_IP2I(Adresse_IP : in String) return Integer is
+        -- Fonction qui convertie les adresses IP en nombre binaire.
+    function Convertir_IP2B(Adresse_IP : in String) return Integer is
+            
         begin
-        return Null;
+        
     end Convertir_IP2I;
 
-    -- Fonction qui convertie les adresses IP en adresses binaires.
+    -- Fonction qui convertie les adresses IP en entier.
      function Convertir_IP2I(Adresse_IP : in String) return Integer is
         entier : Integer ;
         begin
         for i in 1..length(Adresse_IP) loop
-            case Adresse_IP(i)
+            case Adresse_IP(i) is
                 when '0'|'1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9' =>
                     entier := entier + Adresse_IP(i)*(10**i) ;
                 when others =>
