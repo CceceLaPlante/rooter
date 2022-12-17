@@ -24,7 +24,7 @@ procedure Routeur_Simple is
    procedure Free
    is new Ada.Unchecked_Deallocation (Object => T_Table, Name => T_Liste);
    
-   procedure Initialiser_Table(table : Out  T_Table) is
+   procedure Initialiser_Table(table : Out  T_Liste) is
    begin
       table := Null;
    end Initialiser_Table;
@@ -47,18 +47,19 @@ procedure Routeur_Simple is
    -- d'abord on s'occupe d'une conversion 4bit 
    function Convertir_IP2B_4 (adr : Integer) return Unbounded_String is 
       a_return : String :=("00000000");
+      adr_cp : Integer := adr;
    begin
       for i in 1..8 loop
-         if adr mod 2 = 1 then
+         if adr_cp mod 2 = 1 then
             -- on fais à l'envers parce qu'en binaire on fais de droite à gauche
             a_return(9-i) := '1'; 
          else
             a_return(9-i) := '0';
          end if;
          -- on divise par 2 pour passer au bit suivant, on remarque que c'est une division entière car adr : Integer
-         adr := adr / 2; 
+         adr_cp := adr / 2; 
       end loop;
-      return a_return;
+      return To_Unbounded_String(a_return);
    end Convertir_IP2B_4;
     
 
@@ -362,7 +363,7 @@ procedure Routeur_Simple is
    fichier_destination : File_Type;
    
    -- Variable qui sert pour la fonction Meilleur_Masque
-   current_tab : T_Table;
+   current_lst : T_Liste;
    
      
 begin
@@ -374,9 +375,10 @@ begin
    Chargement_Table(table, fichier_table,0);
    ligne_a_lire := Lire(fichier_destination);
    
-   Initialiser_Table(current_tab);
+   Initialiser_Table(current_lst);
+   current_lst.all := New ;
    while (not (ligne_a_lire = "fin") and not End_Of_File(fichier_destination)) loop
-      Ecrire(fichier_table, Meilleur_Masque(table, ligne_a_lire, current_tab).inter);
+      Ecrire(fichier_table, Meilleur_Masque(table, ligne_a_lire, current_lst.all).inter);
       ligne_a_lire := Lire(fichier_destination);
    end loop;
 
