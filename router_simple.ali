@@ -1,0 +1,243 @@
+V "GNAT Lib v10"
+M P W=b
+P SS ZX
+
+RN
+RV NO_ALLOCATORS
+RV NO_DIRECT_BOOLEAN_OPERATORS
+RV NO_EXCEPTION_HANDLERS
+RV NO_EXCEPTION_PROPAGATION
+RV NO_EXCEPTIONS
+RV NO_IO
+RV NO_IMPLICIT_CONDITIONALS
+RV NO_LOCAL_ALLOCATORS
+RV NO_NESTED_FINALIZATION
+RV NO_RECURSION
+RV NO_SECONDARY_STACK
+RV NO_STANDARD_ALLOCATORS_AFTER_ELABORATION
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_UNCHECKED_DEALLOCATION
+RV NO_DEFAULT_INITIALIZATION
+RV NO_DYNAMIC_SIZED_OBJECTS
+RV NO_IMPLICIT_LOOPS
+RV SPARK_05
+
+U routeur_simple%b	router_simple.adb	e376149a NE OO SU
+W ada%s			ada.ads			ada.ali
+W ada.command_line%s	a-comlin.adb		a-comlin.ali
+W ada.exceptions%s	a-except.adb		a-except.ali
+W ada.integer_text_io%s	a-inteio.ads		a-inteio.ali
+W ada.strings%s		a-string.ads		a-string.ali
+W ada.strings.unbounded%s  a-strunb.adb		a-strunb.ali
+Z ada.tags%s		a-tags.adb		a-tags.ali
+W ada.text_io%s		a-textio.adb		a-textio.ali
+W ada.text_io.unbounded_io%s  a-tiunio.ads	a-tiunio.ali
+W ada.unchecked_deallocation%s
+Z interfaces%s		interfac.ads		interfac.ali
+Z system%s		system.ads		system.ali
+Z system.exp_lli%s	s-explli.adb		s-explli.ali
+Z system.finalization_masters%s  s-finmas.adb	s-finmas.ali
+Z system.pool_global%s	s-pooglo.adb		s-pooglo.ali
+Z system.secondary_stack%s  s-secsta.adb	s-secsta.ali
+Z system.soft_links%s	s-soflin.adb		s-soflin.ali
+Z system.standard_library%s  s-stalib.adb	s-stalib.ali
+Z system.storage_elements%s  s-stoele.adb	s-stoele.ali
+Z system.storage_pools%s  s-stopoo.adb		s-stopoo.ali
+Z system.storage_pools.subpools%s  s-stposu.adb	s-stposu.ali
+
+D ada.ads		20210408115627 76789da1 ada%s
+D a-charac.ads		20210408115627 2d3ec45b ada.characters%s
+D a-chlat1.ads		20210408115627 66457d31 ada.characters.latin_1%s
+D a-comlin.ads		20210408115627 4aa66568 ada.command_line%s
+D a-except.ads		20210408115627 a7106115 ada.exceptions%s
+D a-finali.ads		20210408115627 bf4f806b ada.finalization%s
+D a-inteio.ads		20210408115627 f64b89a4 ada.integer_text_io%s
+D a-ioexce.ads		20210408115627 e4a01f64 ada.io_exceptions%s
+D a-stream.ads		20210408115627 119b8fb3 ada.streams%s
+D a-string.ads		20210408115627 90ac6797 ada.strings%s
+D a-strmap.ads		20210408115627 e8bb714a ada.strings.maps%s
+D a-strunb.ads		20210408115627 1656705b ada.strings.unbounded%s
+D a-suteio.ads		20210408115627 26d8e9aa ada.strings.unbounded.text_io%s
+D a-tags.ads		20210408115627 491b781d ada.tags%s
+D a-textio.ads		20210408115627 aef4d56d ada.text_io%s
+D a-tiinio.ads		20210408115627 390edddb ada.text_io.integer_io%s
+D a-tiunio.ads		20210408115627 759c6b0c ada.text_io.unbounded_io%s
+D a-unccon.ads		20210408115627 0e9b276f ada.unchecked_conversion%s
+D a-uncdea.ads		20210408115627 eff36322 ada.unchecked_deallocation%s
+D interfac.ads		20210408115627 5ab55268 interfaces%s
+D i-cstrea.ads		20210408115627 e53d8b8e interfaces.c_streams%s
+D router_simple.adb	20221217195123 4aea53cc routeur_simple%b
+D system.ads		20210408115627 4635ec04 system%s
+D s-atocou.ads		20210408115627 b45c2d8d system.atomic_counters%s
+D s-crtl.ads		20210408115627 0ebbdb71 system.crtl%s
+D s-exctab.ads		20210408115627 54135002 system.exception_table%s
+D s-explli.ads		20210408115627 ba60219a system.exp_lli%s
+D s-ficobl.ads		20210408115627 078245e4 system.file_control_block%s
+D s-finmas.ads		20210408115627 7811a767 system.finalization_masters%s
+D s-finroo.ads		20210408115627 4ff27390 system.finalization_root%s
+D s-memory.ads		20210408115627 597d6634 system.memory%s
+D s-parame.ads		20210408115627 48ec542b system.parameters%s
+D s-pooglo.ads		20210408115627 ede33ef8 system.pool_global%s
+D s-secsta.ads		20210408115627 20bbe636 system.secondary_stack%s
+D s-soflin.ads		20210408115627 a7318a92 system.soft_links%s
+D s-stache.ads		20210408115627 a37c21ec system.stack_checking%s
+D s-stalib.ads		20210408115627 09bd3940 system.standard_library%s
+D s-stalib.adb		20210408115627 f2fe2716 system.standard_library%b
+D s-stoele.ads		20210408115627 2dc34a04 system.storage_elements%s
+D s-stopoo.ads		20210408115627 b16154c2 system.storage_pools%s
+D s-stposu.ads		20210408115627 97a6219c system.storage_pools.subpools%s
+D s-stratt.ads		20210408115627 aedef97e system.stream_attributes%s
+D s-traent.ads		20210408115627 005bf670 system.traceback_entries%s
+D s-unstyp.ads		20210408115627 34867c83 system.unsigned_types%s
+D s-wchcon.ads		20210408115627 1b7d22d2 system.wch_con%s
+G a e
+G c Z b b [routeur_simple standard 10 11 none]
+X 1 ada.ads
+16K9*Ada 20e8 22|1r6 1r37 2r6 2r37 3r6 3r37 4r6 4r37 5r6 5r37 6r6 6r37 7r6
+. 7r37 8r6 25r11
+X 4 a-comlin.ads
+36K13*Command_Line 144e21 22|6w10 6r41
+X 5 a-except.ads
+48K13*Exceptions 335e19 22|7w10 7r41
+X 7 a-inteio.ads
+18K13*Integer_Text_IO[16|46] 22|3w10 3r41
+X 10 a-string.ads
+16K13*Strings 35e16 22|1w10 1r41 4r10 4r41
+X 12 a-strunb.ads
+82K21*Unbounded 756e26 22|4w18 4r49
+87R9*Unbounded_String<6|43R9> 739e14 22|16r24 17r17 18r18 48r53 67r41 67r66
+. 69r35 97r44 114r44 114r69 117r16 149r35 150r21 151r14 152r15 179r36 181r13
+. 182r14 184r22 185r21 186r21 251r31 264r67 285r53 294r46 295r22 335r22 357r19
+92V13*Length{natural} 22|75s19 100s19 188s21 255s24
+103V13*To_Unbounded_String{87R9} 22|62s14 124s17 299s26 302s29 305s32 342s25
+109V13*To_Unbounded_String{87R9} 22|137s38 139s23
+116V13*To_String{string} 22|72s32
+151V14*"&"{87R9} 22|90s21 90s30 90s39 137s36
+159V14*"&"{87R9} 22|137s30
+175V14*"&"{87R9} 22|159s37 164s23 169s25
+191V13*Element{character} 22|76s15 101s15 103s57 131s69 158s13 159s39 163s13
+. 164s25 168s13 169s27 191s13 191s41 191s69 256s13
+238V14*"="{boolean} 22|342s23
+244V14*"="{boolean} 22|380s29
+X 15 a-textio.ads
+57K13*Text_IO 727e16 22|2w10 2r41 5r10 5r41
+64P9*File_Type 22|285r31 294r28 312r65 312r98 334r86 362r20 363r26
+66n23*In_File{66E9} 22|370r23
+66n32*Out_File{66E9} 22|371r29
+114U14*Open 22|370s4 371s4
+129U14*Close 22|385s4 386s4
+312V13*End_Of_File{boolean} 22|298s10 380s46
+492V13*Get_Line{string} 22|302s49
+547X4*End_Error 22|304r18
+X 17 a-tiunio.ads
+25K21*Unbounded_IO 61e29 22|5w18 5r49
+36U14*Put_Line=39:42 22|287s7
+X 19 a-uncdea.ads
+17+9 Object 22|25r39
+18P9 Name(17+9) 22|25r58
+20u15*Unchecked_Deallocation 22|8w10 25r15
+X 22 router_simple.adb
+10U11*Routeur_Simple 10b11 389l5 389t19
+12R9 T_Table 13r27 14c9 21e17 25r49 149r76 174r14 179r65 264r102 264r118
+. 336r19 340r26 366r18 375r17
+13P9 T_Liste(12R9) 19r20 25r66 27r45 35r26 264r42 323r37 324r23 334r53 356r12
+14R9 T_Table
+16r10 destination{12|87R9} 174m23 182r40
+17r10 mask{12|87R9} 174m51 181r39 272r34 272r63
+18r10 inter{12|87R9} 174m65 381r79
+19p10 Suivant{13P9} 38r32 174m92 274m40 277m40 280m37 327m28 347m43
+20i10 cle{integer} 174m81
+24U14 Free[19|20] 329s7
+27U14 Initialiser_Table 27b14 27<32 30l8 30t25
+27p32 table{13P9} 29m7
+32M9 T_adresse_IP
+35V13 length{integer} 35b13 35>20 38s21 42l8 42t14
+35p20 lst{13P9} 37r10 38r28
+48V13 Convertir_IP2B_4{12|87R9} 48b13 48>31 63l8 63t24 82s28
+48i31 adr{integer} 50r27 60r20
+49a7 a_return{string} 55m13 57m13 62r34
+50i7 adr_cp{integer} 53r13 60m10
+52i11 i{integer} 55r24 57r24
+67V13 Convertir_IP2B{12|87R9} 67b13 67>28 92l8 92t22 184s42 185s41 186s41
+67r28 Adresse_IP{12|87R9} 72r42 75r26 76r23
+68i7 entier{integer} 79m16 79r26 82r45 84m16
+69A12 adr4(12|87R9)<integer> 70r13
+70a7 adr{69A12} 82m16 90r14 90r23 90r32 90r41
+71i7 idx{integer} 82r20 83m16 83r23
+72a7 Adresse_IP_S{string} 79r57
+75i11 i{integer} 76r35 79r70 79r79
+97V13 Convertir_IP2I{integer} 97b13 97>28 109l8 109t22
+97r28 Adresse_IP{12|87R9} 100r26 101r23 103r65
+98i7 entier{integer} 103m16 103r26 108r14
+100i11 i{integer} 101r35 103r76 103r85
+114V13 Convertir_B2IP{12|87R9} 114b13 114>28 144l8 144t22
+114r28 Adresse_IP{12|87R9} 131r77
+115i7 puissance{integer} 128m10 130r16 131r121 132m13 132r26
+116i7 nombre_entier{integer} 129m10 131m13 131r30 137r58 139r43
+117r7 nombre{12|87R9} 124m7 137m13 137r23 139m13 143r14
+118i7 indice{integer} 122m7 131r88 133m13 133r23
+119i7 octet{integer} 123m7 126r13 136r13 141m10 141r19
+149V13 Convertir_L2T{14R9} 149b13 149>27 149>54 176l8 176t21 345s23
+149r27 ligne{12|87R9} 158r21 159r47 163r21 164r33 168r21 169r35
+149i54 cle{integer} 174r88
+150r7 destination{12|87R9} 159m10 159r25 174r38
+151r7 mask{12|87R9} 164m10 164r18 174r59
+152r7 inter{12|87R9} 169m10 169r19 174r74
+153i7 idx{integer} 156m7 158r27 159r53 160m10 160r17 162m7 162r14 163r27
+. 164r39 165m10 165r17 167m7 167r14 168r27 169r41 170m10 170r17
+179V13 Masque{boolean} 179b13 179>20 179>54 196l8 196t14 270s13
+179r20 Adresse_IP{12|87R9} 186r56
+179r54 ligne{14R9} 181r33 182r34
+180i7 idx{integer}
+181r7 msk{12|87R9} 185r56 191r21
+182r7 dest{12|87R9} 184r57
+184r7 dest_binaire{12|87R9} 191r77
+185r7 msk_binaire{12|87R9}
+186r7 adr_binaire{12|87R9} 188r28 191r49
+188i11 idx{integer} 191r26 191r61 191r91
+251V13 somme_masque{integer} 251b13 251>27 262l8 262t20 272s13 272s42
+251r27 m{12|87R9} 255r31 256r21
+252i7 somme{integer} 257m13 257r22 260r14
+255i11 indice{integer} 256r23
+264V13 Meilleur_Masque{14R9} 264b13 264=29 264>51 264=85 274s20 277s20 280s17
+. 282l8 282t23 381s29
+264p29 lst{13P9} 267r10 270r31 272r26 273r24 274r36 277r36 280r33
+264r51 Adresse_IP{12|87R9} 270r20 274r48 277r48 280r45
+264r85 current{14R9} 268r17 272r55 273m13 274m59 274r59 277m59 277r59 280m56
+. 280r56
+285U14 Ecrire 285b14 285>21 285>42 288l8 288t14 315s10 381s7
+285p21 fichier{15|64P9} 287r16
+285r42 a_ecrire{12|87R9} 287r25
+294V13 Lire{12|87R9} 294b13 294>18 309l8 309t12 315s38 341s23 378s20 382s23
+294p18 fichier{15|64P9} 298r22 302r58
+295r7 ligne_a_lire{12|87R9} 299m10 302m13 305m16 308r14
+312U14 Traiter_Commande 312b14 312>31 312>49 312>76 320l8 320t24
+312a31 commande{string} 314r10
+312p49 fichier_table{15|64P9} 315r43
+312p76 fichier_destination{15|64P9} 315r17
+323U14 Liberer 323b14 323=22 327s10 330l8 330t15 387s4
+323p22 table{13P9} 326r10 327r18 329m12
+324p7 current_table{13P9}
+334U14 Chargement_Table 334b14 334=31 334=62 334>97 347s10 350l8 350t24 377s4
+334p31 liste_table{13P9} 340m7 346r10 347r27
+334p62 fichier_tableT{15|64P9} 341r28 347m52
+334i97 cle{integer} 345r50 347r67
+335r7 ligne_a_lire{12|87R9} 341m7 342r10 345r37
+336r7 ligne_L2T{14R9} 345m10 345r10 346r29
+356p4 table{13P9} 375m4 377m21 377r21 381m45 381r45 387m12 387r12
+357r4 ligne_a_lire{12|87R9} 378m4 380r16 381r52 382m7
+358a4 nom_destination{string} 371r38
+359a4 nom_table{string} 370r31
+362p4 fichier_table{15|64P9} 370m9 370r9 377m28 377r28 381r14 385m10 385r10
+363p4 fichier_destination{15|64P9} 371m9 371r9 378r25 380r58 382r28 386m10
+. 386r10
+366r4 current_tab{14R9} 381m66 381r66
+X 23 system.ads
+67M9*Address
+X 31 s-memory.ads
+53V13*Alloc{23|67M9} 103i<c,__gnat_malloc>22
+68U14*Free 104i<c,__gnat_free>22
+76V13*Realloc{23|67M9} 105i<c,__gnat_realloc>22
+X 38 s-stalib.adb
+93U14 Break_Start 94i<c,__gnat_break_start>22
+

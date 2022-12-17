@@ -24,7 +24,7 @@ procedure Routeur_Simple is
    procedure Free
    is new Ada.Unchecked_Deallocation (Object => T_Table, Name => T_Liste);
    
-   procedure Initialiser_Table(table : Out  T_Table) is
+   procedure Initialiser_Table(table : Out  T_Liste) is
    begin
       table := Null;
    end Initialiser_Table;
@@ -353,7 +353,7 @@ procedure Routeur_Simple is
 
    ----------------------------------------------MAIN------------------------------------------------
 
-   table : T_Liste;
+   table : T_Liste := Null;
    ligne_a_lire : Unbounded_String;
    nom_destination : String := "fichier_destination.txt";
    nom_table : String := "table.txt";
@@ -370,12 +370,13 @@ begin
    Open(fichier_table,In_File,nom_table);
    Open(fichier_destination,Out_File,nom_destination);
 
-   table := Null;
+
+
+   table := New T_Table;
    -- on donne table Null, et 0 comme clé, parce que la fonction est réccurssive et à besoin de ces paramètres.
    Chargement_Table(table, fichier_table,0);
    ligne_a_lire := Lire(fichier_destination);
    
-   Initialiser_Table(current_tab);
    while (not (ligne_a_lire = "fin") and not End_Of_File(fichier_destination)) loop
       Ecrire(fichier_table, Meilleur_Masque(table, ligne_a_lire, current_tab).inter);
       ligne_a_lire := Lire(fichier_destination);
