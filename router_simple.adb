@@ -76,7 +76,7 @@ procedure Routeur_Simple is
          case Element(Adresse_IP, i) is
             when '0'|'1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9' =>
                --on fait une conversion en entier pour pouvoir appliquer la fonction Convertir_IP2B_4
-               entier := entier + Adresse_IP_S(i)*(10**i) ;
+               entier := entier + Integer(Character'Pos(Adresse_IP_S(i))*(10**i)) ;
             when '.' =>
                --touts les points, on convertis l'entier ainsi calculé en binaire
                adr(idx) := Convertir_IP2B_4(entier) ;
@@ -87,7 +87,7 @@ procedure Routeur_Simple is
          end case ;
       end loop ;
 
-      return To_Unbounded_String(adr(1) & adr( 2) & adr(3) & adr(4)) ; -- [!] on ne renvoi pas avec des points !!!! 
+      return adr(1) & adr(2) & adr(3) & adr(4) ; -- [!] on ne renvoi pas avec des points !!!! 
         
    end Convertir_IP2B;
 
