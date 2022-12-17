@@ -8,15 +8,17 @@ with Ada.Exceptions;            use Ada.Exceptions;
 
 procedure Routeur_Simple is 
 
-    Type T_Liste is access T_Table;
-
-    Type T_Table is record 
-        destination : String;
-        mask : String;
-        interface : String;
-        Suivant : T_Table;
-        cle : Integer;
-    end record;
+    type T_Table;
+    type T_Liste is access T_Table;
+    type T_Table is 
+        record 
+            destination : Unbounded_String;
+            mask : Unbounded_String;
+            inter : Unbounded_String;
+            Suivant : T_Liste;
+            cle : Integer;
+        end record;
+    
 
     Type T_adresse_IP is mod 2 ** 32;
     -- renvois la taille d'une T_Liste
@@ -27,7 +29,7 @@ procedure Routeur_Simple is
         else
             return 0;
         end if;
-    end lenght;
+    end Length;
 
         -- Fonction qui converti les adresses IP en nombre binaire.
         -- Elle servira à appliquer les masques.
@@ -51,18 +53,19 @@ procedure Routeur_Simple is
     
 
     -- puis on s'occupe de la conversion de l'adresse IP complète
-    function Convertir_IP2B(Adresse_IP : in String) return String is
+    function Convertir_IP2B(Adresse_IP : in Unbounded_String) return String is
         entier : Integer ;
         type adr4 is array(1..4) of String ;
         adr : adr4 ;
         idx : Integer := 1;
+        Adresse_IP_S : String := To_String(Adresse_IP);
         
         begin
-        for i in 1..length(Adresse_IP) loop
+        for i in 1..length(Adresse_IP_S) loop
             case Adresse_IP(i) is
                 when '0'|'1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9' =>
                     --on fait une conversion en entier pour pouvoir appliquer la fonction Convertir_IP2B_4
-                    entier := entier + Adresse_IP(i)*(10**i) ;
+                    entier := entier + Adresse_IP_S(i)*(10**i) ;
                 when '.' =>
                     --touts les points, on convertis l'entier ainsi calculé en binaire
                     adr(idx) := Convertir_IP2B_4(entier) ;
@@ -132,7 +135,7 @@ procedure Routeur_Simple is
     function Convertir_L2T(ligne : String ; cle : Integer) return T_Table is 
             destination : Unbounded_String;
             mask : Unbounded_String;
-            interface : Unbounded_String;
+            inter : Unbounded_String;
             idx : Integer;
             
         begin
@@ -149,11 +152,12 @@ procedure Routeur_Simple is
             end loop;
             idx := idx + 1;
             while ligne(idx) /= ' ' loop
-                interface := interface & ligne(idx);
+                inter := inter & ligne(idx);
                 idx := idx + 1;
             end loop;
             -- on initialise suivant à Null pour la suite..
-            return T_Table'(destination => To_String(destination), mask => To_String(mask), interface => To_String(interface), cle => cle,suivant => Null);
+            -- ya ptet un problème avec cette ligne, cf tests.adb...
+            return T_Table'(destination => destination, mask => mask, inter => inter, cle => cle,suivant => Null);
         return Null;
 
     end Convertir_L2T;
@@ -161,8 +165,8 @@ procedure Routeur_Simple is
     -- Fonction qui renvoie True si le masque et l'adresse IP coïncident.
     function Masque(Adresse_IP : in String; ligne : in T_Table) return Boolean is 
             idx : Integer;
-            msk : ligne.mask;
-            dest : ligne.destination;
+            msk : Unbounded_String := ligne.mask;
+            dest : Unbounded_String := ligne.destination;
             -- pour masquer il faut que l'adresse soit en binaire
             dest_binaire : String := Convertir_IP2B(dest);
             msk_binaire : String := Convertir_IP2B(msk);
@@ -242,7 +246,7 @@ procedure Routeur_Simple is
         end loop ;
         return somme ;
 
-    end comparaison_masque;
+    end somme_masque;
 
     function Meilleur_Masque(lst : T_Liste; Adresse_IP : in String; current : T_Table) return T_Table is --Fonction qui renvoie le masque le plus long qui correspond avec l'adresse.
     begin 
@@ -269,9 +273,10 @@ procedure Routeur_Simple is
     procedure Chargement_Table(liste_table : T_Liste; fichier_tableT : File_Type;cle : Integer) is
         ligne_a_lire : Unbounded_String;
         ligne_L2T : T_Table; 
-        liste_table : T_Liste; --Table de routage reformatée
+        --liste_table : T_Liste; --Table de routage reformatée
 
     begin
+        liste_table := New T_Table;
         ligne_a_lire := Lire(fichier_tableT);
         if ligne_a_lire = Null then
             Null;
@@ -346,7 +351,7 @@ procedure Routeur_Simple is
         ligne_a_lire := Lire(fichier_destinationT);
         
         while (ligne_a_lire /= Null and not (ligne_a_lire = "fin") and not End_Of_File(fichier_destinationT)) loop
-            Ecrire(fichier_table, Meilleur_Masque(table, ligne_a_lire).interface);
+            Ecrire(fichier_table, Meilleur_Masque(table, ligne_a_lire).inter);
             ligne_a_lire := Lire(fichier_destinationT);
         end loop;
 

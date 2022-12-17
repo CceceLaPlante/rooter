@@ -17,16 +17,29 @@ procedure tests is
     end Lire;
     Entree : File_Type;
     Entree2 : File_Type;
+
+    type T_Table;
+    type T_Liste is access T_Table;
+    type T_Table is 
+        record 
+            destination : Unbounded_String;
+            mask : Unbounded_String;
+            inter : Unbounded_String;
+            Suivant : T_Liste;
+            cle : Integer;
+        end record;
+
+    lst : T_Liste := Null ;
+
+
 begin
-    Open(Entree,In_File,"table.txt");
-    Open(Entree2,In_File,"destination.txt");
-    Put_Line(Lire(Entree));
-    Put_Line(Lire(Entree2));
-    Put_Line(Lire(Entree));
-    Put_Line(Lire(Entree2));
-    Put_Line(Lire(Entree));
-    Put_Line(Lire(Entree2));
-    Close(Entree);
-    Close(Entree2);
+    lst := new T_Table;
+    lst.all.destination := To_Unbounded_String("abc");
+    lst.all.mask := To_Unbounded_String("def");
+    lst.all.inter := To_Unbounded_String("ghi");
+    lst.all.cle := 1;
+    lst.all.Suivant := Null;
+    Put_Line(lst.all.destination&lst.all.mask&lst.all.inter);
+    
     
 end tests;
