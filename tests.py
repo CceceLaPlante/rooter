@@ -14,4 +14,4 @@ def convertire_IP2B_4(adr) :
 
 
 
-print(convertire_IP2B_4(128))
+print(convertire_IP2B_4(3))

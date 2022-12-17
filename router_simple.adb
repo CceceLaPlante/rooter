@@ -44,30 +44,39 @@ procedure routeur_simple is
 -- Fonction qui converti les adresses IP en nombre binaire.
    -- Elle servira à appliquer les masques.
 
+
    -- d'abord on s'occupe d'une conversion 4bit 
    function Convertir_IP2B_4 (adr : Integer) return Unbounded_String is 
-      a_return : String :=("00000000");
+      a_return : Unbounded_String :=To_Unbounded_String("");
+      a_return_reversed : Unbounded_String :=To_Unbounded_String("");
       adr_cp : Integer := adr;
    begin
       for i in 1..8 loop
          if adr_cp mod 2 = 1 then
             -- on fais à l'envers parce qu'en binaire on fais de droite à gauche
-            Put_Line("ligne 55"&Integer'Image(9-i));
-            a_return(9-i) := '1'; 
+            a_return := a_return & '1'; -- attention on vas inverser juste après !
          else
-            a_return(9-i) := '0';
+            a_return := a_return & '0'; 
          end if;
          -- on divise par 2 pour passer au bit suivant, on remarque que c'est une division entière car adr : Integer
-         adr_cp := adr / 2; 
+         adr_cp := Integer(adr_cp / 2); 
       end loop;
-      return To_Unbounded_String(a_return);
+
+      for i in 1..8 loop 
+         -- on inverse la chaine de caractère
+         a_return_reversed := a_return_reversed & Element(a_return, 9-i);
+      end loop;
+
+
+      return a_return_reversed;
    end Convertir_IP2B_4;
     
 
    -- puis on s'occupe de la conversion de l'adresse IP complète
    function Convertir_IP2B(Adresse_IP : Unbounded_String) return Unbounded_String is
       entier : Integer := 0;
-      type adr4 is array(1..4) of Unbounded_String ;
+      entier_string : Unbounded_String := To_Unbounded_String("");
+      type adr4 is array(1..4) of Unbounded_String;
       adr : adr4 ;
       idx : Integer := 1;
       Adresse_IP_S : String := To_String(Adresse_IP);
@@ -77,10 +86,22 @@ procedure routeur_simple is
          case Element(Adresse_IP, i) is
             when '0'|'1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9' =>
                --on fait une conversion en entier pour pouvoir appliquer la fonction Convertir_IP2B_4
-               entier := entier + Integer(Character'Pos(Adresse_IP_S(i))*(10**i)) ;
+               --begin
+                  --entier := entier + (Character'Pos(Element(Adresse_IP,i))- Character'Pos('0') )*(10**true_i) ;
+               --exception 
+                  --when constraint_error =>
+                     --Put_Line("constraint error");
+               --end;
+
+               entier_string := entier_string & Element(Adresse_IP, i);
             when '.' =>
                --touts les points, on convertis l'entier ainsi calculé en binaire
+               entier := Integer'Value (To_String(entier_string));
+
                adr(idx) := Convertir_IP2B_4(entier) ;
+               --Put_Line("entier, puis entier en binaire : "&entier_string&" , "&adr(idx));
+               entier_string := To_Unbounded_String("");
+
                idx := idx + 1 ;
                entier := 0 ;
             when others =>
@@ -157,17 +178,17 @@ procedure routeur_simple is
    begin
       idx := 1;
       -- on ajoute la ligne tant qu'on ne rencontre pas d'espace...
-      while Element(ligne,idx) /= ' ' loop
+      while idx <= length(ligne) and then Element(ligne,idx) /= ' ' loop
          destination := destination & Element(ligne,idx); 
          idx := idx + 1;
       end loop;
       idx := idx + 1; -- on saute l'espace
-      while Element(ligne,idx) /= ' ' loop
+      while idx <= length(ligne) and then Element(ligne,idx) /= ' ' loop
          mask := mask & Element(ligne,idx);
          idx := idx + 1;
       end loop;
       idx := idx + 1;
-      while Element(ligne,idx) /= ' ' and idx <= length(ligne) loop
+      while idx <= length(ligne) and then Element(ligne,idx) /= ' '  loop
          inter := inter & Element(ligne,idx);
          idx := idx + 1;
       end loop;
@@ -189,12 +210,15 @@ procedure routeur_simple is
       for idx in 1..length(adr_binaire) loop
          -- l'égalité ne s'applique que si le masque est à 1
          -- on utilise des and then par cohérence syntaxique et un peu par optimisation, mais c'est pas nécéssaire
-         Put_Line("msk et adresse binaire et destination binaire: "&msk&adr_binaire&dest_binaire);
+         --Put_Line("msk et adresse binaire et destination binaire: masque "&msk_binaire&" adresse : "&adr_binaire&" destination "&dest_binaire);
          if Element(msk_binaire, idx) = '1' and Element(adr_binaire,idx) /= Element(dest_binaire, idx) then
             return False;
          end if;
       end loop;
+      --Put_Line("eh jai renvoye true alors que : "&msk_binaire&" "&adr_binaire&" "&dest_binaire);
+      --Put_Line("eh jai renvoye true alors que : "&ligne.mask&" "&Adresse_IP&" "&ligne.destination);
       return True;
+
    end Masque;
 
 
@@ -255,9 +279,7 @@ procedure routeur_simple is
 
    begin 
       for indice in 1..Length(m) loop
-         if Element(m,indice) = '1' then
-            somme := somme + 1 ;
-         end if ;
+         somme := somme + Character'Pos(Element(m,indice)) - Character'Pos('0') ;
       end loop ;
       return somme ;
 
@@ -269,7 +291,7 @@ procedure routeur_simple is
       if lst = Null then 
          return current; 
 
-      elsif Masque(Adresse_IP,lst.all) then
+      elsif lst.all.mask /= To_Unbounded_String("") and then Masque(Adresse_IP,lst.all) then
          -- on compare les masques, et on garde le plus long
          if somme_masque(lst.all.mask) > somme_masque(current.mask) then
             current := lst.all;
@@ -311,10 +333,23 @@ procedure routeur_simple is
    end Lire;
 
    --Fonction qui traite les commandes telles que "fin", "table"...
-   procedure Traiter_Commande(commande: String; fichier_table : File_Type; fichier_sortie: File_Type) is 
+   procedure Traiter_Commande(commande: String;nom_table : String; fichier_sortie: File_Type) is 
+      fichier_table : File_Type;
+      ligne : Unbounded_String := To_Unbounded_String("");
    begin
       if commande = "table" then 
-         Ecrire(fichier_sortie, Lire(fichier_table));
+         Open(fichier_table,In_File ,nom_table);  
+
+         ligne := Lire(fichier_table);
+         Ecrire(fichier_sortie,To_Unbounded_String(""));
+         Ecrire(fichier_sortie,To_Unbounded_String("table : "));
+         while ligne /= To_Unbounded_String("") loop
+            Ecrire(fichier_sortie, ligne);
+            ligne := Lire(fichier_table);
+         end loop;
+         Ecrire(fichier_sortie,To_Unbounded_String(""));
+         
+         Close(fichier_table);
       else
             Null;
       end if;
@@ -343,6 +378,7 @@ procedure routeur_simple is
       if ligne_a_lire = To_Unbounded_String("") then
          Null;
       else
+         --Put_Line("eh je charge-mental lolilol "&Integer'Image(cle));
          ligne_L2T := convertir_L2T(ligne_a_lire,cle);
          liste_table.all := ligne_L2T; -- j'ai jamais fais ça avant, alors ça marche sans doute, mais c'est à tester.
          Chargement_Table(liste_table.all.suivant, fichier_tableT,cle+1);
@@ -367,26 +403,44 @@ procedure routeur_simple is
    
    -- Variable qui sert pour la fonction Meilleur_Masque
    current_tab : T_Table;
+   a_ecrire : Unbounded_String;
    
      
 begin
    Open(fichier_table,In_File,nom_table);
-   Open(fichier_entree,Out_File,nom_entree);
+   Open(fichier_entree,In_File,nom_entree);
    Create(fichier_sortie,Out_File,nom_sortie);
 
    table := New T_Table;
    -- on donne table Null, et 0 comme clé, parce que la fonction est réccurssive et à besoin de ces paramètres.
    Chargement_Table(table, fichier_table,0);
+   Close(fichier_table);
    ligne_a_lire := Lire(fichier_entree);
-   
+
    while (not (ligne_a_lire = "fin") and not End_Of_File(fichier_entree) and not (ligne_a_lire = To_Unbounded_String(""))) loop
-      Ecrire(fichier_sortie, Meilleur_Masque(table, ligne_a_lire, current_tab).inter);
-      ligne_a_lire := Lire(fichier_entree);
+
+      current_tab.cle := 0;
+      current_tab.mask := To_Unbounded_String("0.0.0.0");
+      current_tab.inter := To_Unbounded_String("Adress does not match any known network");
+      current_tab.suivant := Null;
+      current_tab.destination := To_Unbounded_String("0.0.0.0");
+      
+
+      case Element(ligne_a_lire,1) is 
+         when '0'|'1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9' =>
+            a_ecrire := ligne_a_lire & To_Unbounded_String(" ")& Meilleur_Masque(table, ligne_a_lire, current_tab).inter;
+            Ecrire(fichier_sortie, a_ecrire);
+         when others =>
+            Traiter_Commande(To_String(ligne_a_lire), nom_table, fichier_sortie);
+         end case;
+
+         ligne_a_lire := Lire(fichier_entree);
+
    end loop;
 
-   Close(fichier_table);
    Close(fichier_entree);
    Close(fichier_sortie);
+
    Liberer(table) ;
    
 end routeur_simple;

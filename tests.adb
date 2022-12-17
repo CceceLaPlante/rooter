@@ -30,6 +30,7 @@ procedure tests is
         end record;
 
     lst : T_Liste := Null ;
+    uwu : Unbounded_String := To_Unbounded_String("UwU");
 
 
 begin
@@ -39,8 +40,13 @@ begin
     lst.all.inter := To_Unbounded_String("ghi");
     lst.all.cle := 1;
     lst.all.Suivant := Null;
-    Put_Line(lst.all.destination&lst.all.mask&lst.all.inter);
-    Put_Line(Integer'Image(length("UwU")));
+    --Put_Line(lst.all.destination&lst.all.mask&lst.all.inter);
+    --Put_Line(Integer'Image(length("UwU")));
+    -- Put_Line(Integer'Image(3**2));
+    uwu(1):= 'a';
+    Put_Line(uwu);
+
+    
     
     
 end tests;
