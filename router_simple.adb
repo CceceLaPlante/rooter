@@ -7,7 +7,7 @@ with Ada.Command_Line;          use Ada.Command_Line;
 with Ada.Exceptions;            use Ada.Exceptions;
 with Ada.Unchecked_Deallocation; 
 
-procedure Routeur_Simple is 
+procedure routeur_simple is 
 
    type T_Table;
    type T_Liste is access T_Table;
@@ -65,7 +65,7 @@ procedure Routeur_Simple is
 
    -- puis on s'occupe de la conversion de l'adresse IP complète
    function Convertir_IP2B(Adresse_IP : Unbounded_String) return Unbounded_String is
-      entier : Integer ;
+      entier : Integer := 0;
       type adr4 is array(1..4) of Unbounded_String ;
       adr : adr4 ;
       idx : Integer := 1;
@@ -95,7 +95,7 @@ procedure Routeur_Simple is
    -- je ne crois pas qu'on l'utilise donc.. bon.. [!] par contre, je pense que la fonction est buggée, parce que si on a un . 
    -- l'adresse IP, il continue de s'incrémenter et dcp l'adresse IP est fucked up
    function Convertir_IP2I(Adresse_IP : in Unbounded_String) return Integer is
-      entier : Integer ;
+      entier : Integer := 0;
    begin
       for i in 1..Length(Adresse_IP) loop
          case Element(Adresse_IP, i) is
@@ -177,7 +177,6 @@ procedure Routeur_Simple is
 
    -- Fonction qui renvoie True si le masque et l'adresse IP coïncident.
    function Masque(Adresse_IP : in Unbounded_String; ligne : in T_Table) return Boolean is 
-      idx : Integer;
       msk : Unbounded_String := ligne.mask;
       dest : Unbounded_String := ligne.destination;
       -- pour masquer il faut que l'adresse soit en binaire
@@ -249,7 +248,7 @@ procedure Routeur_Simple is
    -- prend un masque en entrée, et renvoie la somme des 1,ça permet de facilement en quantifier la taille...
    -- [!] prend un masque BINAIRE en entrée
    function somme_masque (m : Unbounded_String) return Integer is
-      somme : Integer ;
+      somme : Integer := 0;
 
    begin 
       for indice in 1..Length(m) loop
@@ -321,7 +320,6 @@ procedure Routeur_Simple is
     
    --fonction qui libère tout élément de type T_Liste
    procedure Liberer(table : in out T_Liste) is
-      current_table : T_Liste;
    begin
       if table /= Null then
          Liberer(table.all.suivant);
@@ -386,5 +384,5 @@ begin
    Close(fichier_destination);
    Liberer(table) ;
    
-end Routeur_Simple;
+end routeur_simple;
 
