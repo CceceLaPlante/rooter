@@ -353,7 +353,7 @@ procedure Routeur_Simple is
 
    ----------------------------------------------MAIN------------------------------------------------
 
-   table : T_Liste;
+   table : T_Liste := Null;
    ligne_a_lire : Unbounded_String;
    nom_destination : String := "fichier_destination.txt";
    nom_table : String := "table.txt";
@@ -363,22 +363,20 @@ procedure Routeur_Simple is
    fichier_destination : File_Type;
    
    -- Variable qui sert pour la fonction Meilleur_Masque
-   current_lst : T_Liste;
+   current_table : T_Table;
    
      
 begin
    Open(fichier_table,In_File,nom_table);
    Open(fichier_destination,Out_File,nom_destination);
 
-   table := Null;
+   table := New T_Table;
    -- on donne table Null, et 0 comme clé, parce que la fonction est réccurssive et à besoin de ces paramètres.
    Chargement_Table(table, fichier_table,0);
    ligne_a_lire := Lire(fichier_destination);
-   
-   Initialiser_Table(current_lst);
-   current_lst.all := New ;
+
    while (not (ligne_a_lire = "fin") and not End_Of_File(fichier_destination)) loop
-      Ecrire(fichier_table, Meilleur_Masque(table, ligne_a_lire, current_lst.all).inter);
+      Ecrire(fichier_table, Meilleur_Masque(table, ligne_a_lire, current_table).inter);
       ligne_a_lire := Lire(fichier_destination);
    end loop;
 
