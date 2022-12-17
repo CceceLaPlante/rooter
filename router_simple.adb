@@ -80,9 +80,9 @@ procedure Routeur_Simple is
         
     end Convertir_IP2B;
 
-    -- Fonction qui converti les adresses IP en entier.
+    -- Fonction qui convertie les adresses IP en entier.
     -- je ne crois pas qu'on l'utilise donc.. bon.. [!] par contre, je pense que la fonction est buggée, parce que si on a un . 
-    -- l'adresse IP, i continus de s'incrémenter et dcp l'adresse IP est fucked up
+    -- l'adresse IP, il continue de s'incrémenter et dcp l'adresse IP est fucked up
      function Convertir_IP2I(Adresse_IP : in String) return Integer is
         entier : Integer ;
         begin
@@ -97,7 +97,7 @@ procedure Routeur_Simple is
         return entier ;
     end Convertir_IP2I;
 
-    -- Fonction qui converti les adresses binaires en adresses IP.
+    -- Fonction qui convertie les adresses binaires en adresses IP.
     -- alors je crois que c'est pas grave parce qu'on ne l'utilise pas (pour l'instant), mais elle n'est pas compatible avec 
     -- la conversion IP2B (présence de points...)
     function Convertir_B2IP(Adresse_IP : in String) return String is
@@ -129,9 +129,9 @@ procedure Routeur_Simple is
         return nombre ;
     end Convertir_B2IP;
 
-     --Fonction prenant une ligne de la table de routage et la converti en T_Table.
+     --Fonction prenant une ligne de la table de routage et la convertie en T_Table.
      --Attention cependant, tout est stocké sous forme de Unbounded_String.*
-     -- on dois renseigner une clé, après elle ne sers pas vraiment...
+     -- on dois renseigner une clé, après elle ne sert pas vraiment...
     function Convertir_L2T(ligne : String ; cle : Integer) return T_Table is 
             destination : Unbounded_String;
             mask : Unbounded_String;
@@ -329,6 +329,18 @@ procedure Routeur_Simple is
         end case;
             
     end Traiter_Commande; 
+    
+    --fonction qui libère tout élément de type T_Liste
+    function Liberer(table : T_Liste) is
+    begin
+        if table.all.suivant = Null then 
+            Free(table) ;
+        else
+            return Liberer(table.all.suivant) ;
+        end if ;
+    end Liberer ;
+        
+                
 
     ----------------------------------------------MAIN------------------------------------------------
 
@@ -357,5 +369,6 @@ procedure Routeur_Simple is
 
         Close(fichier_tableT);
         Close(fichier_destinationT);
+        Liberer(table) ;
 
 end Routeur_Simple;
