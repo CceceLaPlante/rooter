@@ -24,7 +24,7 @@ procedure Routeur_Simple is
    procedure Free
    is new Ada.Unchecked_Deallocation (Object => T_Table, Name => T_Liste);
    
-   procedure Initialiser_Table(table : Out  T_Liste) is
+   procedure Initialiser_Table(table : Out  T_Table) is
    begin
       table := Null;
    end Initialiser_Table;
@@ -41,7 +41,7 @@ procedure Routeur_Simple is
       end if;
    end length;
 
-   -- Fonction qui converti les adresses IP en nombre binaire.
+-- Fonction qui converti les adresses IP en nombre binaire.
    -- Elle servira à appliquer les masques.
 
    -- d'abord on s'occupe d'une conversion 4bit 
@@ -66,14 +66,14 @@ procedure Routeur_Simple is
    -- puis on s'occupe de la conversion de l'adresse IP complète
    function Convertir_IP2B(Adresse_IP : Unbounded_String) return Unbounded_String is
       entier : Integer ;
-      type adr4 is array(1..4) of String ;
+      type adr4 is array(1..4) of Unbounded_String ;
       adr : adr4 ;
       idx : Integer := 1;
       Adresse_IP_S : String := To_String(Adresse_IP);
         
    begin
       for i in 1..Length(Adresse_IP) loop
-         case Adresse_IP(i) is
+         case Element(Adresse_IP, i) is
             when '0'|'1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9' =>
                --on fait une conversion en entier pour pouvoir appliquer la fonction Convertir_IP2B_4
                entier := entier + Adresse_IP_S(i)*(10**i) ;
@@ -87,7 +87,7 @@ procedure Routeur_Simple is
          end case ;
       end loop ;
 
-      return adr(1) & adr(2) & adr(3) & adr(4) ; -- [!] on ne renvoi pas avec des points !!!! 
+      return To_Unbounded_String(adr(1) & adr( 2) & adr(3) & adr(4)) ; -- [!] on ne renvoi pas avec des points !!!! 
         
    end Convertir_IP2B;
 
@@ -98,9 +98,9 @@ procedure Routeur_Simple is
       entier : Integer ;
    begin
       for i in 1..Length(Adresse_IP) loop
-         case Adresse_IP(i) is
+         case Element(Adresse_IP, i) is
             when '0'|'1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9' =>
-               entier := entier + Adresse_IP(i)*(10**i) ;
+               entier := entier + Integer(Character'Pos(Element(Adresse_IP,i))*(10**i)) ;
             when others =>
                null ;
          end case ;
@@ -353,7 +353,7 @@ procedure Routeur_Simple is
 
    ----------------------------------------------MAIN------------------------------------------------
 
-   table : T_Liste := Null;
+   table : T_Liste;
    ligne_a_lire : Unbounded_String;
    nom_destination : String := "fichier_destination.txt";
    nom_table : String := "table.txt";
@@ -363,20 +363,21 @@ procedure Routeur_Simple is
    fichier_destination : File_Type;
    
    -- Variable qui sert pour la fonction Meilleur_Masque
-   current_table : T_Table;
+   current_tab : T_Table;
    
      
 begin
    Open(fichier_table,In_File,nom_table);
    Open(fichier_destination,Out_File,nom_destination);
 
-   table := New T_Table;
+   table := Null;
    -- on donne table Null, et 0 comme clé, parce que la fonction est réccurssive et à besoin de ces paramètres.
    Chargement_Table(table, fichier_table,0);
    ligne_a_lire := Lire(fichier_destination);
-
+   
+   Initialiser_Table(current_tab);
    while (not (ligne_a_lire = "fin") and not End_Of_File(fichier_destination)) loop
-      Ecrire(fichier_table, Meilleur_Masque(table, ligne_a_lire, current_table).inter);
+      Ecrire(fichier_table, Meilleur_Masque(table, ligne_a_lire, current_tab).inter);
       ligne_a_lire := Lire(fichier_destination);
    end loop;
 
