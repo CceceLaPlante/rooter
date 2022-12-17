@@ -110,29 +110,32 @@ procedure Routeur_Simple is
    -- Fonction qui convertie les adresses binaires en adresses IP.
    -- alors je crois que c'est pas grave parce qu'on ne l'utilise pas (pour l'instant), mais elle n'est pas compatible avec 
    -- la conversion IP2B (présence de points...)
-   function Convertir_B2IP(Adresse_IP : in String) return Unbounded_String is
+   function Convertir_B2IP(Adresse_IP : in Unbounded_String) return Unbounded_String is
       puissance : Integer;
       nombre_entier : Integer;
       nombre : Unbounded_String;
-      indice : Unbounded_String;
+      indice : Integer;
+      octet : Integer;
+
    begin
       indice := 1 ;
       octet := 1 ;
+      nombre := To_Unbounded_String("");
 
       while octet /= 4 loop 
          -- on descend les puissances, de 7 à 0, parce que les nombres binaire se lisent de droite à gauche
          puissance := 7 ; 
          nombre_entier := 0 ;
          while puissance /= 0 loop
-            nombre_entier := nombre_entier + (Ord(Adresse_IP(indice))-Ord('0'))*2**puissance ;
+            nombre_entier := nombre_entier + Integer((Character'Pos(Element(Adresse_IP,indice))-Character'Pos('0'))*(2**puissance)) ;
             puissance := puissance - 1 ;
             indice := indice + 1 ;
 
          end loop ;
          if octet /= 1 then
-            nombre := nombre + '.' + "nombre_entier"  ;
+            nombre := nombre & "." & To_Unbounded_String(nombre_entier)  ;
          else
-            nombre := "nombre_entier" ;
+            nombre := To_Unbounded_String(nombre_entier) ;
          end if ;
          octet := octet + 1 ;
       end loop ;
