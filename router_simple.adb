@@ -52,6 +52,7 @@ procedure routeur_simple is
       for i in 1..8 loop
          if adr_cp mod 2 = 1 then
             -- on fais à l'envers parce qu'en binaire on fais de droite à gauche
+            Put_Line("ligne 55"&Integer'Image(9-i));
             a_return(9-i) := '1'; 
          else
             a_return(9-i) := '0';
@@ -127,6 +128,7 @@ procedure routeur_simple is
          -- on descend les puissances, de 7 à 0, parce que les nombres binaire se lisent de droite à gauche
          puissance := 7 ; 
          nombre_entier := 0 ;
+
          while puissance /= 0 loop
             nombre_entier := nombre_entier + Integer((Character'Pos(Element(Adresse_IP,indice))-Character'Pos('0'))*(2**puissance)) ;
             puissance := puissance - 1 ;
@@ -165,7 +167,7 @@ procedure routeur_simple is
          idx := idx + 1;
       end loop;
       idx := idx + 1;
-      while Element(ligne,idx) /= ' ' loop
+      while Element(ligne,idx) /= ' ' and idx <= length(ligne) loop
          inter := inter & Element(ligne,idx);
          idx := idx + 1;
       end loop;
@@ -187,7 +189,8 @@ procedure routeur_simple is
       for idx in 1..length(adr_binaire) loop
          -- l'égalité ne s'applique que si le masque est à 1
          -- on utilise des and then par cohérence syntaxique et un peu par optimisation, mais c'est pas nécéssaire
-         if Element(msk, idx) = '1' and Element(adr_binaire,idx) /= Element(dest_binaire, idx) then
+         Put_Line("msk et adresse binaire et destination binaire: "&msk&adr_binaire&dest_binaire);
+         if Element(msk_binaire, idx) = '1' and Element(adr_binaire,idx) /= Element(dest_binaire, idx) then
             return False;
          end if;
       end loop;
@@ -308,10 +311,10 @@ procedure routeur_simple is
    end Lire;
 
    --Fonction qui traite les commandes telles que "fin", "table"...
-   procedure Traiter_Commande(commande: String; fichier_table : File_Type; fichier_destination : File_Type) is 
+   procedure Traiter_Commande(commande: String; fichier_table : File_Type; fichier_sortie: File_Type) is 
    begin
       if commande = "table" then 
-         Ecrire(fichier_destination, Lire(fichier_table));
+         Ecrire(fichier_sortie, Lire(fichier_table));
       else
             Null;
       end if;
@@ -353,12 +356,14 @@ procedure routeur_simple is
 
    table : T_Liste := Null;
    ligne_a_lire : Unbounded_String;
-   nom_destination : String := "fichier_destination.txt";
+   nom_entree : String := "fichier_entree.txt";
    nom_table : String := "table.txt";
+   nom_sortie : String := "fichier_sortie.txt";
 
    -- pour la fonction Lire, il faut pré-ouvrire les fichiers
    fichier_table : File_Type;
-   fichier_destination : File_Type;
+   fichier_entree : File_Type;
+   fichier_sortie : File_Type;
    
    -- Variable qui sert pour la fonction Meilleur_Masque
    current_tab : T_Table;
@@ -366,22 +371,22 @@ procedure routeur_simple is
      
 begin
    Open(fichier_table,In_File,nom_table);
-   Open(fichier_destination,Out_File,nom_destination);
-
-
+   Open(fichier_entree,Out_File,nom_entree);
+   Create(fichier_sortie,Out_File,nom_sortie);
 
    table := New T_Table;
    -- on donne table Null, et 0 comme clé, parce que la fonction est réccurssive et à besoin de ces paramètres.
    Chargement_Table(table, fichier_table,0);
-   ligne_a_lire := Lire(fichier_destination);
+   ligne_a_lire := Lire(fichier_entree);
    
-   while (not (ligne_a_lire = "fin") and not End_Of_File(fichier_destination)) loop
-      Ecrire(fichier_table, Meilleur_Masque(table, ligne_a_lire, current_tab).inter);
-      ligne_a_lire := Lire(fichier_destination);
+   while (not (ligne_a_lire = "fin") and not End_Of_File(fichier_entree) and not (ligne_a_lire = To_Unbounded_String(""))) loop
+      Ecrire(fichier_sortie, Meilleur_Masque(table, ligne_a_lire, current_tab).inter);
+      ligne_a_lire := Lire(fichier_entree);
    end loop;
 
    Close(fichier_table);
-   Close(fichier_destination);
+   Close(fichier_entree);
+   Close(fichier_sortie);
    Liberer(table) ;
    
 end routeur_simple;
