@@ -29,9 +29,9 @@ procedure Routeur_Simple is
       table := Null;
    end Initialiser_Table;
     
-
    Type T_adresse_IP is mod 2 ** 32;
    -- renvois la taille d'une T_Liste
+   
    function length(lst : T_Liste) return Integer is
    begin
       if lst /= Null then
@@ -71,7 +71,7 @@ procedure Routeur_Simple is
       Adresse_IP_S : String := To_String(Adresse_IP);
         
    begin
-      for i in 1..length(Adresse_IP_S) loop
+      for i in 1..Length(Adresse_IP) loop
          case Adresse_IP(i) is
             when '0'|'1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9' =>
                --on fait une conversion en entier pour pouvoir appliquer la fonction Convertir_IP2B_4
@@ -93,10 +93,10 @@ procedure Routeur_Simple is
    -- Fonction qui convertie les adresses IP en entier.
    -- je ne crois pas qu'on l'utilise donc.. bon.. [!] par contre, je pense que la fonction est buggée, parce que si on a un . 
    -- l'adresse IP, il continue de s'incrémenter et dcp l'adresse IP est fucked up
-   function Convertir_IP2I(Adresse_IP : in String) return Integer is
+   function Convertir_IP2I(Adresse_IP : in Unbounded_String) return Integer is
       entier : Integer ;
    begin
-      for i in 1..length(Adresse_IP) loop
+      for i in 1..Length(Adresse_IP) loop
          case Adresse_IP(i) is
             when '0'|'1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9' =>
                entier := entier + Adresse_IP(i)*(10**i) ;
@@ -211,7 +211,7 @@ procedure Routeur_Simple is
    --            if Masque(Adresse_IP,ligne) then
    --                -- On parcourt l'adresse IP à l'envers pour réduire la complexité
    --                -- ehh je comprend pas pk ça optimise de parcourir à l'envers ? emma i need ansers ;( (céleste)
-   --                current := length(Adresse_IP(indice)) ; 
+   --                current := Length(Adresse_IP(indice)) ; 
    --
    --                while current /= 0 loop
    --                    if Adresse_IP(current) = '.' then
@@ -248,7 +248,7 @@ procedure Routeur_Simple is
       somme : Integer ;
 
    begin 
-      for indice in 1..length(m) loop
+      for indice in 1..Length(m) loop
          if Element(m,indice) = '1' then
             somme := somme + 1 ;
          end if ;

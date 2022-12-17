@@ -40,6 +40,7 @@ begin
     lst.all.cle := 1;
     lst.all.Suivant := Null;
     Put_Line(lst.all.destination&lst.all.mask&lst.all.inter);
+    Put_Line(Integer'Image(length("UwU")));
     
     
 end tests;
