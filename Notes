@@ -1,0 +1,6 @@
+-> fichiers pour différentes politiques de cache (LFU,LRU,FIFO)
+-> fichiers pour les différents types de cache (LCA, arbre)
+-> fonction Est_Pleine appelée avant, condition d'appel de supprimer  (toujours la place d'enregistrer)
+-> changer Enregistrer, Supprimer
+-> adresse IP en Integer et quand on l'utilise, on la convertit 
+-> refaire procédure Initialiser/ procédures en général car besoin de garder les stats
