@@ -18,13 +18,13 @@ package Cache_Arbre is
     type T_ligne is
         record
             destination : Unbounded_String;
-			destination_binaire : Unbounded_String;
             mask : Unbounded_String;
             inter : Unbounded_String;
+			time : Integer;
         end record;
 	
     package Arbre_LA is 
-	    new Arbre (T_cle => Boolean, T_Donnee => T_ligne);
+	    new Arbre (T_Donnee => T_ligne);
 	use Arbre_LA;
 
 	type T_Stat is 
@@ -32,14 +32,14 @@ package Cache_Arbre is
 			nb_defaut : Integer;
 			tx_defaut : Float; -- nb_defaut / nb_demande
 			nb_demande : Integer;
+		end record;
 			
 
 	type T_Cache is record 
 		Arbre : T_Arbre;
-		stats : 
+		stats : T_Stat;
 	end record;
 
-	
 
 	-- permet d'initialiser le cache
 	function Initialiser (Cache : in out T_Arbre) return Arbre
@@ -48,14 +48,6 @@ package Cache_Arbre is
 	-- pretty self explanatory
 	function Est_Vide (Cache : in T_Arbre) return Boolean;
 
-	-- permet une conversion 4bits de l'ip en binaire
-	function Convertir_IP2B_4 (IP : in Unbounded_String) return Unbounded_String;
-
-	-- permet une conversion totale de l'ip en binaire
-	function IP2B (IP : in Unbounded_String) return Unbounded_String;
-
-	-- [!] grâce à notre structure de donnée (cf T_ligne) pas besoin de conversion inverse
-	
 
 
 end Cache_Arbre;
