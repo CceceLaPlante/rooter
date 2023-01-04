@@ -48,6 +48,14 @@ package Cache_Arbre is
 	-- pretty self explanatory
 	function Est_Vide (Cache : in T_Arbre) return Boolean;
 
+	  	-- permet une conversion 4bits de l'ip en binaire
+	function Convertir_IP2B_4 (IP : in Unbounded_String) return Unbounded_String;
+
+	-- permet une conversion totale de l'ip en binaire
+	function IP2B (IP : in Unbounded_String) return Unbounded_String;
+  
+  	-- operation inverse de IP2B
+  	function B2IP (IP : in Unbounded_String) return Unbounded_String;
 
 
 end Cache_Arbre;

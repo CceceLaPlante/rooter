@@ -1,0 +1,124 @@
+V "GNAT Lib v10"
+P ZX
+
+RN
+RV NO_ALLOCATORS
+RV NO_DIRECT_BOOLEAN_OPERATORS
+RV NO_EXCEPTION_HANDLERS
+RV NO_EXCEPTIONS
+RV NO_IO
+RV NO_LOCAL_ALLOCATORS
+RV NO_RECURSION
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_UNCHECKED_DEALLOCATION
+RV NO_DYNAMIC_SIZED_OBJECTS
+RV SPARK_05
+
+U arbre%b		arbre.adb		2729d736 NE OO PK GE IL
+W ada%s			ada.ads			ada.ali
+W ada.text_io%s		a-textio.adb		a-textio.ali
+W ada.unchecked_deallocation%s
+
+U arbre%s		arbre.ads		7a576132 BN EE NE OO PK GE IL
+
+D ada.ads		20220628085427 76789da1 ada%s
+D a-except.ads		20220628085427 a7106115 ada.exceptions%s
+D a-ioexce.ads		20220628085427 e4a01f64 ada.io_exceptions%s
+D a-stream.ads		20220628085427 119b8fb3 ada.streams%s
+D a-tags.ads		20220628085427 491b781d ada.tags%s
+D a-textio.ads		20220628085427 aef4d56d ada.text_io%s
+D a-unccon.ads		20220628085427 0e9b276f ada.unchecked_conversion%s
+D a-uncdea.ads		20220628085427 eff36322 ada.unchecked_deallocation%s
+D arbre.ads		20230104151536 7a576132 arbre%s
+D arbre.adb		20230104155527 1c79004b arbre%b
+D interfac.ads		20220628085427 5ab55268 interfaces%s
+D i-cstrea.ads		20220628085427 e53d8b8e interfaces.c_streams%s
+D system.ads		20220628085427 4635ec04 system%s
+D s-crtl.ads		20220628085427 0ebbdb71 system.crtl%s
+D s-exctab.ads		20220628085427 54135002 system.exception_table%s
+D s-ficobl.ads		20220628085427 078245e4 system.file_control_block%s
+D s-parame.ads		20220628085427 48ec542b system.parameters%s
+D s-secsta.ads		20220628085427 20bbe636 system.secondary_stack%s
+D s-soflin.ads		20220628085427 a7318a92 system.soft_links%s
+D s-stache.ads		20220628085427 a37c21ec system.stack_checking%s
+D s-stalib.ads		20220628085427 09bd3940 system.standard_library%s
+D s-stoele.ads		20220628085427 2dc34a04 system.storage_elements%s
+D s-traent.ads		20220628085427 005bf670 system.traceback_entries%s
+D s-unstyp.ads		20220628085427 34867c83 system.unsigned_types%s
+D s-wchcon.ads		20220628085427 1b7d22d2 system.wch_con%s
+G a e
+G c Z s b [arbre standard 10 9 none]
+X 1 ada.ads
+16K9*Ada 20e8 10|2r6 3r6 3r23 16r10
+X 6 a-textio.ads
+57K13*Text_IO 727e16 10|3w10 3r27
+X 8 a-uncdea.ads
+17+9 Object 10|16r38
+18P9 Name(17+9) 10|16r56
+20u15*Unchecked_Deallocation 10|2w10 16r14
+X 9 arbre.ads
+8+9 T_Donnee 31r81 48r68 58r58 69r18 10|38r76 41r84 43r22 91r69 92r92
+10k9*arbre 8z9 63E8 77l5 77e10 10|13b14 161l5 161t10
+13P8*T_Arbre 16r36 20r30 24r31 31r41 38r39 44r37 48r34 52r35 59r37 65c8 70r21
+. 71r21 10|16r64 18r37 23r31 29r29 38r42 41r47 66r38 68r43 91r35 92r40 113r40
+. 114r45 134r36 144r38
+16U13*Initialiser 16<25 10|18b14 21l8 21t19
+16p25 Arbre{13P8} 17r23 10|18b26 20m7
+20V12*Est_Vide{boolean} 17s13 20>22 26s31 53s13 10|23b13 26t7 31s10 46s13
+. 70s13 94s13 116s13 136s14 146s10
+20p22 Arbre{13P8} 10|23b23 25r15
+24V12*Taille{integer} 24>20 25r13 26r10 33s49 33s66 34s43 34s60 39s14 39s31
+. 10|29b13 34s23 34s49 36l8 36t14
+24p20 Arbre{13P8} 26r41 10|29b21 31r19 34r30 34r56
+31U13*Enregistrer 31=26 31>51 31>69 10|38b14 63l8 63t19
+31p26 Arbre{13P8} 32r27 32r55 33r29 33r57 33r74 34r24 34r51 34r68 10|38b27
+. 62m24
+31a51 Cle{string} 32r34 32r62 33r36 34r31 10|38b52 62r30
+31*69 Donnee{8+9} 32r69 10|38b67 62r34
+38U13*Supprimer 38=24 38>49 10|113b14 122s16 124s16 131l8 131t17
+38p24 Arbre{13P8} 39r22 39r39 40r27 10|113b25 129m19
+38a49 Cle{string} 40r34 10|113b50 129r25
+44V12*Cle_Presente{boolean} 32s13 33s15 34s10 40s13 44>26 44>47 10|66b13
+. 87l8 87t20
+44p26 Arbre{13P8} 10|66b27 86r29
+44a47 Cle{string} 10|66b48 86r35
+48V12*La_Donnee{8+9} 32s44 48>23 48>44 10|91b13 107l8 107t17
+48p23 Arbre{13P8} 10|91b24 106r26
+48a44 Cle{string} 10|91b45 106r32
+52U13*Vider 52=20 10|134b14 137s10 138s10 141l8 141t13
+52p20 Arbre{13P8} 53r23 10|134b21 136r23 137r16 138r16 140m12
+58U21 Traiter 58>30 58>47 10|150s13
+58a30 Cle{string}
+58*47 Donnee{8+9}
+59u13*Pour_Chaque 59>26 10|144b14 155s10 156s10 158l8 158t19
+59p26 Arbre{13P8} 10|144b27 146r19 150r21 150r36 155r22 156r22
+63R8 T_Node 65r26 67c8 75e17 10|16r48 47r26
+68a10 Cle{string} 10|51m23 73r26 96r27 118r26 150r31
+69*10 Donnee{8+9} 10|52m23 97r30 150r46
+70p10 Suivant_G{13P8} 10|34r36 54m37 77r48 99r42 122m36 137m26 155r32
+71p10 Suivant_D{13P8} 10|34r62 56m37 79r48 101r42 124m36 138m26 156r32
+X 10 arbre.adb
+15U14 Free[8|20] 119s13 140s7
+41U17 Enregistrer_r 41b17 41=32 41>57 41>72 41>94 54s13 56s13 59l11 59t24
+. 62s10
+41p32 Arbre{9|13P8} 46r22 47m13 51r13 52r13 54r27 56r27
+41a57 Cle{string} 51r30 53r16 54r47 56r47
+41*72 Donnee{9|8+9} 52r33 54r51 56r51
+41i94 idx{integer} 50r13 53r20 54r58 56r59
+42a9 nuls{string} 47r34
+43*9 nul_donnee{9|8+9} 47r40
+68V16 Cle_Presente_r{boolean} 68b16 68>32 68>53 68>70 77s23 79s23 83l11 83t25
+. 86s14
+68p32 Arbre{9|13P8} 70r22 73r16 77r38 79r38
+68a53 Cle{string} 73r32 76r16 77r59 79r59
+68i70 idx{integer} 76r20 77r64 79r63
+92V16 La_Donnee_r{9|8+9} 92b16 92>29 92>50 92>67 99s20 101s20 103l11 103t22
+. 106s14
+92p29 Arbre{9|13P8} 94r22 96r17 97r20 99r32 101r32
+92a50 Cle{string} 96r33 98r16 99r53 101r53
+92i67 idx{integer} 98r20 99r57 101r57
+114U17 Supprimer_r 114b17 114=30 114>55 114>72 127l11 127t22 129s7
+114p30 Arbre{9|13P8} 116r22 118r16 119m18 122r26 124r26
+114a55 Cle{string} 118r32 121r16 122r46 124r46
+114i72 idx{integer} 121r20
+

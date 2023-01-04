@@ -1,5 +1,6 @@
 -- with Ada.Text_IO;            use Ada.Text_IO;
 with Ada.Unchecked_Deallocation;
+with Ada.Text_IO; use Ada.Text_IO;
 
 --fonctionnement de l'arbre : 
 -- c'est un arbre binaire de recherche particulier, les noeuds sont
@@ -12,9 +13,9 @@ with Ada.Unchecked_Deallocation;
 package body arbre is
 
    procedure Free is
-     new Ada.Unchecked_Deallocation (Object => T_Cellule, Name => T_Arbre);
+     new Ada.Unchecked_Deallocation (Object => T_Node, Name => T_Arbre);
    -- On initialise l'Arbre étant vide.
-   procedure Initialiser(Arbre: T_Arbre) is
+   procedure Initialiser(Arbre: out T_Arbre) is
    begin
       Arbre := Null;	
    end Initialiser;
@@ -27,23 +28,25 @@ package body arbre is
    -- On calcule la taille en parcourant récursivement l'Arbre et en ajoutant 1 à chaque pointeur non vide.
    function Taille (Arbre : T_Arbre) return Integer is
    begin
-      if Arbre = Null then
+      if Est_Vide(Arbre) then
          return 0;
       else 
          return ( 1 + Taille(Arbre.Suivant_G) + Taille(Arbre.Suivant_D) );
       end if;
    end Taille;
 
-   procedure Enregistrer (Arbre : T_Arbre ; Cle : String ; Donnee : T_Donnee) is
+   procedure Enregistrer (Arbre : in out T_Arbre ; Cle : String ; Donnee : T_Donnee) is
       -- On crée une fonction récursive qui va parcourir l'Arbre et enregistrer la clé mais qui prend en compte le 
       -- soucis de relation d'ordre entre les clés.
-      procedure Enregistrer_r (Arbre : T_Arbre ; Cle : String ; Donnee : in T_Donnee; idx : in Integer ) is
+      procedure Enregistrer_r (Arbre : in out T_Arbre ; Cle : String ; Donnee : in T_Donnee; idx : in Integer ) is
+        nuls : String(1..32) := (others => Character'Val(0));
+        nul_donnee : T_Donnee;
       begin
 
          if Est_Vide(Arbre) then
-            Arbre := New T_Node'(Null, Null, Null, Null);  
+            Arbre := New T_Node'(nuls, nul_donnee, Null, Null);  --les valeurs par défaut...
          end if;
-
+         
          if idx > 32 then 
             Arbre.all.Cle := Cle;
             Arbre.all.Donnee := Donnee;
@@ -56,7 +59,7 @@ package body arbre is
       end Enregistrer_r;
 
       begin
-         Enregistrer_r(Arbre,Cle,Donnee,0);
+         Enregistrer_r(Arbre,Cle,Donnee,1);
    end Enregistrer;
 
 
@@ -80,7 +83,7 @@ package body arbre is
       end Cle_Presente_r;
 
    begin
-      return Cle_Presente_r(Arbre,Cle,0);
+      return Cle_Presente_r(Arbre,Cle,1);
    end Cle_Presente;
 
 
@@ -89,7 +92,7 @@ package body arbre is
       function La_Donnee_r (Arbre : in T_Arbre ; Cle : in String; idx : in Integer) return T_Donnee is
       begin
          if Est_Vide(Arbre) then
-            raise Cle_Absente_Exception;
+            raise Constraint_Error with "cle inexistante"; -- La clé n'est pas présente car la liste est vide
          elsif  Arbre.all.Cle = Cle then
             return Arbre.all.Donnee;  -- On renvoie la donnee associée à la clé souhaitée.
          elsif Cle(idx) = '0' then
@@ -100,7 +103,7 @@ package body arbre is
       end La_Donnee_r;
 
    begin
-      return La_Donnee_r(Arbre,Cle,0);
+      return La_Donnee_r(Arbre,Cle,1);
    end La_Donnee;
 
 
@@ -111,7 +114,7 @@ package body arbre is
       procedure Supprimer_r (Arbre : in out T_Arbre ; Cle : in String; idx : in Integer) is
       begin
          if Est_Vide(Arbre) then
-            raise Cle_Absente_Exception;
+            raise Constraint_Error with "cle inexistante";
          elsif Arbre.all.Cle = Cle then
             Free(Arbre); -- On supprime l'Arbre
          else
@@ -123,14 +126,14 @@ package body arbre is
          end if;
       end Supprimer_r;
    begin
-      Supprimer_r(Arbre,Cle,0);
+      Supprimer_r(Arbre,Cle,1);
 
    end Supprimer;
 
 
    procedure Vider (Arbre : in out T_Arbre) is
    begin
-      if Arbre /= Null then
+      if not Est_Vide(Arbre) then
          Vider(Arbre.all.Suivant_G); -- On parcours l'Arbre récursivement pour arriver à la dernière.
          Vider(Arbre.all.Suivant_D);
       end if;
@@ -155,4 +158,4 @@ package body arbre is
    end Pour_Chaque;
 
 
-end Arbre;
+end arbre;

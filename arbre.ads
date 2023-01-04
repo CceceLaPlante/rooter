@@ -65,7 +65,7 @@ private
   type T_Arbre is access T_Node;
 
   type T_Node is record
-         Cle: String;
+         Cle: String(1..32);
          Donnee: T_Donnee;
          Suivant_G: T_Arbre;
          Suivant_D: T_Arbre;
