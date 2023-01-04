@@ -22,5 +22,9 @@ procedure tests is
 
 begin
 
+    if Character'Pos('1') > Character'Pos('0') then
+        Put("yay");
+    end if;
+
     Put(t_cle_to_string(a));
 end tests;

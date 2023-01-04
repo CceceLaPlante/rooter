@@ -7,7 +7,7 @@ generic
 package Arbre is
   -- on remarque qu'il n'éxiste pas de relation d'ordre pour la clé
   -- la relation d'ordre sera sur les éléments de la clé (les 32 charactere)
-  type T_Cle is new String(1..32);
+  type T_Cle is new String(1..32); -- une adresse ip en binaire
   type T_Arbre is limited private;
 
    -- Initialiser un Arbre.  l'Arbre est vide.
@@ -16,6 +16,15 @@ package Arbre is
 
   -- si on veux afficher la clé 
   function Cle2String (Cle : in T_Cle) return String;
+
+  	-- permet une conversion 4bits de l'ip en binaire
+	function Convertir_IP2B_4 (IP : in Unbounded_String) return Unbounded_String;
+
+	-- permet une conversion totale de l'ip en binaire
+	function IP2B (IP : in Unbounded_String) return Unbounded_String;
+  
+  -- operation inverse de IP2B
+  function B2IP (IP : in Unbounded_String) return Unbounded_String;
 
    -- Est-ce qu'un Arbre est vide ?
   function Est_Vide (Arbre : T_Arbre) return Boolean;

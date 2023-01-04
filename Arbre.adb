@@ -1,5 +1,4 @@
 -- with Ada.Text_IO;            use Ada.Text_IO;
-with Arbre_Exceptions;         use Arbre_Exceptions;
 with Ada.Unchecked_Deallocation;
 
 package body Arbre is
@@ -8,7 +7,7 @@ package body Arbre is
      new Ada.Unchecked_Deallocation (Object => T_Cellule, Name => T_Arbre);
 
    -- On initialise l'Arbre étant vide.
-   procedure Initialiser(Arbre: out T_Arbre) is
+   procedure Initialiser(Arbre: T_Arbre) is
    begin
       Arbre := Null;	
    end Initialiser;
@@ -20,7 +19,7 @@ package body Arbre is
    end;
 
    -- On calcule la taille en parcourant récursivement l'Arbre et en ajoutant 1 à chaque pointeur non vide.
-   function Taille (Arbre : in T_Arbre) return Integer is
+   function Taille (Arbre : T_Arbre) return Integer is
    begin
       if Arbre = Null then
          return 0;
@@ -29,43 +28,73 @@ package body Arbre is
       end if;
    end Taille;
 
-   procedure Enregistrer (Arbre : in out T_Arbre ; Cle : in T_Cle ; Donnee : in T_Donnee) is
-   begin
-      if Arbre = Null then
-         Arbre := New T_Node'(Cle, Donnee, Null);   -- On crée une cellule dans laquelle on enregistre la clé et la donnée souhaitées.
-      elsif Arbre.all.Cle > Cle then   
-           Enregistrer(Arbre.all.Suivant_G,Cle,Donnee) ; -- on parcourt à gauche
-      else
-            Enregistrer(Arbre.all.Suivant_D,Cle,Donnee); -- on parcourt à droite
-      end if;
+   procedure Enregistrer (Arbre : T_Arbre ; Cle : T_Cle ; Donnee : T_Donnee) is
+      -- On crée une fonction récursive qui va parcourir l'Arbre et enregistrer la clé mais qui prend en compte le 
+      -- soucis de relation d'ordre entre les clés.
+      procedure Enregistrer_r (Arbre : T_Arbre ; Cle : T_Cle ; Donnee : in T_Donnee; idx : in Integer ) is
+      begin
+
+         if Est_Vide(Arbre) then
+            Arbre := New T_Node'(Null, Null, Null, Null);  
+         end if;
+
+         if idx > 32 then 
+            Arbre.all.Cle := Cle;
+            Arbre.all.Donnee := Donnee;
+         elsif Cle(idx) = '0' then
+            Enregistrer_r(Arbre.all.Suivant_G,Cle,Donnee,idx+1) ; -- on parcourt à gauche
+         else
+            Enregistrer_r(Arbre.all.Suivant_D,Cle,Donnee, idx+1); -- on parcourt à droite
+         end if;
+
+      end Enregistrer_r;
+
+      begin
+         Enregistrer_r(Arbre,Cle,Donnee,0);
    end Enregistrer;
 
 
    function Cle_Presente (Arbre : in T_Arbre ; Cle : in T_Cle) return Boolean is
+
+      function Cle_Presente_r (Arbre : in T_Arbre ; Cle : in T_Cle; idx : in Integer) return Boolean is
+      begin
+         if Est_Vide(Arbre) then
+            return False ;  -- La clé n'est pas présente car la liste est vide.
+
+         elsif Arbre.all.Cle = Cle then
+            return True;  -- On a trouvé la clé dans l'Arbre
+         else
+            if Cle(idx) = '0' then
+               return Cle_Presente_r(Arbre.all.Suivant_G, Cle, idx+1); -- On parcours récursivement jusqu'à trouver la clé ou avoir un noeud suivant vide à gauche
+            else
+               return Cle_Presente_r(Arbre.all.Suivant_D, Cle,idx+1) ; -- idem à droite
+            end if;
+         end if;
+
+      end Cle_Presente_r;
+
    begin
-      if Arbre = Null then
-         return False ;  -- La clé n'est pas présente car la liste est vide.
-      elsif Arbre.all.Cle = Cle then
-         return True;  -- On a trouvé la clé dans l'Arbre
-      else
-         return Cle_Presente(Arbre.all.Suivant_G, Cle); -- On parcours récursivement jusqu'à trouver la clé ou avoir un noeud suivant vide à gauche
-         return Cle_Presente(Arbre.all.Suivant_D, Cle) ; -- idem à droite
-      end if;
+      return Cle_Presente_r(Arbre,Cle,0);
    end Cle_Presente;
 
 
 
    function La_Donnee (Arbre : in T_Arbre ; Cle : in T_Cle) return T_Donnee is
+      function La_Donnee_r (Arbre : in T_Arbre ; Cle : in T_Cle; idx : in Integer) return T_Donnee is
+      begin
+         if Est_Vide(Arbre) then
+            raise Cle_Absente_Exception;
+         elsif  Arbre.all.Cle = Cle then
+            return Arbre.all.Donnee;  -- On renvoie la donnee associée à la clé souhaitée.
+         elsif Cle(idx) = '0' then
+            return La_Donnee(Arbre.all.Suivant_G, Cle,idx+1); -- On cherche la clé dans les pointeurs à gauche
+         else
+            return La_Donnee(Arbre.all.Suivant_D, Cle,idx+1); -- On cherche la clé dans les pointeurs à droite
+         end if;
+      end La_Donnee_r;
+
    begin
-      if Arbre = Null then
-         raise Cle_Absente_Exception;
-      elsif  Arbre.all.Cle = Cle then
-         return Arbre.all.Donnee;  -- On renvoie la donnee associée à la clé souhaitée.
-      elsif Cle < Abre.all.Cle then
-         return La_Donnee(Arbre.all.Suivant_G, Cle); -- On cherche la clé dans les pointeurs à gauche
-      else
-         return La_Donnee(Arbre.all.Suivant_D, Cle); -- On cherche la clé dans les pointeurs à droite
-      end if;
+      return La_Donnee_r(Arbre,Cle,0);
    end La_Donnee;
 
   
