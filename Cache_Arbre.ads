@@ -7,7 +7,7 @@ generic
    type T_Adresse is private;
    
 
-package Routeur_LA is
+package Cache_Arbre is
 
    type T_Arbre is limited private;
 

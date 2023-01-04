@@ -7,9 +7,6 @@ package body Arbre is
    procedure Free is
      new Ada.Unchecked_Deallocation (Object => T_Cellule, Name => T_Arbre);
 
-
-   
-
    -- On initialise l'Arbre étant vide.
    procedure Initialiser(Arbre: out T_Arbre) is
    begin
