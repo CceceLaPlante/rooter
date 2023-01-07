@@ -26,11 +26,14 @@ package body Cache_fifo is
     begin
         if Est_Vide(Cache) then
             Cache_Contenu := new T_Cellule'(Adresse => Adresse_IP, Cle => (Taille(Cache_Contenu) + 1), Suivant => Null, Interface => Interface_Adresse);
-            Cache_Stats.nb_demandes := 1 ;
+            Cache_Stats.nb_demandes := Cache_Stats.nb_demandes + 1 ;
+            Cache_Stats.nb_defauts := Cache_Stats.nb_defauts + 1 ;
+            Cache_Stats.taux_defauts := Cache_Stats.nb_defauts / Cache_Stats.nb_demandes ;
         elsif (Cache_Contenu.all.Adresse /= Adresse_IP) then
             Enregistrer(Cache_Contenu.all.Suivant; Cache_Stats; Adresse_IP; Interface_Adresse);
         else 
-            Cache_Stats.nb_demandes := Cache_Stats.nb_demandes + 1;
+            Cache_Stats.nb_demandes := Cache_Stats.nb_demandes + 1 ;
+            Cache_Stats.taux_defauts := Cache_Stats.nb_defauts / Cache_Stats.nb_demandes ;
         end if ;
     end Enregistrer ;
 
