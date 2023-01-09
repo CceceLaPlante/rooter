@@ -19,18 +19,18 @@ package body Cache_fifo is
       return (Cache = Null) ;
    end Est_Vide ;
 
-   procedure Supprimer(Cache : in out T_LCA) is -- fonction à "supprimer" pour la passer en générique dans le cache_ll et réutiliser sinon les autres sous-programmes !
+   procedure Supprimer(Cache : in out T_LCA) is -- fonction Ã  "supprimer" pour la passer en gÃ©nÃ©rique dans le cache_ll et rÃ©utiliser sinon les autres sous-programmes !
       pointeur_debut : T_LCA ;
    begin
-      pointeur_debut := Cache.all.Suivant ; -- on récupère l'adresse du deuxième élément du cache
-      Free(Cache); -- on libère le premier élément ---- condition à changer en fonction de la politique du cache !
-      Cache := pointeur_debut ; -- on récupère le cache à partir du deuxième élément
+      pointeur_debut := Cache.all.Suivant ; -- on rÃ©cupÃ¨re l'adresse du deuxiÃ¨me Ã©lÃ©ment du cache
+      Free(Cache); -- on libÃ¨re le premier Ã©lÃ©ment ---- condition Ã  changer en fonction de la politique du cache !
+      Cache := pointeur_debut ; -- on rÃ©cupÃ¨re le cache Ã  partir du deuxiÃ¨me Ã©lÃ©ment
    end Supprimer;
 
    procedure Enregistrer(Cache : in out T_LCA; Stats : in out T_Stats; Adresse_IP : in Unbounded_String; Interface_Adresse : in Unbounded_String) is
    begin
       if Est_Vide(Cache) then
-         Cache := new T_Cellule'(Adresse => Adresse_IP, Cle => (Taille(Cache) + 1), Suivant => Null, Interface_utilisation => Interface_Adresse);
+         Cache := new T_Cellule'(Adresse => Adresse_IP, Nombre_utilisation => 0, Cle => (Taille(Cache) + 1), Suivant => Null, Interface_utilisation => Interface_Adresse);
          Stats.nb_demandes := Stats.nb_demandes + 1.0 ;
          Stats.nb_defauts := Stats.nb_defauts + 1.0 ;
          Stats.taux_defauts := Stats.nb_defauts / Stats.nb_demandes ;
@@ -39,10 +39,11 @@ package body Cache_fifo is
       else 
          Stats.nb_demandes := Stats.nb_demandes + 1.0 ;
          Stats.taux_defauts := Stats.nb_defauts / Stats.nb_demandes ;
+         Cache.all.Nombre_utilisation := Cache.all.Nombre_utilisation + 1;
       end if ;
    end Enregistrer ;
 
-   procedure Vider(Cache : in out T_LCA; Stats : in out T_Stats) is -- on décompose les entrées pour pouvoir parcourir la LCA récursivement
+   procedure Vider(Cache : in out T_LCA; Stats : in out T_Stats) is -- on dÃ©compose les entrÃ©es pour pouvoir parcourir la LCA rÃ©cursivement
    begin
       if Est_Vide(Cache) then
          Null ;
@@ -50,7 +51,7 @@ package body Cache_fifo is
          Vider(Cache.all.Suivant, Stats) ;
       end if;
       Free(Cache);
-      if (Stats.nb_demandes /= 0.0) and (Stats.nb_defauts /= 0.0) and (Stats.taux_defauts /= 0.0) then -- pour ne passer les différents paramètres à zéro une seule fois
+      if (Stats.nb_demandes /= 0.0) and (Stats.nb_defauts /= 0.0) and (Stats.taux_defauts /= 0.0) then -- pour ne passer les diffÃ©rents paramÃ¨tres Ã  zÃ©ro une seule fois
          Stats.nb_demandes := 0.0 ;
          Stats.nb_defauts := 0.0 ;
          Stats.taux_defauts := 0.0 ;
