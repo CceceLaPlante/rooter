@@ -7,6 +7,7 @@ with Ada.Text_IO.Unbounded_IO;  use Ada.Text_IO.Unbounded_IO;
 with Ada.Exceptions;            use Ada.Exceptions;
 with Ada.Unchecked_Deallocation; 
 
+-- toutes les adresses ip et masques donnés par le client sont en base 10.
 
 generic
     politic : Unbounded_String
@@ -15,6 +16,7 @@ package Cache_Arbre is
 
 	-- ça c'est qu'on mettras dans chaques noeuds de l'arbre
 	-- [!] pas la même que dans rooter simple
+	-- c'est le T_Donnee de Arbre
     type T_ligne is
         record
             destination : Unbounded_String;
@@ -42,20 +44,46 @@ package Cache_Arbre is
 
 
 	-- permet d'initialiser le cache
-	function Initialiser (Cache : in out T_Arbre) return Arbre
+	procedure Initialiser_cache (Cache : in out T_Arbre)
 		with Post => Est_Vide (Cache) = True;
 
 	-- pretty self explanatory
-	function Est_Vide (Cache : in T_Arbre) return Boolean;
+	function Est_Vide_cache (Cache : in T_Arbre) return Boolean;
 
-	  	-- permet une conversion 4bits de l'ip en binaire
-	function Convertir_IP2B_4 (IP : in Unbounded_String) return Unbounded_String;
+	-- permet une conversion 4bits de l'ip en binaire
+	function Convertir_IP2B_4 (adr: Integer) return Unbounded_String;
 
 	-- permet une conversion totale de l'ip en binaire
-	function IP2B (IP : in Unbounded_String) return Unbounded_String;
+	--[!] elle renvoie sans les . (point)
+	function IP2B (Adresse_IP : in Unbounded_String) return Unbounded_String;
   
   	-- operation inverse de IP2B
-  	function B2IP (IP : in Unbounded_String) return Unbounded_String;
+  	function B2IP_4 (IP : in Unbounded_String) return Unbounded_String;
+
+	function B2IP (IP : in Unbounded_String) return Unbounded_String;
+
+	-- permet de trouver la ligne correspondante à l'ip
+	function Trouver (Cache : in T_Arbre; IP : in Unbounded_String) return T_ligne;
+
+	-- permet d'ajouter une ligne dans le cache
+	procedure Ajouter (Cache : in out T_Arbre; Ligne : in T_ligne);
+
+	-- permet de supprimer une ligne du cache
+	procedure Supprimer (Cache : in out T_Arbre; IP : in Unbounded_String);
+
+	-- permet de savoir si une ligne est présente dans le cache
+	function Cle_Presente (Cache : in T_Arbre; IP : in Unbounded_String) return Boolean;
+
+	-- permet de vider le cache
+	procedure vider (Cache : in out T_Arbre)
+		with Post => Est_Vide (Cache);
+
+	-- permet d'afficher le cache
+	procedure Afficher (Cache : in T_Arbre);
+
+	-- permet de retourner la taille du cache (le nb de feuilles,pas de noeuds)
+	function taille(Cache : in T_Arbre) return Integer;
+
 
 
 end Cache_Arbre;

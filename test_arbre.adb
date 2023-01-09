@@ -13,9 +13,8 @@ procedure test_arbre is
         nuls:String(1..32) := (others => Character'Val(0));
     begin
         if Cle =  nuls then
-            Put("|");
+            Put("");
         else 
-            Put_Line("");
             Put_Line (Cle & " : " & Integer'Image(Donnee));
         end if;
 
@@ -30,8 +29,8 @@ procedure test_arbre is
     cle3 : String(1..32) := "00000000000000000000000000000001";
     cle4 : String(1..32) := "00000000000000000000000000000010";
     ladonnee : Integer;
+    
 begin
-    Put(cle1(32));
     Enregistrer(tree, cle1, 1);
     Enregistrer(tree, cle2, 2);
     Enregistrer(tree, cle3, 3);
@@ -43,6 +42,16 @@ begin
     Put_Line("---------------------");
     ladonnee := La_Donnee(tree, cle2);
     Put_Line("La donnee de " & cle2 & " est " & Integer'Image(ladonnee));
+    Put_Line("---------------------");
+    if Cle_Presente(tree, cle1) then
+        Put_Line("La cle " & cle1 & " est presente");
+    else
+        Put_Line("La cle " & cle1 & " n'est pas presente");
+    end if;
+    Put_Line("---------------------");
+    Vider(tree);
+    Put_Line("arbre vide : ");
+    Afficher(tree);
     Put_Line("---------------------");
 
 end test_arbre;
