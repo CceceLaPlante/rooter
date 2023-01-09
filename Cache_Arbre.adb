@@ -109,6 +109,13 @@ package body  Cache_Arbre is
 
     function B2IP (IP : in Unbounded_String) return Unbounded_String is
         a_return : Unbounded_String;
-        
+    begin 
+        for i in 1..4 loop
+            if i = 4 then
+                a_return := a_return & B2IP_4(Substring(IP, (i-1)*8+1, 8));
+            else
+                a_return := a_return & B2IP_4(Substring(IP, (i-1)*8+1, 8)) & '.';
+            end if;
+        end loop;
 
 end Cache_Arbre;
