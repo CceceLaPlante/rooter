@@ -42,6 +42,9 @@ package Cache_fifo is
    function Taille(Cache : in T_LCA) return Integer ;
 
    function Est_Pleine(Cache : in T_LCA; capacite_cache : in Integer) return Boolean ;
+   
+   procedure Pour_Chaque(Cache : in T_LCA);
+      
 
 
 private
@@ -57,4 +60,3 @@ private
    end record;
 
 end Cache_fifo;
-
