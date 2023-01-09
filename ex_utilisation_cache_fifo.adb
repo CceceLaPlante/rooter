@@ -27,6 +27,7 @@ begin
    pragma assert (Est_Vide(Un_Cache)) ;
    pragma assert (not Est_Pleine(Un_Cache,capacite_cache)) ;
    Enregistrer(Un_Cache,Stats,To_Unbounded_String("147.255.32.57"),To_Unbounded_String("eth0")) ;
+   Pour_Chaque(Un_Cache);
    --pragma assert (Adresse_Presente(Un_Cache,Stats, "147.255.32.57")) ;
    --pragma assert (Un_Cache.all.Adresse = "147.255.32.57") ;
    --pragma assert (Un_Cache.all.Interface_utilisation = "eth0") ;
@@ -36,6 +37,7 @@ begin
    pragma assert (not Est_Vide(Un_Cache)) ;
    pragma assert (not Est_Pleine(Un_Cache, capacite_cache)) ;
    Enregistrer(Un_Cache,Stats,To_Unbounded_String("147.255.65.36"),To_Unbounded_String("eth1")) ;
+   Pour_Chaque(Un_Cache);
    --pragma assert (Un_Cache.all.Adresse = "147.255.32.57") ;
    --pragma assert (Un_Cache.all.Interface_utilisation = "eth0") ;
    --pragma assert (Un_Cache.all.Suivant.all.Adresse = "147.255.65.36") ;
@@ -46,6 +48,7 @@ begin
    pragma assert (not Est_Vide(Un_Cache)) ;
    pragma assert (not Est_Pleine(Un_Cache, capacite_cache)) ;
    Enregistrer(Un_Cache,Stats,To_Unbounded_String("147.255.32.57"), To_Unbounded_String("eth0")) ;
+   Pour_Chaque(Un_Cache);
    --pragma assert (Un_Cache.all.Adresse = "147.255.32.57") ;
    --pragma assert (Un_Cache.all.Interface_utilisation = "eth0") ;
    --pragma assert (Un_Cache.all.Suivant.all.Adresse = "147.255.65.36") ;
@@ -58,11 +61,15 @@ begin
    pragma assert (not Est_Vide(Un_Cache)) ;
    pragma assert (not Est_Pleine(Un_Cache,capacite_cache)) ;
    Enregistrer(Un_Cache,Stats,To_Unbounded_String("152.215.98.57"),To_Unbounded_String("eth2")) ;
+   Pour_Chaque(Un_Cache);
    Enregistrer(Un_Cache,Stats,To_Unbounded_String("136.145.6.63"),To_Unbounded_String("eth3")) ;
+   Pour_Chaque(Un_Cache);
    Enregistrer(Un_Cache,Stats,To_Unbounded_String("254.168.15.76"),To_Unbounded_String("eth4")) ;
+   Pour_Chaque(Un_Cache);
    pragma assert (Taille(Un_Cache) = 5) ;
    pragma assert (Est_Pleine(Un_Cache, capacite_cache)) ;
    Supprimer(Un_Cache);
+   Pour_Chaque(Un_Cache);
    --pragma assert (Un_Cache.all.Adresse = "147.255.65.36") ;
    --pragma assert (Un_Cache.all.Interface_utilisation = "eth1") ;
    pragma assert (Taille(Un_Cache) = 4) ;
