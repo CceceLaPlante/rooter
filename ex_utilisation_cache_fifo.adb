@@ -5,6 +5,18 @@ procedure ex_utilisation_cache_fifo is
 
    package Cache_fifo_utilisation is new Cache_fifo(capacite_cache => 5) ;
    use Cache_fifo_utilisation;
+   
+   procedure Afficher_cache is new Cache_fifo_utilisation.Pour_Chaque(Afficher);
+   
+   procedure Afficher (adresse : in Unbounded_String ; interface_utilisation : in Unbounded_String) is
+    begin
+        Put("Adresse : ");
+        Put(To_Unbounded_String(adresse));
+        Skip_Line ;
+        Put("interface : ");
+        Put(To_Unbounded_String(interface_utilisation));
+        Skip_Line ;
+    end Afficher ;
 
    Un_Cache : T_LCA ;
    Stats : T_Stats ;
@@ -58,5 +70,4 @@ begin
    pragma assert (not Est_Pleine(Un_Cache,capacite_cache)) ;
    Vider(Un_Cache, Stats) ; 
 end ex_utilisation_cache_fifo;
-
 
