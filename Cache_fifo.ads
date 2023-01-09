@@ -46,13 +46,15 @@ package Cache_fifo is
 
 private
 
-   type T_Cellule ;
-   type T_LCA is access T_Cellule ;
+   type T_Cellule;
+   type T_LCA is access T_Cellule;
    type T_Cellule is record
-      Adresse : Unbounded_String ;
-      Interface_utilisation : Unbounded_String ; 
-      Cle : Integer ;
-      Suivant : T_LCA ;
-   end record ;
+      Adresse : Unbounded_String;
+      Interface_utilisation : Unbounded_String; 
+      Nombre_utilisation : Integer;
+      Cle : Integer;
+      Suivant : T_LCA;
+   end record;
 
-end Cache_fifo ;
+end Cache_fifo;
+
