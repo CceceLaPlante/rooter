@@ -84,5 +84,21 @@ package body Cache_fifo is
    begin
       return (Taille(Cache) = capacite_cache) ;
    end Est_Pleine ;
+   
+   procedure Pour_Chaque(Cache: in T_LCA) is
+   begin
+      if Est_Vide(Cache) then
+         Null;
+      else 
+         begin
+            Afficher(Cache.all.adresse, cache.all.Interface_utilisation);
+         exception 
+            when others =>
+               Null;
+         end;
+         Pour_Chaque(Cache.all.suivant);
+      end if;
+
+   end Afficher_cache ;
 
 end Cache_fifo ;
