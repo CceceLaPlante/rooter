@@ -4,3 +4,4 @@
 -> changer Enregistrer, Supprimer
 -> adresse IP en Integer et quand on l'utilise, on la convertit 
 -> refaire procédure Initialiser/ procédures en général car besoin de garder les stats
+=> toutes fonctions dans cache_total à faire en généricité ?
