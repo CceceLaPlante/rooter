@@ -1,8 +1,8 @@
 with cache_ll ;
 with Ada.Strings.Unbounded;     use Ada.Strings.Unbounded;
-with LCA ;
 with SDA_Exceptions;         use SDA_Exceptions;
 with Ada.Calendar; use Ada.Calendar;
+with cache_exception; use cache_exception ;
 
 
 procedure test_cache_ll is 
@@ -108,5 +108,5 @@ begin
    
    Vider(Un_Cache, Stats) ; 
    
-end ex_utilisation_cache_fifo;
+end test_cache_ll;
 
