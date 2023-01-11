@@ -33,7 +33,7 @@ procedure test_cache_ll is
    min : Unbounded_String;
    freq_min : Integer ;
    max : Unbounded_String ;
-   temps_max : Horaire ;
+   temps_max : Time ;
    
 begin
    
@@ -105,19 +105,30 @@ begin
    --pragma assert (Un_Cache.all.Adresse = "147.255.65.36") ;
    --pragma assert (Un_Cache.all.Interface_utilisation = "eth1") ;
    pragma assert (Taille(Un_Cache) = 4) ;
+   --Put_Line("Etape 7 - 1");
    pragma assert (not Est_Vide(Un_Cache)) ;
+   --Put_Line("Etape 7 - 2");
    pragma assert (not Est_Pleine(Un_Cache,capacite_cache)) ;
    
+   --Put_Line("Juste avant Chercher min freq");
+   min := To_Unbounded_String("00000000000000000000000000000000") ;
+   freq_min := 0 ;
    Chercher_min_freq(Un_Cache, min, freq_min);
-   pragma assert (not Est_Vide(Un_Cache));
+   --Put_Line("Juste avant Supprimer lfu");
    Supprimer_lfu(Un_Cache,min);
+   --Put_Line("Juste avant le afficher");
    Afficher_cache(Un_Cache);
    Put_Line("Etape 8");
    pragma assert (Taille(Un_Cache) = 3) ;
    pragma assert (not Est_Vide(Un_Cache)) ;
    pragma assert (not Est_Pleine(Un_Cache,capacite_cache)) ;
    
+    
+   --Put_Line("Juste avant Chercher max temps");
+   max := To_Unbounded_String("00000000000000000000000000000000");
+   temps_max := Clock ;
    Chercher_max_temps(Un_Cache, max, temps_max);
+   --Put_Line("Juste avant Supprimer lfu");
    Supprimer_lru(Un_Cache,max);
    Afficher_cache(Un_Cache);
    Put_Line("Etape 9");
@@ -167,4 +178,3 @@ begin
 
    
 end test_cache_ll;
-
