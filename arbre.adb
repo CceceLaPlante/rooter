@@ -41,15 +41,17 @@ package body arbre is
       procedure Enregistrer_r (Arbre : in out T_Arbre ; Cle : String ; Donnee : in T_Donnee; idx : in Integer ) is
         nuls : String(1..32) := (others => Character'Val(0));
         nul_donnee : T_Donnee;
+        feuille : Boolean := False;
       begin
 
          if Est_Vide(Arbre) then
-            Arbre := New T_Node'(nuls, nul_donnee, Null, Null);  --les valeurs par défaut...
+            Arbre := New T_Node'(feuille,nuls, nul_donnee, Null, Null);  --les valeurs par défaut...
          end if;
          
          if idx > 32 then 
             Arbre.all.Cle := Cle;
             Arbre.all.Donnee := Donnee;
+            Arbre.all.leaf := True;
          elsif Cle(idx) = '0' then
             Enregistrer_r(Arbre.all.Suivant_G,Cle,Donnee,idx+1) ; -- on parcourt à gauche
          else

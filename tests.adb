@@ -6,6 +6,10 @@ with Ada.Text_IO.Unbounded_IO;  use Ada.Text_IO.Unbounded_IO;
 with Ada.Command_Line;          use Ada.Command_Line;
 with Ada.Exceptions;            use Ada.Exceptions;	-- pour Exception_Message
 
+with Ada.Calendar;            use Ada.Calendar;
+with Ada.Calendar.Formatting; use Ada.Calendar.Formatting;
+with Ada.Text_IO;             use Ada.Text_IO;
+
 procedure tests is 
 
     Type T_Cle is new String(1..3);
@@ -20,11 +24,19 @@ procedure tests is
         return to_return;
     end t_cle_to_string;
 
+    t : Time;
+    t2: Time;
+    t3 : Time := Null;
+
 begin
 
-    if Character'Pos('1') > Character'Pos('0') then
-        Put("yay");
+    t := Clock;
+    Skip_Line;
+    t2 := Clock;
+    if t>t2 then
+        Put_Line("t>t2");
+    else
+        Put_Line("t<t2");
     end if;
 
-    Put(t_cle_to_string(a));
 end tests;

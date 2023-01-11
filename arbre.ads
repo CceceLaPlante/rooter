@@ -10,7 +10,20 @@ generic
 package arbre is
   -- on remarque qu'il n'éxiste pas de relation d'ordre pour la clé
   -- la relation d'ordre sera sur les éléments de la clé (les 32 charactere)
-  type T_Arbre is limited private;
+  type T_Node;
+
+  type T_Arbre is access T_Node;
+
+  type T_Node is record
+         leaf : Boolean;
+         Cle: String(1..32);
+         Donnee: T_Donnee;
+         Suivant_G: T_Arbre;
+         Suivant_D: T_Arbre;
+         -- Invariant :
+         --   Suivant = Null or else Suivant.all.Indice > Indice;
+         --   	-- les cellules sont stockÃ©s dans l'ordre croissant des indices.
+      end record;
 
    -- Initialiser un Arbre.  l'Arbre est vide.
   procedure Initialiser(Arbre: out T_Arbre) with
@@ -59,20 +72,6 @@ package arbre is
   procedure Pour_Chaque (Arbre : in T_Arbre);
 
 
-private
-  type T_Node;
-
-  type T_Arbre is access T_Node;
-
-  type T_Node is record
-         Cle: String(1..32);
-         Donnee: T_Donnee;
-         Suivant_G: T_Arbre;
-         Suivant_D: T_Arbre;
-         -- Invariant :
-         --   Suivant = Null or else Suivant.all.Indice > Indice;
-         --   	-- les cellules sont stockÃ©s dans l'ordre croissant des indices.
-      end record;
 
 end arbre;
 

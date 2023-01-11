@@ -7,6 +7,11 @@ with Ada.Text_IO.Unbounded_IO;  use Ada.Text_IO.Unbounded_IO;
 with Ada.Exceptions;            use Ada.Exceptions;
 with Ada.Unchecked_Deallocation; 
 
+with Ada.Calendar;            use Ada.Calendar;
+with Ada.Calendar.Formatting; use Ada.Calendar.Formatting;
+with Ada.Text_IO;             use Ada.Text_IO;
+
+
 -- toutes les adresses ip et masques donnés par le client sont en base 10.
 
 generic
@@ -22,7 +27,7 @@ package Cache_Arbre is
             destination : Unbounded_String;
             mask : Unbounded_String;
             inter : Unbounded_String;
-			time : Integer;
+			temps : Time;
         end record;
 	
     package Arbre_LA is 
@@ -69,20 +74,23 @@ package Cache_Arbre is
 	procedure Ajouter (Cache : in out T_Arbre; Ligne : in T_ligne);
 
 	-- permet de supprimer une ligne du cache
-	procedure Supprimer (Cache : in out T_Arbre; IP : in Unbounded_String);
+	procedure Supprimer_IP (Cache : in out T_Arbre; IP : in Unbounded_String);
+
+	-- permet de supprimer la ligne la plus ancienne du cache
+	procedure Supprimer_LRU (Cache : in out T_Arbre; Ligne : in T_ligne);
 
 	-- permet de savoir si une ligne est présente dans le cache
-	function Cle_Presente (Cache : in T_Arbre; IP : in Unbounded_String) return Boolean;
+	function IP_Presente (Cache : in T_Arbre; IP : in Unbounded_String) return Boolean;
 
 	-- permet de vider le cache
-	procedure vider (Cache : in out T_Arbre)
+	procedure Vider (Cache : in out T_Arbre)
 		with Post => Est_Vide (Cache);
 
 	-- permet d'afficher le cache
 	procedure Afficher (Cache : in T_Arbre);
 
 	-- permet de retourner la taille du cache (le nb de feuilles,pas de noeuds)
-	function taille(Cache : in T_Arbre) return Integer;
+	function Taille_cache(Cache : in T_Arbre) return Integer;
 
 
 
