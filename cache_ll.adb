@@ -2,6 +2,7 @@ with LCA ;
 with SDA_Exceptions;         use SDA_Exceptions;
 with Ada.Calendar; use Ada.Calendar;
 with cache_exception;  use cache_exception;
+with Ada.Text_IO; use Ada.Text_IO;
 
 package body cache_ll is
 
@@ -51,22 +52,20 @@ package body cache_ll is
    end Supprimer_fifo;
 
 
-   procedure Chercher_min_freq(Cache : in out T_LCA; min: out Unbounded_String; freq_min : out Integer) is
-      --min : Unbounded_String;
-      --freq_min : Integer ;
+   procedure Chercher_min_freq(Cache : in out T_LCA; min: in out Unbounded_String; freq_min : in out Integer) is
+     --min : Unbounded_String;
+     --freq_min : Integer ;
    begin
-      if not Est_Vide(Cache) then
-         if Est_Vide(Cache.all.Suivant)  then
+        if Est_Vide(Cache.all.Suivant)  then
             min := Cache.all.adresse ;
             freq_min := Cache.all.Nombre_utilisation ;
-         else
-            Chercher_min_freq(Cache, min, freq_min);
-         end if ;
-         if Cache.all.Nombre_utilisation < freq_min then
+        else
+            Chercher_min_freq(Cache.all.Suivant, min, freq_min);
+        end if ;
+        if Cache.all.Nombre_utilisation < freq_min then
             min := Cache.all.Adresse;
             freq_min := Cache.all.Nombre_utilisation;
-         end if;
-      end if ;
+        end if;
    end Chercher_min_freq ;
 
 
@@ -81,7 +80,7 @@ package body cache_ll is
       end if ;
    end Supprimer_lfu;
 
-   procedure Chercher_max_temps(Cache : in out T_LCA; max : out Unbounded_String; temps_max : out Horaire) is
+   procedure Chercher_max_temps(Cache : in out T_LCA; max : in out Unbounded_String; temps_max : in out Time) is
       --max : Unbounded_String ;
       --temps_max : Horaire ;
    begin
@@ -91,7 +90,7 @@ package body cache_ll is
       else
          Chercher_max_temps(Cache.All.Suivant, max, temps_max);
       end if;
-      if (Cache.all.Temps_enregistrement.Annee > temps_max.Annee) and then (Cache.all.Temps_enregistrement.Mois > temps_max.Mois) and then (Cache.all.Temps_enregistrement.Jour > temps_max.Jour) and then (Cache.all.Temps_enregistrement.Secondes > temps_max.Secondes) then
+      if Cache.all.Temps_enregistrement > temps_max then
          max := Cache.all.Adresse ;
          temps_max := Cache.all.Temps_enregistrement ;
       end if;
@@ -111,17 +110,17 @@ package body cache_ll is
    procedure Enregistrer(Cache : in out T_LCA; Stats : in out T_Stats; Adresse_IP : in Unbounded_String; Interface_Adresse : in Unbounded_String; Masque_Adresse: Unbounded_String) is
    begin
       if Est_Vide(Cache) then
-         Cache := new T_Cellule'(Adresse => Adresse_IP, Masque => Masque_Adresse, Nombre_utilisation => 0, Cle => (Taille(Cache) + 1), Suivant => Null, Interface_utilisation => Interface_Adresse, Temps_enregistrement => Temps);
+         Cache := new T_Cellule'(Adresse => Adresse_IP, Masque => Masque_Adresse, Nombre_utilisation => 0, Cle => (Taille(Cache) + 1), Suivant => Null, Interface_utilisation => Interface_Adresse, Temps_enregistrement => Clock);
          Stats.nb_demandes := Stats.nb_demandes + 1.0 ;
          Stats.nb_defauts := Stats.nb_defauts + 1.0 ;
          Stats.taux_defauts := Stats.nb_defauts / Stats.nb_demandes ;
-      elsif (Cache.all.Adresse /= Adresse_IP) or ((Cache.all.Adresse = Adresse_IP) and (Cache.all.Masque /= Masque_Adresse) then
+      elsif (Cache.all.Adresse /= Adresse_IP) or ((Cache.all.Adresse = Adresse_IP) and (Cache.all.Masque /= Masque_Adresse)) then
          Enregistrer(Cache.all.Suivant, Stats, Adresse_IP, Interface_Adresse, Masque_Adresse);
       else 
          Stats.nb_demandes := Stats.nb_demandes + 1.0 ;
          Stats.taux_defauts := Stats.nb_defauts / Stats.nb_demandes ;
          Cache.all.Nombre_utilisation := Cache.all.Nombre_utilisation + 1;
-         Cache.all.Temps_enregistrement := Temps ;
+         Cache.all.Temps_enregistrement := Clock ;
       end if ;
    end Enregistrer ;
 
@@ -187,4 +186,3 @@ package body cache_ll is
    end Pour_Chaque ;
 
 end cache_ll ;
-
