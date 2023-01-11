@@ -6,7 +6,7 @@ with Ada.Calendar; use Ada.Calendar;
 generic
    capacite_cache : Integer ;
 
-package cache_total is
+package cache_LL is
 
    type T_Stats is record
       nb_demandes : Float ;
@@ -66,4 +66,4 @@ private
       Suivant : T_LCA;
    end record;
 
-end cache_total;
+end cache_LL;
