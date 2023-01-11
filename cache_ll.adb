@@ -115,7 +115,7 @@ package body cache_ll is
          Stats.nb_demandes := Stats.nb_demandes + 1.0 ;
          Stats.nb_defauts := Stats.nb_defauts + 1.0 ;
          Stats.taux_defauts := Stats.nb_defauts / Stats.nb_demandes ;
-      elsif (Cache.all.Adresse /= Adresse_IP) and then (Cache.all.Masque /= Masque_Adresse) then
+      elsif (Cache.all.Adresse /= Adresse_IP) or ((Cache.all.Adresse = Adresse_IP) and (Cache.all.Masque /= Masque_Adresse) then
          Enregistrer(Cache.all.Suivant, Stats, Adresse_IP, Interface_Adresse, Masque_Adresse);
       else 
          Stats.nb_demandes := Stats.nb_demandes + 1.0 ;
