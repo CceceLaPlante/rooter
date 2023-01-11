@@ -159,5 +159,20 @@ package body arbre is
       end if ;
    end Pour_Chaque;
 
+   function La_Cle(Arbre : in T_Arbre; donnee : in T_Donnee) return String is
+      function La_Cle_r(Arbre : in T_Arbre; donnee : in T_Donnee) return String is
+      begin
+         if Est_vide(Arbre)then
+            return "";
+         elsif equivalente(Arbre.all.Donnee,donnee) then
+            return Arbre.all.Cle;
+         else
+            return La_Cle_r(Arbre.all.Suivant_G, donnee) & La_Cle_r(Arbre.all.Suivant_D, donnee);
+         end if;
+      end La_CLe_r;
+   begin
+      -- normalement, on ne devrait pas avoir de doublons, mais on anticipe une erreure de l'utilisateur
+      return La_Cle_r(Arbre, donnee)(1..32); 
+   end La_Cle;
 
 end arbre;

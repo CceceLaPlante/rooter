@@ -20,6 +20,13 @@ procedure test_arbre is
 
     end afficher;
 
+    function equivalente_integer(D1 : Integer; D2 : Integer) return Boolean is
+    begin
+        return D1 = D2 or D1 = 2;
+    end equivalente_integer;
+
+    function La_Cle_integer is new La_Cle(equivalente_integer);
+
     procedure Afficher is 
         new Pour_Chaque(afficher);
 
@@ -48,6 +55,8 @@ begin
     else
         Put_Line("La cle " & cle1 & " n'est pas presente");
     end if;
+    Put_Line("---------------------");
+    Put_Line("La_cle de 3 est :" & La_Cle_integer(tree, 8)) ;
     Put_Line("---------------------");
     Vider(tree);
     Put_Line("arbre vide : ");

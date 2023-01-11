@@ -46,6 +46,15 @@ package Cache_Arbre is
 		stats : T_Stat;
 	end record;
 
+	-- permet de comparer deux lignes, elle sert pour la fonction generique : La_Cle,
+	-- attention !!! elle compare l'adresse ip de la ligne 1, masquee avec l'adresse ip de la ligne 2
+	function equivalente_ligne (Ligne1 : in T_ligne; Ligne2 : in T_ligne) return Boolean;
+
+	-- permet de comparer une adresse et une autre selon un masque 
+	function correspond(adr1 : in String; adr2 : in String;mask : in String) return Boolean;
+
+	-- renvoie une adresse binaire, masquee par le mask (binaire aussi)
+	function masquer(adr : in String; mask : in String) return String;
 
 	-- permet d'initialiser le cache
 	procedure Initialiser_cache (Cache : in out T_Cache)
@@ -78,8 +87,8 @@ package Cache_Arbre is
 	-- permet de supprimer la ligne la plus ancienne du cache
 	procedure Supprimer_LRU (Cache : in out T_Cache; Ligne : in T_ligne);
 
-	-- permet de savoir si une ligne est présente dans le cache
-	function IP_Presente (Cache : in T_Cache; IP : in Unbounded_String) return Boolean;
+	-- permet de savoir si une ip est dans le cache, attention, l'ip dois être un binaire masqué
+	function IP_Presente (Cache : in T_Cache; IP : in String) return Boolean;
 
 	-- permet de vider le cache
 	procedure Vider (Cache : in out T_Cache)

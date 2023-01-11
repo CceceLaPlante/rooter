@@ -71,6 +71,12 @@ package arbre is
      with procedure Traiter (Cle : in String; Donnee: in T_Donnee);
   procedure Pour_Chaque (Arbre : in T_Arbre);
 
+  -- cette fonction permet de savoir si une donnée a une donnée équivalente
+  -- dans l'arbre, elle en renvoie la cle
+  generic 
+    with function equivalente(D1 : in T_Donnee; D2 : in T_Donnee) return Boolean;
+  function La_Cle(Arbre: in T_Arbre ; donnee : in T_Donnee) return String;
+
 
 
 end arbre;
