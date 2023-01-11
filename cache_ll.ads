@@ -2,11 +2,12 @@ with LCA;
 with Ada.Unchecked_Deallocation;
 with Ada.Strings.Unbounded;     use Ada.Strings.Unbounded;
 with Ada.Calendar; use Ada.Calendar;
+with cache_exception; use cache_exception;
 
 generic
    capacite_cache : Integer ;
 
-package cache_LL is
+package cache_ll is
 
    type T_Stats is record
       nb_demandes : Float ;
@@ -23,7 +24,7 @@ package cache_LL is
 
    type T_LCA is private ;
 
-   procedure Temps(Annee : out Year_Number; Mois : out Month_Number; Jour : out Day_Number; Secondes : out Day_Duration) ;
+   function Temps return Horaire;
 
    procedure Initialiser(Cache : out T_LCA; Stats : out T_Stats) ;
 
@@ -31,13 +32,13 @@ package cache_LL is
 
    procedure Supprimer_fifo(Cache : in out T_LCA) ;
 
-   procedure Chercher_min_freq(Cache : in out T_LCA, min: out Unbounded_String, freq_min : out Integer);
+   procedure Chercher_min_freq(Cache : in out T_LCA; min: out Unbounded_String; freq_min : out Integer);
 
-   procedure Supprimer_lfu(Cache : in out T_LCA, min : in Unbounded_String) ;
+   procedure Supprimer_lfu(Cache : in out T_LCA; min : in Unbounded_String) ;
 
-   procedure Chercher_max_temps(Cache : in out T_LCA, max : out Unbounded_String, temps_max : out Horaire);
+   procedure Chercher_max_temps(Cache : in out T_LCA; max : out Unbounded_String; temps_max : out Horaire);
 
-   procedure Supprimer_lru(Cache : in out T_LCA, max : in Unbounded_String) ;
+   procedure Supprimer_lru(Cache : in out T_LCA; max : in Unbounded_String) ;
 
    procedure Enregistrer(Cache : in out T_LCA; Stats : in out T_Stats; Adresse_IP : in Unbounded_String; Interface_Adresse : in Unbounded_String) ;
 
@@ -49,7 +50,10 @@ package cache_LL is
 
    function Est_Pleine(Cache : in T_LCA; capacite_cache : in Integer) return Boolean ;
    
+   generic
+      with procedure Traiter(Adresse: in Unbounded_String; Interface_utilisation: in Unbounded_String);
    procedure Pour_Chaque(Cache : in T_LCA);
+
       
 
 
@@ -66,5 +70,5 @@ private
       Suivant : T_LCA;
    end record;
 
-end cache_LL;
-end cache_LL;
+end cache_ll;
+
