@@ -15,7 +15,21 @@ with Ada.Text_IO;             use Ada.Text_IO;
 package body  Cache_Arbre is
 
     function equivalente_ligne (Ligne1 : in T_ligne; Ligne2 : in T_Ligne) return Boolean is
-        
+        ip1 : String(1..32):=To_String(Convertir_IP2B(Ligne1.destination));
+        ip2 : String(1..32):=To_String(Convertir_IP2B(Ligne2.destination));
+        masque : String(1..32):=To_String(Convertir_IP2B(Ligne2.mask));
+    begin  
+        for i in 1..32 loop 
+            if masque(i) = '1' and ip1(i) = ip2(i) then 
+                null;
+            else 
+                return False;
+            end if;
+        end loop;
+        return True;
+    end equivalente_ligne;
+
+    function La_cle_cache is new La_Cle(equivalente_ligne);
 
     procedure Initialiser_cache (Cache : in out T_Cache) is
     begin
@@ -49,12 +63,11 @@ package body  Cache_Arbre is
          a_return_reversed := a_return_reversed & Element(a_return, 9-i);
       end loop;
 
-
       return a_return_reversed;
    end Convertir_IP2B_4;
     
    -- puis on s'occupe de la conversion de l'adresse IP complète
-   function Convertir_IP2B(Adresse_IP : Unbounded_String) return Unbounded_String is
+   function Convertir_IP2B (Adresse_IP : Unbounded_String) return Unbounded_String is
       entier : Integer := 0;
       entier_string : Unbounded_String := To_Unbounded_String("");
       type adr4 is array(1..4) of Unbounded_String;
@@ -140,6 +153,14 @@ package body  Cache_Arbre is
         ligne.temps := Now;
         return ligne;
     end Trouver;
+
+    function Trouver_global(Cache: in  T_Cache; IP : in Unbounded_String) return T_ligne is
+        cle : String(1..32);
+        ip_bin : String(1..32) := To_String(Convertir_IP2B(IP));
+    begin
+        cle := La_cle_cache(ip_bin);
+        return Trouver(Cache, cle);
+    end Trouver_masque;
 
     function correspond(adr1 : in String; adr2 : in String; mask : in String) return Boolean is
         a_return : Boolean := True;
@@ -249,5 +270,5 @@ package body  Cache_Arbre is
     end Taille_cache;
 
 
-
+    
 end Cache_Arbre;

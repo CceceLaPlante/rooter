@@ -47,7 +47,7 @@ package Cache_Arbre is
 	end record;
 
 	-- permet de comparer deux lignes, elle sert pour la fonction generique : La_Cle,
-	-- attention !!! elle compare l'adresse ip de la ligne 1, masquee avec l'adresse ip de la ligne 2
+	-- attention !!! elle compare l'adresse ip de la ligne 1, masquee avec le maque et l'adresse ip de la ligne 2
 	function equivalente_ligne (Ligne1 : in T_ligne; Ligne2 : in T_ligne) return Boolean;
 
 	-- permet de comparer une adresse et une autre selon un masque 
@@ -74,6 +74,8 @@ package Cache_Arbre is
   	function B2IP_4 (IP : in Unbounded_String) return Unbounded_String;
 
 	function B2IP (IP : in Unbounded_String) return Unbounded_String;
+
+	function Trouver_global (Cache: in T_Cache; IP : Unbounded_String) return T_ligne;
 
 	-- permet de trouver la ligne correspondante à l'ip
 	function Trouver (Cache : in T_Cache; IP : in Unbounded_String) return T_ligne;
