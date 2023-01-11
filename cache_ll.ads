@@ -32,11 +32,11 @@ package cache_ll is
 
    procedure Supprimer_fifo(Cache : in out T_LCA) ;
 
-   procedure Chercher_min_freq(Cache : in out T_LCA; min: out Unbounded_String; freq_min : out Integer);
+   procedure Chercher_min_freq(Cache : in out T_LCA; min: in out Unbounded_String; freq_min : in out Integer);
 
    procedure Supprimer_lfu(Cache : in out T_LCA; min : in Unbounded_String) ;
 
-   procedure Chercher_max_temps(Cache : in out T_LCA; max : out Unbounded_String; temps_max : out Horaire);
+   procedure Chercher_max_temps(Cache : in out T_LCA; max : in out Unbounded_String; temps_max : in out Time);
 
    procedure Supprimer_lru(Cache : in out T_LCA; max : in Unbounded_String) ;
 
@@ -67,9 +67,8 @@ private
       Interface_utilisation : Unbounded_String; 
       Nombre_utilisation : Integer;
       Cle : Integer;
-      Temps_enregistrement : Horaire ;
+      Temps_enregistrement : Time ;
       Suivant : T_LCA;
    end record;
 
 end cache_ll;
-
