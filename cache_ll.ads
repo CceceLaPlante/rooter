@@ -40,18 +40,18 @@ package cache_ll is
 
    procedure Supprimer_lru(Cache : in out T_LCA; max : in Unbounded_String) ;
 
-   procedure Enregistrer(Cache : in out T_LCA; Stats : in out T_Stats; Adresse_IP : in Unbounded_String; Interface_Adresse : in Unbounded_String) ;
+   procedure Enregistrer(Cache : in out T_LCA; Stats : in out T_Stats; Adresse_IP : in Unbounded_String; Interface_Adresse : in Unbounded_String; Masque_Adresse: Unbounded_String) ;
 
    procedure Vider(Cache : in out T_LCA; Stats : in out T_Stats);
 
-   function Adresse_Presente(Cache : in T_LCA; Stats : in T_Stats; Adresse : in Unbounded_String) return Boolean;
+   function Adresse_Presente(Cache : in T_LCA; Stats : in T_Stats; Adresse : in Unbounded_String; Masque_Adresse: in Unbounded_String) return Boolean;
 
    function Taille(Cache : in T_LCA) return Integer ;
 
    function Est_Pleine(Cache : in T_LCA; capacite_cache : in Integer) return Boolean ;
    
    generic
-      with procedure Traiter(Adresse: in Unbounded_String; Interface_utilisation: in Unbounded_String);
+      with procedure Traiter(Adresse: in Unbounded_String; Interface_utilisation: in Unbounded_String; Masque_Adresse: in Unbounded_String);
    procedure Pour_Chaque(Cache : in T_LCA);
 
       
@@ -63,6 +63,7 @@ private
    type T_LCA is access T_Cellule;
    type T_Cellule is record
       Adresse : Unbounded_String;
+      Masque: Unbounded_String;
       Interface_utilisation : Unbounded_String; 
       Nombre_utilisation : Integer;
       Cle : Integer;
