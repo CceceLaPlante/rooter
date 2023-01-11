@@ -55,7 +55,7 @@ package body cache_ll is
       --min : Unbounded_String;
       --freq_min : Integer ;
    begin
-      if Est_Vide(Cache) then
+      if Est_Vide(Cache.all.Suivant) then
          min := Cache.all.adresse ;
          freq_min := Cache.all.Nombre_utilisation ;
       else
@@ -83,7 +83,7 @@ package body cache_ll is
       --max : Unbounded_String ;
       --temps_max : Horaire ;
    begin
-      if Est_Vide(Cache) then
+      if Est_Vide(Cache.all.Suivant) then
          max := Cache.all.Adresse ;
          temps_max := Cache.all.Temps_enregistrement ;
       else
