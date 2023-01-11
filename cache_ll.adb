@@ -55,15 +55,17 @@ package body cache_ll is
       --min : Unbounded_String;
       --freq_min : Integer ;
    begin
-      if Est_Vide(Cache.all.Suivant) then
-         min := Cache.all.adresse ;
-         freq_min := Cache.all.Nombre_utilisation ;
-      else
-         Chercher_min_freq(Cache.all.Suivant, min, freq_min);
-      end if ;
-      if Cache.all.Nombre_utilisation < freq_min then
-         min := Cache.all.Adresse;
-         freq_min := Cache.all.Nombre_utilisation;
+      if not Est_Vide(Cache) then
+         if Est_Vide(Cache.all.Suivant)  then
+            min := Cache.all.adresse ;
+            freq_min := Cache.all.Nombre_utilisation ;
+         else
+            Chercher_min_freq(Cache, min, freq_min);
+         end if ;
+         if Cache.all.Nombre_utilisation < freq_min then
+            min := Cache.all.Adresse;
+            freq_min := Cache.all.Nombre_utilisation;
+         end if;
       end if ;
    end Chercher_min_freq ;
 
@@ -106,15 +108,15 @@ package body cache_ll is
       end if ;
    end Supprimer_lru;
 
-   procedure Enregistrer(Cache : in out T_LCA; Stats : in out T_Stats; Adresse_IP : in Unbounded_String; Interface_Adresse : in Unbounded_String) is
+   procedure Enregistrer(Cache : in out T_LCA; Stats : in out T_Stats; Adresse_IP : in Unbounded_String; Interface_Adresse : in Unbounded_String; Masque_Adresse: Unbounded_String) is
    begin
       if Est_Vide(Cache) then
-         Cache := new T_Cellule'(Adresse => Adresse_IP, Nombre_utilisation => 0, Cle => (Taille(Cache) + 1), Suivant => Null, Interface_utilisation => Interface_Adresse, Temps_enregistrement => Temps);
+         Cache := new T_Cellule'(Adresse => Adresse_IP, Masque => Masque_Adresse, Nombre_utilisation => 0, Cle => (Taille(Cache) + 1), Suivant => Null, Interface_utilisation => Interface_Adresse, Temps_enregistrement => Temps);
          Stats.nb_demandes := Stats.nb_demandes + 1.0 ;
          Stats.nb_defauts := Stats.nb_defauts + 1.0 ;
          Stats.taux_defauts := Stats.nb_defauts / Stats.nb_demandes ;
-      elsif (Cache.all.Adresse /= Adresse_IP) then
-         Enregistrer(Cache.all.Suivant, Stats, Adresse_IP, Interface_Adresse);
+      elsif (Cache.all.Adresse /= Adresse_IP) or ((Cache.all.Adresse = Adresse_IP) and (Cache.all.Masque /= Masque_Adresse) then
+         Enregistrer(Cache.all.Suivant, Stats, Adresse_IP, Interface_Adresse, Masque_Adresse);
       else 
          Stats.nb_demandes := Stats.nb_demandes + 1.0 ;
          Stats.taux_defauts := Stats.nb_defauts / Stats.nb_demandes ;
@@ -140,14 +142,14 @@ package body cache_ll is
    end Vider ;
 
 
-   function Adresse_Presente(Cache : in T_LCA; Stats : in T_Stats; Adresse : in Unbounded_String) return Boolean is
+   function Adresse_Presente(Cache : in T_LCA; Stats : in T_Stats; Adresse : in Unbounded_String; Masque_Adresse: in Unbounded_String) return Boolean is
    begin
       if Est_Vide(Cache) then
          return False ;
-      elsif Cache.all.Adresse = Adresse then
+      elsif (Cache.all.Adresse = Adresse) and (Cache.all.Masque = Masque_Adresse) then
          return True ;
       else
-         return Adresse_Presente(Cache.all.Suivant, Stats, Adresse);
+         return Adresse_Presente(Cache.all.Suivant, Stats, Adresse, Masque_Adresse);
       end if ;
       --exception when 
       --Adresse_Absente_Exception => return False ;
@@ -175,13 +177,14 @@ package body cache_ll is
          Null;
       else 
          begin
-            Traiter(Cache.all.adresse, cache.all.Interface_utilisation);
+            Traiter(Cache.all.Adresse, Cache.all.Masque, Cache.all.Interface_utilisation);
          exception 
             when others =>
                Null;
          end;
-         Pour_Chaque(Cache.all.suivant);
+         Pour_Chaque(Cache.all.Suivant);
       end if;
    end Pour_Chaque ;
 
 end cache_ll ;
+
