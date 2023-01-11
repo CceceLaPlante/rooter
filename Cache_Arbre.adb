@@ -14,14 +14,14 @@ with Ada.Text_IO;             use Ada.Text_IO;
 
 package body  Cache_Arbre is
 
-    procedure Initialiser_cache (Cache : in out T_Arbre) is
+    procedure Initialiser_cache (Cache : in out T_Cache) is
     begin
-        Cache := Initialiser(Cache);
+        Initialiser(Cache.Arbre);
     end Initialiser;
 
-    function Est_vide_cache (Cache : in T_Arbre) is
+    function Est_vide_cache (Cache : in T_Cache) is
     begin
-        return Est_vide(cache);
+        return Est_vide(Cache.Arbre);
     end Est_vide;
 
        -- d'abord on s'occupe d'une conversion 4bit 
@@ -125,38 +125,40 @@ package body  Cache_Arbre is
         return a_return;
     end B2IP;
 
-    function Trouver (Cache : in T_Arbre; IP : in Unbounded_String) return T_Ligne is 
+    function Trouver (Cache : in T_Cache; IP : in Unbounded_String) return T_Ligne is 
         IP_Bin : Unbounded_String := Convertir_IP2B(IP);
         Cle : String(1..32);
         ligne : T_Ligne;
         Now : Time := Clock;
     begin 
         Cle := To_String(IP_Bin);
-        ligne:= La_Donnee(Cache, Cle);
+        ligne:= La_Donnee(Cache.Arbre, Cle);
         -- j'ai peur que modifier comme ça ne change pas dans l'arbre
         ligne.temps := Now;
         return ligne;
     end Trouver;
 
-    procedure Ajouter (Cache : in out T_Arbre; IP : in Unbounded_String; Ligne : in T_Ligne) is
+    procedure Ajouter (Cache : in out T_Cache; IP : in Unbounded_String; Ligne : in T_Ligne) is
         IP_Bin : Unbounded_String := Convertir_IP2B(IP);
         Cle : String(1..32);
         Now : Time := Clock;
     begin
+        Cache.stats.nb_defaut := Cache.stats.nb_defaut + 1;
         Cle := To_String(IP_Bin);
         Ligne.temps := Now;
-        Enregistrer(Cache, Cle, Ligne);
+        Cache.
+        Enregistrer(Cache.Arbre, Cle, Ligne);
     end Ajouter;
 
-    procedure Supprimer_IP (Cache : in out T_Arbre; IP : in Unbounded_String) is
+    procedure Supprimer_IP (Cache : in out T_Cache; IP : in Unbounded_String) is
         IP_Bin : Unbounded_String := Convertir_IP2B(IP);
         Cle : String(1..32);
     begin
         Cle := To_String(IP_Bin);
-        Supprimer(Cache, Cle);
+        Supprimer(Cache.Arbre, Cle);
     end Supprimer_IP;
 
-    procedure Supprimer_LRU (Cache : in out T_Arbre; max_taille: in Integer) is
+    procedure Supprimer_LRU (Cache : in out T_Cache; max_taille: in Integer) is
         -- faut utiliser un pour chaques j'ai envie de me tirer une balle...
 
         function minimum(a : T_Ligne; b : T_Ligne) return T_Ligne is
@@ -192,11 +194,37 @@ package body  Cache_Arbre is
         end min_rec;
     begin
 
-        if Taille(Cache) > max_taille then
-            Supprimer_IP(Cache, min_rec(Cache).IP);
+        if Taille(Cache.Arbre) > max_taille then
+            Supprimer_IP(Cache.Arbre, min_rec(Cache.Arbre).destination);
         end if;
     end Supprimer_LRU;
         
+    function IP_Presente(Cache : in T_Cache; IP : in Unbounded_String) return Boolean is
+        IP_Bin : Unbounded_String := Convertir_IP2B(IP);
+        Cle : String(1..32);
+
+    begin
+        Cle := To_String(IP_Bin);
+        return Est_Present(Cache.Arbre, Cle);
+    end IP_Presente;
     
+    procedure afficher_inter(Cle : in String(1..32); Ligne : in T_Ligne) is
+        IP : Unbounded_String := B2IP(Cle);
+    begin
+        if Cle =  nuls then
+            Put("");
+        else 
+            Put_Line (Ligne.destination & " : " & Ligne.mask & " : " & Ligne.inter);
+        end if;
+    end afficher;
+
+    procedure Afficher is new Pour_Chaque(afficher_inter);
+
+    function Taille_cache(Cache : in T_Cache) return Integer is 
+    begin
+        return Taille(Cache.Arbre);
+    end Taille_cache;
+
+
 
 end Cache_Arbre;

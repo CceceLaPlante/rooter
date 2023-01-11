@@ -13,7 +13,6 @@ with Ada.Text_IO;             use Ada.Text_IO;
 
 
 -- toutes les adresses ip et masques donnés par le client sont en base 10.
-
 generic
     politic : Unbounded_String
    
@@ -49,7 +48,7 @@ package Cache_Arbre is
 
 
 	-- permet d'initialiser le cache
-	procedure Initialiser_cache (Cache : in out T_Arbre)
+	procedure Initialiser_cache (Cache : in out T_Cache)
 		with Post => Est_Vide (Cache) = True;
 
 	-- pretty self explanatory
@@ -68,29 +67,32 @@ package Cache_Arbre is
 	function B2IP (IP : in Unbounded_String) return Unbounded_String;
 
 	-- permet de trouver la ligne correspondante à l'ip
-	function Trouver (Cache : in T_Arbre; IP : in Unbounded_String) return T_ligne;
+	function Trouver (Cache : in T_Cache; IP : in Unbounded_String) return T_ligne;
 
 	-- permet d'ajouter une ligne dans le cache
-	procedure Ajouter (Cache : in out T_Arbre; Ligne : in T_ligne);
+	procedure Ajouter (Cache : in out T_Cache; Ligne : in T_ligne);
 
 	-- permet de supprimer une ligne du cache
-	procedure Supprimer_IP (Cache : in out T_Arbre; IP : in Unbounded_String);
+	procedure Supprimer_IP (Cache : in out T_Cache; IP : in Unbounded_String);
 
 	-- permet de supprimer la ligne la plus ancienne du cache
-	procedure Supprimer_LRU (Cache : in out T_Arbre; Ligne : in T_ligne);
+	procedure Supprimer_LRU (Cache : in out T_Cache; Ligne : in T_ligne);
 
 	-- permet de savoir si une ligne est présente dans le cache
-	function IP_Presente (Cache : in T_Arbre; IP : in Unbounded_String) return Boolean;
+	function IP_Presente (Cache : in T_Cache; IP : in Unbounded_String) return Boolean;
 
 	-- permet de vider le cache
-	procedure Vider (Cache : in out T_Arbre)
+	procedure Vider (Cache : in out T_Cache)
 		with Post => Est_Vide (Cache);
 
+	-- procedure "traiter" de arbre
+	procedure afficher_inter (Cle : in String(1..32); Ligne : in T_ligne);
+
 	-- permet d'afficher le cache
-	procedure Afficher (Cache : in T_Arbre);
+	procedure Afficher (Cache : in T_Cache);
 
 	-- permet de retourner la taille du cache (le nb de feuilles,pas de noeuds)
-	function Taille_cache(Cache : in T_Arbre) return Integer;
+	function Taille_cache(Cache : in T_Cache) return Integer;
 
 
 
