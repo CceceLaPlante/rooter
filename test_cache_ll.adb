@@ -5,10 +5,10 @@ with SDA_Exceptions;         use SDA_Exceptions;
 with Ada.Calendar; use Ada.Calendar;
 
 
-procedure ex_utilisation_cache_fifo is 
+procedure test_cache_ll is 
 
-   package Cache_fifo_utilisation is new Cache_fifo(capacite_cache => 5) ;
-   use Cache_fifo_utilisation;
+   package cache_ll_utilisation is new Cache_fifo(capacite_cache => 5) ;
+   use cache_ll_utilisation;
    
    procedure Afficher_cache is new Cache_fifo_utilisation.Pour_Chaque(Afficher);
    
