@@ -1,22 +1,29 @@
-  with LCA ;
+with LCA ;
 with SDA_Exceptions;         use SDA_Exceptions;
 with Ada.Calendar; use Ada.Calendar;
+with cache_exception;  use cache_exception;
 
-package body cache_LL is
+package body cache_ll is
 
 
    procedure Free is
      new Ada.Unchecked_Deallocation (Object => T_Cellule, Name => T_LCA);
 
-
-   procedure Temps(Annee : out Year_Number; Mois : out Month_Number; Jour : out Day_Number; Secondes : out Day_Duration) is
+   --(Annee : out Year_Number; Mois : out Month_Number; Jour : out Day_Number; Secondes : out Day_Duration) 
+   function Temps return Horaire is
       Mon_Time : Time :=  Clock ;
       Annee    : Year_Number;
       Mois     : Month_Number;
       Jour     : Day_Number;
       Secondes : Day_Duration;
+      Date : Horaire;
    begin
       Split (Mon_Time, Annee, Mois, Jour, Secondes );
+      Date.Annee := Annee;
+      Date.Mois := Mois;
+      Date.Jour := Jour;
+      Date.Secondes := Secondes;
+      return Date;
    end Temps;
         
 
@@ -41,18 +48,18 @@ package body cache_LL is
       pointeur_debut := Cache.all.Suivant ; -- on rÃ©cupÃ¨re l'adresse du deuxiÃ¨me Ã©lÃ©ment du cache
       Free(Cache); -- on libÃ¨re le premier Ã©lÃ©ment ---- condition Ã  changer en fonction de la politique du cache !
       Cache := pointeur_debut ; -- on rÃ©cupÃ¨re le cache Ã  partir du deuxiÃ¨me Ã©lÃ©ment
-   end Supprimer;
+   end Supprimer_fifo;
 
 
-   procedure Chercher_min_freq(Cache : in out T_LCA, min: out Unbounded_String, freq_min : out Integer) is
-      min : Unbounded_String;
-      freq_min : Integer ;
+   procedure Chercher_min_freq(Cache : in out T_LCA; min: out Unbounded_String; freq_min : out Integer) is
+      --min : Unbounded_String;
+      --freq_min : Integer ;
    begin
       if Est_Vide(Cache) then
          min := Cache.all.adresse ;
          freq_min := Cache.all.Nombre_utilisation ;
       else
-         Chercher_min(Cache.all.Suivant, min, freq_min);
+         Chercher_min_freq(Cache.all.Suivant, min, freq_min);
       end if ;
       if Cache.all.Nombre_utilisation < freq_min then
          min := Cache.all.Adresse;
@@ -61,7 +68,7 @@ package body cache_LL is
    end Chercher_min_freq ;
 
 
-   procedure Supprimer_lfu(Cache : in out T_LCA, min : in Unbounded_String) is
+   procedure Supprimer_lfu(Cache : in out T_LCA; min : in Unbounded_String) is
    begin
       if Est_Vide(Cache) then
          raise Adresse_Absente_Exception ;
@@ -72,9 +79,9 @@ package body cache_LL is
       end if ;
    end Supprimer_lfu;
 
-   procedure Chercher_max_temps(Cache : in out T_LCA, max : out Unbounded_String, temps_max : out Horaire) is
-      max : Unbounded_String ;
-      temps_max : out Horaire ;
+   procedure Chercher_max_temps(Cache : in out T_LCA; max : out Unbounded_String; temps_max : out Horaire) is
+      --max : Unbounded_String ;
+      --temps_max : Horaire ;
    begin
       if Est_Vide(Cache) then
          max := Cache.all.Adresse ;
@@ -86,9 +93,9 @@ package body cache_LL is
          max := Cache.all.Adresse ;
          temps_max := Cache.all.Temps_enregistrement ;
       end if;
-   end Chercher_max ;
+   end Chercher_max_temps ;
 
-   procedure Supprimer_lru(Cache : in out T_LCA, max : in Unbounded_String) is
+   procedure Supprimer_lru(Cache : in out T_LCA; max : in Unbounded_String) is
    begin
       if Est_Vide(Cache) then
          raise Adresse_Absente_Exception ;
@@ -168,7 +175,7 @@ package body cache_LL is
          Null;
       else 
          begin
-            Afficher(Cache.all.adresse, cache.all.Interface_utilisation);
+            Traiter(Cache.all.adresse, cache.all.Interface_utilisation);
          exception 
             when others =>
                Null;
@@ -177,8 +184,4 @@ package body cache_LL is
       end if;
    end Pour_Chaque ;
 
-
-
-
-
-end cache_LL ;
+end cache_ll ;
