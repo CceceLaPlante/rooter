@@ -14,6 +14,9 @@ with Ada.Text_IO;             use Ada.Text_IO;
 
 package body  Cache_Arbre is
 
+    function equivalente_ligne (Ligne1 : in T_ligne; Ligne2 : in T_Ligne) return Boolean is
+        
+
     procedure Initialiser_cache (Cache : in out T_Cache) is
     begin
         Initialiser(Cache.Arbre);
@@ -138,15 +141,39 @@ package body  Cache_Arbre is
         return ligne;
     end Trouver;
 
-    procedure Ajouter (Cache : in out T_Cache; IP : in Unbounded_String; Ligne : in T_Ligne) is
-        IP_Bin : Unbounded_String := Convertir_IP2B(IP);
+    function correspond(adr1 : in String; adr2 : in String; mask : in String) return Boolean is
+        a_return : Boolean := True;
+    begin 
+        for i in 1..32 loop
+            if mask(i) = '1' then
+                if adr1(i) /= adr2(i) then
+                    a_return := False;
+                end if;
+            end if;
+        end loop;
+        return a_return;
+    end correspond;
+
+    function masquer(adr : in String; mask : in String) return String is
+        a_return : String(1..32):= "00000000000000000000000000000000";
+    begin
+        for i in 1..32 loop
+            if mask(i) = '1' then
+                a_return(i) := adr(i);
+            end if;
+        end loop;
+
+        return a_return;
+    end masquer;
+
+    procedure Ajouter (Cache : in out T_Cache;Ligne : in T_Ligne) is
+        IP_Bin : Unbounded_String := Convertir_IP2B(Ligne.destination);
         Cle : String(1..32);
         Now : Time := Clock;
     begin
         Cache.stats.nb_defaut := Cache.stats.nb_defaut + 1;
         Cle := To_String(IP_Bin);
         Ligne.temps := Now;
-        Cache.
         Enregistrer(Cache.Arbre, Cle, Ligne);
     end Ajouter;
 
@@ -199,13 +226,9 @@ package body  Cache_Arbre is
         end if;
     end Supprimer_LRU;
         
-    function IP_Presente(Cache : in T_Cache; IP : in Unbounded_String) return Boolean is
-        IP_Bin : Unbounded_String := Convertir_IP2B(IP);
-        Cle : String(1..32);
-
+    function IP_Presente(Cache : in T_Cache; IP : in String) return Boolean is
     begin
-        Cle := To_String(IP_Bin);
-        return Est_Present(Cache.Arbre, Cle);
+        return Est_Present(Cache.Arbre, IP);
     end IP_Presente;
     
     procedure afficher_inter(Cle : in String(1..32); Ligne : in T_Ligne) is
