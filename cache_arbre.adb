@@ -32,14 +32,17 @@ package body  Cache_Arbre is
     function La_cle_cache is new La_Cle(equivalente_ligne);
 
     procedure Initialiser_cache (Cache : in out T_Cache) is
+        stat : T_Stat := (nb_defaut => 0, tx_defaut => 0.0 , nb_demande => 0);
     begin
+        Cache.stats := stat;
+        Cache.Arbre := null;
         Initialiser(Cache.Arbre);
-    end Initialiser;
+    end Initialiser_cache;
 
-    function Est_vide_cache (Cache : in T_Cache) is
+    function Est_vide_cache (Cache : in T_Cache) return Boolean is
     begin
         return Est_vide(Cache.Arbre);
-    end Est_vide;
+    end Est_vide_cache;
 
        -- d'abord on s'occupe d'une conversion 4bit 
    function Convertir_IP2B_4 (adr : Integer) return Unbounded_String is 
@@ -125,16 +128,18 @@ package body  Cache_Arbre is
         end loop;
 
         return a_return_reversed;
-    end B2IP;
+    end B2IP_4;
 
     function B2IP (IP : in Unbounded_String) return Unbounded_String is
         a_return : Unbounded_String;
+        quart_IP : Unbounded_String;
     begin 
         for i in 1..4 loop
             if i = 4 then
-                a_return := a_return & B2IP_4(IP((i-1)*8+1..i*8));
+                quart_IP := To_Unbounded_String(To_String(IP)((i-1)*8+1..i*8));
+                a_return :=To_Unbounded_String(To_String(a_return) & To_String(B2IP_4(quart_IP)));
             else
-                a_return := a_return & B2IP_4(IP((i-1)*8+1..i*8)) & '.';
+                a_return := To_Unbounded_String(To_String(a_return) & To_String(B2IP_4(quart_IP))) & '.';
             end if;
         end loop;
 
@@ -156,11 +161,13 @@ package body  Cache_Arbre is
 
     function Trouver_global(Cache: in  T_Cache; IP : in Unbounded_String) return T_ligne is
         cle : String(1..32);
-        ip_bin : String(1..32) := To_String(Convertir_IP2B(IP));
+        --ip_bin : String(1..32) := To_String(Convertir_IP2B(IP));
+        ligne_factis : T_Ligne;
     begin
-        cle := La_cle_cache(ip_bin);
-        return Trouver(Cache, cle);
-    end Trouver_masque;
+        ligne_factis.destination := IP;
+        cle := La_cle_cache(Cache.Arbre, ligne_factis);
+        return Trouver(Cache, To_Unbounded_String(cle));
+    end Trouver_global;
 
     function correspond(adr1 : in String; adr2 : in String; mask : in String) return Boolean is
         a_return : Boolean := True;
@@ -187,15 +194,20 @@ package body  Cache_Arbre is
         return a_return;
     end masquer;
 
-    procedure Ajouter (Cache : in out T_Cache;Ligne : in T_Ligne) is
+    procedure Ajouter (Cache : in out T_Cache;Ligne : in out T_Ligne) is
         IP_Bin : Unbounded_String := Convertir_IP2B(Ligne.destination);
         Cle : String(1..32);
         Now : Time := Clock;
+        nul_ligne : T_Ligne;
     begin
+        nul_ligne.destination := To_Unbounded_String("");
+        nul_ligne.mask := To_Unbounded_String("");
+        nul_ligne.inter := To_Unbounded_String("");
+        nul_ligne.temps := Clock;
         Cache.stats.nb_defaut := Cache.stats.nb_defaut + 1;
         Cle := To_String(IP_Bin);
         Ligne.temps := Now;
-        Enregistrer(Cache.Arbre, Cle, Ligne);
+        Enregistrer(Cache.Arbre, Cle, Ligne,nul_ligne);
     end Ajouter;
 
     procedure Supprimer_IP (Cache : in out T_Cache; IP : in Unbounded_String) is
@@ -216,25 +228,25 @@ package body  Cache_Arbre is
             else
                 return a;
             end if;
-        end maximum;
+        end minimum;
 
         function min_rec (Cache: in T_Arbre) return T_Ligne is
             nuls : String(1..32) := (others => Character'Val(0));
             -- Clock est forcément le plus grand temps possible
-            nul_tligne : T_Ligne := (destination => nuls, mask => nuls, inter => nuls, temps => Clock);
+            nul_tligne : T_Ligne := (destination => To_Unbounded_String(nuls), mask => To_Unbounded_String(nuls), inter => To_Unbounded_String(nuls), temps => Clock);
 
         begin
-            if not Est_vide_cache(Cache) and then Cache.all.leaf = False then
-                if Est_vide_cache(Cache.all.Suivant_G) then 
+            if not Est_vide(Cache) and then Cache.all.leaf = False then
+                if Est_vide(Cache.all.Suivant_G) then 
                     return min_rec(Cache.all.suivant_D);
-                elsif Est_vide_cache(Cache.all.Suivant_G) then 
+                elsif Est_vide(Cache.all.Suivant_G) then 
                     return min_rec(Cache.all.suivant_D);
-                elsif Est_vide_cache(Cache.all.Suivant_D) then
+                elsif Est_vide(Cache.all.Suivant_D) then
                     return min_rec(Cache.all.suivant_G);
                 else
                     return minimum(min_rec(Cache.all.suivant_G),min_rec(Cache.all.suivant_D));
                 end if;
-            elsif not Est_Vide_cache(Cache) and then Cache.all.leaf = True then
+            elsif not Est_Vide(Cache) and then Cache.all.leaf = True then
                 return Cache.all.Donnee;
             else 
                 return nul_tligne;
@@ -243,32 +255,42 @@ package body  Cache_Arbre is
     begin
 
         if Taille(Cache.Arbre) > max_taille then
-            Supprimer_IP(Cache.Arbre, min_rec(Cache.Arbre).destination);
+            Supprimer_IP(Cache, min_rec(Cache.Arbre).destination);
         end if;
     end Supprimer_LRU;
         
     function IP_Presente(Cache : in T_Cache; IP : in String) return Boolean is
     begin
-        return Est_Present(Cache.Arbre, IP);
+        return Cle_Presente(Cache.Arbre, IP);
     end IP_Presente;
     
-    procedure afficher_inter(Cle : in String(1..32); Ligne : in T_Ligne) is
-        IP : Unbounded_String := B2IP(Cle);
+    procedure afficher_inter(Cle : in String; Ligne : in T_Ligne) is
+        IP : Unbounded_String := B2IP(To_Unbounded_String(Cle));    
+        nuls:String(1..32) := (others => Character'Val(0));
+
     begin
         if Cle =  nuls then
             Put("");
         else 
             Put_Line (Ligne.destination & " : " & Ligne.mask & " : " & Ligne.inter);
         end if;
-    end afficher;
+    end afficher_inter;
 
-    procedure Afficher is new Pour_Chaque(afficher_inter);
+    procedure Afficher(Cache : in T_Cache) is
+        procedure Afficher_inter2 is new Pour_Chaque(afficher_inter);
+    begin
+        Afficher_inter2(Cache.Arbre);
+    end Afficher;
 
     function Taille_cache(Cache : in T_Cache) return Integer is 
     begin
         return Taille(Cache.Arbre);
     end Taille_cache;
 
+    procedure Vider(Cache : in out T_Cache) is
+    begin
+        Vider(Cache.Arbre);
+    end Vider;
 
     
 end Cache_Arbre;
