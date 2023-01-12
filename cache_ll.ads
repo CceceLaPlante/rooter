@@ -4,15 +4,27 @@ with Ada.Calendar; use Ada.Calendar;
 
 package cache_ll is
 
+   package lca_cache is new lca (Cle => Integer, Donnee => Adresse)
+
    type T_Stats is record
       nb_demandes : Float ;
       nb_defauts : Float ;
       taux_defauts : Float ;
    end record ;
 
-   type T_LCA is private ;
-
    capacite_cache : Integer ;
+
+   type T_LCA is access T_Cellule;
+   type T_Cellule is record
+      Adresse : Unbounded_String;
+      Masque: Unbounded_String;
+      Interface_utilisation : Unbounded_String; 
+      Nombre_utilisation : Integer;
+      Cle : Integer;
+      Temps_enregistrement : Time ;
+      Suivant : T_LCA;
+   end record;
+
 
    procedure Initialiser(Cache : out T_LCA; Stats : out T_Stats) ;
 
@@ -41,22 +53,5 @@ package cache_ll is
    generic
       with procedure Traiter(Adresse: in Unbounded_String; Interface_utilisation: in Unbounded_String; Masque_Adresse: in Unbounded_String);
    procedure Pour_Chaque(Cache : in T_LCA);
-
-      
-
-
-private
-
-   type T_Cellule;
-   type T_LCA is access T_Cellule;
-   type T_Cellule is record
-      Adresse : Unbounded_String;
-      Masque: Unbounded_String;
-      Interface_utilisation : Unbounded_String; 
-      Nombre_utilisation : Integer;
-      Cle : Integer;
-      Temps_enregistrement : Time ;
-      Suivant : T_LCA;
-   end record;
 
 end cache_ll;
