@@ -1,10 +1,18 @@
+
 generic
 	type T_Cle is private;
 	type T_Donnee is private;
-	
-package LCA is
+package lca is
 
-	type T_LCA is limited private;
+	type T_Cellule;
+
+	type T_LCA is access T_Cellule;	
+	type T_Cellule is
+		record
+			Donnee: T_Donnee;
+			Cle : T_Cle;
+			Suivant: T_LCA;
+		end record;
 
 	-- Initialiser une Sda.  La Sda est vide.
 	procedure Initialiser(Sda: out T_LCA) with
@@ -56,18 +64,4 @@ package LCA is
 		with procedure Traiter (Cle : in T_Cle; Donnee: in T_Donnee);
 	procedure Pour_Chaque (Sda : in T_LCA);
 
-
-private
-
-	type T_Cellule;
-
-	type T_LCA is access T_Cellule;
-
-	type T_Cellule is
-		record
-			Donnee: T_Donnee;
-			Cle : T_Cle;
-			Suivant: T_LCA;
-		end record;
-
-end LCA;
+end lca;

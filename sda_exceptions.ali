@@ -1,5 +1,6 @@
 V "GNAT Lib v10"
 A -gnatwa
+A -gnata
 A -g
 P ZX
 

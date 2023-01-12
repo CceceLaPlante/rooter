@@ -8,8 +8,8 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 procedure test_cache_ll is 
 
-   package cache_ll_utilisation is new cache_ll(capacite_cache => 5) ;
-   use cache_ll_utilisation;
+   --package cache_ll_utilisation is new cache_ll(capacite_cache => 5) ;
+   --use cache_ll_utilisation;
    
    
    procedure Afficher (adresse : in Unbounded_String ; Masque_Adresse: in Unbounded_String; interface_utilisation : in Unbounded_String) is
@@ -25,7 +25,7 @@ procedure test_cache_ll is
         Skip_Line;
     end Afficher ;
 
-   procedure Afficher_cache is new cache_ll_utilisation.Pour_Chaque(Afficher);
+   procedure Afficher_cache is new cache_ll.Pour_Chaque(Afficher);
 
    Un_Cache : T_LCA ;
    Stats : T_Stats ;
