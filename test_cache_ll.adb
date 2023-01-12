@@ -31,6 +31,7 @@ procedure test_cache_ll is
    freq_min : Integer ;
    max : Unbounded_String ;
    temps_max : Time ;
+   Interface_test : Unbounded_String;
    
 begin
    
@@ -172,6 +173,10 @@ begin
    pragma assert (not Est_Vide(Un_Cache)) ;
    pragma assert (not Est_Pleine(Un_Cache, capacite_cache)) ;
    pragma assert (Adresse_Presente(Un_Cache, Stats, To_Unbounded_String("147.255.32.57"), To_Unbounded_String("255.255.0.0")));
+
+   Put_Line("Début du troisième test");
+   Interface_test := Interface_Cache(Un_Cache,Stats, To_Unbounded_String("147.255.32.57"), To_Unbounded_String("255.255.0.0"));
+   pragma assert (Interface_test =To_Unbounded_String("eth0"));
 
    
 end test_cache_ll;

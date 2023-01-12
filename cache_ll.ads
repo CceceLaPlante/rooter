@@ -47,6 +47,8 @@ package cache_ll is
    function Taille(Cache : in T_LCA) return Integer ;
 
    function Est_Pleine(Cache : in T_LCA; capacite_cache : in Integer) return Boolean ;
+
+   function Interface_Cache(Cache: in T_LCA; Stats: in T_Stats; Adresse: in Unbounded_String; Masque: Unbounded_String) return Unbounded_String;
    
    generic
       with procedure Traiter(Adresse: in Unbounded_String; Interface_utilisation: in Unbounded_String; Masque_Adresse: in Unbounded_String);

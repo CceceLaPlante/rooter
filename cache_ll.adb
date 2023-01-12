@@ -143,8 +143,21 @@ package body cache_ll is
    begin
       return (Taille(Cache) = capacite_cache) ;
    end Est_Pleine ;
-        
 
+   function Interface_Cache(Cache: in T_LCA; Stats: T_Stats; Adresse: in Unbounded_String; Masque: Unbounded_String) return Unbounded_String is
+   begin
+      if not Est_Vide(Cache) and Adresse_Presente(Cache, Stats, Adresse, Masque) then
+
+         if (Cache.all.Adresse /= Adresse) or ((Cache.all.Adresse = Adresse) and (Cache.all.Masque /= Masque)) then
+            return Interface_Cache(Cache.all.Suivant,Stats, Adresse, Masque);
+         else 
+            return Cache.all.interface_utilisation;
+         end if;
+      else
+         return To_Unbounded_String("Null");
+      end if;
+   end Interface_Cache;
+        
    procedure Pour_Chaque(Cache: in T_LCA) is
    begin
       if Est_Vide(Cache) then

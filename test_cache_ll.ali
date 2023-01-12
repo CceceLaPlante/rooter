@@ -1,0 +1,177 @@
+V "GNAT Lib v10"
+M P W=b
+A -gnatwa
+A -gnata
+A -g
+P SS ZX
+
+RN
+RV NO_CALENDAR
+RV NO_DELAY
+RV NO_EXCEPTION_HANDLERS
+RV NO_EXCEPTIONS
+RV NO_FLOATING_POINT
+RV NO_IO
+RV NO_NESTED_FINALIZATION
+RV NO_RECURSION
+RV NO_SECONDARY_STACK
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_DEFAULT_INITIALIZATION
+RV SPARK_05
+
+U test_cache_ll%b	test_cache_ll.adb	8217af54 NE OO SU IL
+W ada%s			ada.ads			ada.ali
+W ada.calendar%s	a-calend.adb		a-calend.ali
+Z ada.exceptions%s	a-except.adb		a-except.ali
+W ada.strings%s		a-string.ads		a-string.ali
+W ada.strings.unbounded%s  a-strunb.adb		a-strunb.ali
+Z ada.tags%s		a-tags.adb		a-tags.ali
+W ada.text_io%s		a-textio.adb		a-textio.ali
+W cache_ll%s		cache_ll.adb		cache_ll.ali
+Z system.assertions%s	s-assert.adb		s-assert.ali
+Z system.secondary_stack%s  s-secsta.adb	s-secsta.ali
+Z system.soft_links%s	s-soflin.adb		s-soflin.ali
+Z system.standard_library%s  s-stalib.adb	s-stalib.ali
+
+D ada.ads		20220628085427 76789da1 ada%s
+D a-calend.ads		20220628085427 474d9720 ada.calendar%s
+D a-charac.ads		20220628085427 2d3ec45b ada.characters%s
+D a-chlat1.ads		20220628085427 66457d31 ada.characters.latin_1%s
+D a-except.ads		20220628085427 a7106115 ada.exceptions%s
+D a-finali.ads		20220628085427 bf4f806b ada.finalization%s
+D a-ioexce.ads		20220628085427 e4a01f64 ada.io_exceptions%s
+D a-stream.ads		20220628085427 119b8fb3 ada.streams%s
+D a-string.ads		20220628085427 90ac6797 ada.strings%s
+D a-strmap.ads		20220628085427 e8bb714a ada.strings.maps%s
+D a-strunb.ads		20220628085427 1656705b ada.strings.unbounded%s
+D a-tags.ads		20220628085427 491b781d ada.tags%s
+D a-textio.ads		20220628085427 aef4d56d ada.text_io%s
+D a-unccon.ads		20220628085427 0e9b276f ada.unchecked_conversion%s
+D a-uncdea.ads		20220628085427 eff36322 ada.unchecked_deallocation%s
+D cache_exception.ads	20230112100519 fe9d1ae3 cache_exception%s
+D cache_ll.ads		20230112144640 14f15b4b cache_ll%s
+D cache_ll.adb		20230112145033 d08b5e1a cache_ll%b
+D interfac.ads		20220628085427 5ab55268 interfaces%s
+D i-cstrea.ads		20220628085427 e53d8b8e interfaces.c_streams%s
+D system.ads		20220628085427 4635ec04 system%s
+D s-assert.ads		20220628085427 cd8d2c94 system.assertions%s
+D s-atocou.ads		20220628085427 b45c2d8d system.atomic_counters%s
+D s-crtl.ads		20220628085427 0ebbdb71 system.crtl%s
+D s-exctab.ads		20220628085427 54135002 system.exception_table%s
+D s-ficobl.ads		20220628085427 078245e4 system.file_control_block%s
+D s-finmas.ads		20220628085427 7811a767 system.finalization_masters%s
+D s-finroo.ads		20220628085427 4ff27390 system.finalization_root%s
+D s-memory.ads		20220628085427 597d6634 system.memory%s
+D s-parame.ads		20220628085427 48ec542b system.parameters%s
+D s-pooglo.ads		20220628085427 ede33ef8 system.pool_global%s
+D s-secsta.ads		20220628085427 20bbe636 system.secondary_stack%s
+D s-soflin.ads		20220628085427 a7318a92 system.soft_links%s
+D s-stache.ads		20220628085427 a37c21ec system.stack_checking%s
+D s-stalib.ads		20220628085427 09bd3940 system.standard_library%s
+D s-stalib.adb		20220628085427 f2fe2716 system.standard_library%b
+D s-stoele.ads		20220628085427 2dc34a04 system.storage_elements%s
+D s-stopoo.ads		20220628085427 b16154c2 system.storage_pools%s
+D s-stposu.ads		20220628085427 97a6219c system.storage_pools.subpools%s
+D s-stratt.ads		20220628085427 aedef97e system.stream_attributes%s
+D s-traent.ads		20220628085427 005bf670 system.traceback_entries%s
+D s-unstyp.ads		20220628085427 34867c83 system.unsigned_types%s
+D s-wchcon.ads		20220628085427 1b7d22d2 system.wch_con%s
+D test_cache_ll.adb	20230112144711 6909c609 test_cache_ll%b
+G a e
+G c Z b b [test_cache_ll standard 7 11 none]
+G r i none [test_cache_ll standard 7 11 none] [pour_chaque cache_ll 55 14 none]
+G r c none [test_cache_ll standard 7 11 none] [initialiser cache_ll 27 14 none]
+G r c none [test_cache_ll standard 7 11 none] [est_vide cache_ll 29 13 none]
+G r c none [test_cache_ll standard 7 11 none] [est_pleine cache_ll 49 13 none]
+G r c none [test_cache_ll standard 7 11 none] [enregistrer cache_ll 41 14 none]
+G r c none [test_cache_ll standard 7 11 none] [taille cache_ll 47 13 none]
+G r c none [test_cache_ll standard 7 11 none] [supprimer_fifo cache_ll 31 14 none]
+G r c none [test_cache_ll standard 7 11 none] [chercher_min_freq cache_ll 33 14 none]
+G r c none [test_cache_ll standard 7 11 none] [supprimer_lfu cache_ll 35 14 none]
+G r c none [test_cache_ll standard 7 11 none] [chercher_max_temps cache_ll 37 14 none]
+G r c none [test_cache_ll standard 7 11 none] [supprimer_lru cache_ll 39 14 none]
+G r c none [test_cache_ll standard 7 11 none] [vider cache_ll 43 14 none]
+G r c none [test_cache_ll standard 7 11 none] [adresse_presente cache_ll 45 13 none]
+G r c none [test_cache_ll standard 7 11 none] [interface_cache cache_ll 51 13 none]
+X 1 ada.ads
+16K9*Ada 20e8 44|2r6 2r37 3r6 3r24 4r6 4r23
+X 2 a-calend.ads
+36K13*Calendar 409e17 44|3w10 3r28
+42I9*Time<222I9> 44|33r16
+56V13*Clock{42I9} 44|127s17
+222I9 Time_Rep<long_long_integer>
+X 9 a-string.ads
+16K13*Strings 35e16 44|2r10 2r41
+X 11 a-strunb.ads
+82K21*Unbounded 756e26 44|2w18 2r49
+87R9*Unbounded_String<6|43R9> 739e14 44|12r37 12r75 12r120 30r10 32r10 34r21
+103V13*To_Unbounded_String{87R9} 44|46s31 46s68 46s97 58s31 58s68 58s97 71s31
+. 71s69 71s98 86s31 86s68 86s97 90s31 90s67 90s96 94s31 94s68 94s97 112s11
+. 126s11 150s31 150s68 150s97 161s53 161s91 162s58 162s96 164s31 164s68 164s97
+. 175s53 175s91 178s54 178s92 179s35
+116V13*To_String{string} 44|15s13 18s13 21s13
+238V14*"="{boolean} 44|179s34
+X 13 a-textio.ads
+57K13*Text_IO 727e16 44|4w10 4r27
+273U14*Skip_Line 44|16s9 19s9 22s9 39s4 41s4 143s4 145s4
+465U14*Put 44|14s9 15s9 17s9 18s9 20s9 21s9
+508U14*Put_Line 44|40s4 48s4 60s4 73s4 88s4 92s4 96s4 102s4 119s4 132s4 144s4
+. 152s4 166s4 177s4
+X 17 cache_ll.ads
+4K9*cache_ll 57e13 44|1w6 1r21 25r36
+6R9*T_Stats 10e15 44|28r12
+7f7*nb_demandes{float} 44|52r25 65r25 80r25 156r25 170r25
+8f7*nb_defauts{float} 44|53r25 66r25 81r25 157r25 171r25
+14P9*T_LCA(12R9) 44|27r15
+27U14*Initialiser 44|42s4 146s4
+29V13*Est_Vide{boolean} 44|43s19 55s23 68s23 83s23 107s23 121s23 134s23 138s19
+. 147s19 159s23 173s23
+31U14*Supprimer_fifo 44|100s4
+33U14*Chercher_min_freq 44|114s4
+35U14*Supprimer_lfu 44|116s4
+37U14*Chercher_max_temps 44|128s4
+39U14*Supprimer_lru 44|130s4
+41U14*Enregistrer 44|46s4 58s4 71s4 86s4 90s4 94s4 150s4 164s4
+43U14*Vider 44|137s4
+45V13*Adresse_Presente{boolean} 44|161s19 162s24 175s19
+47V13*Taille{integer} 44|54s19 67s19 82s19 97s19 105s19 120s19 133s19 139s19
+. 158s19 172s19
+49V13*Est_Pleine{boolean} 44|44s23 56s23 69s23 84s23 98s19 109s23 122s23
+. 135s23 140s23 148s23 160s23 174s23
+51V13*Interface_Cache{11|87R9} 44|178s22
+55u14*Pour_Chaque 44|25r45
+X 21 system.ads
+67M9*Address
+X 29 s-memory.ads
+53V13*Alloc{21|67M9} 103i<c,__gnat_malloc>22
+68U14*Free 104i<c,__gnat_free>22
+76V13*Realloc{21|67M9} 105i<c,__gnat_realloc>22
+X 36 s-stalib.adb
+93U14 Break_Start 94i<c,__gnat_break_start>22
+X 44 test_cache_ll.adb
+7U11*test_cache_ll 7b11 182l5 182t18
+12U14 Afficher 12b14 12>24 12>56 12>93 23l9 23t17 25r57
+12r24 adresse{11|87R9} 15r23
+12r56 Masque_Adresse{11|87R9} 18r23
+12r93 interface_utilisation{11|87R9} 21r23
+25U14 Afficher_cache[17|55] 18|161b14 44|47s4 59s4 72s4 87s4 91s4 95s4 101s4
+. 118s4 131s4 151s4 165s4
+27p4 Un_Cache{17|14P9} 42m16 42r16 43r28 44r34 46m16 46r16 47r19 54r26 55r32
+. 56r34 58m16 58r16 59r19 67r26 68r32 69r34 71m16 71r16 72r19 82r26 83r32
+. 84r34 86m16 86r16 87r19 90m16 90r16 91r19 94m16 94r16 95r19 97r26 98r30
+. 100m19 100r19 101r19 105r26 107r32 109r34 114r22 116r18 118r19 120r26 121r32
+. 122r34 128r23 130r18 131r19 133r26 134r32 135r34 137m10 137r10 138r28 139r26
+. 140r34 146m16 146r16 147r28 148r34 150m16 150r16 151r19 158r26 159r32 160r34
+. 161r36 162r41 164m16 164r16 165r19 172r26 173r32 174r34 175r36 178r38
+28r4 Stats{17|6R9} 42m26 46m25 46r25 52r19 53r19 58m25 58r25 65r19 66r19
+. 71m25 71r25 80r19 81r19 86m25 86r25 90m25 90r25 94m25 94r25 137m20 137r20
+. 146m26 150m25 150r25 156r19 157r19 161r46 162r51 164m25 164r25 170r19 171r19
+. 175r46 178r47
+29N4 capacite_cache 44r43 56r44 69r44 84r43 98r40 109r43 122r43 135r43 140r44
+. 148r43 160r44 174r44
+30r4 min{11|87R9} 112m4 114m32 114r32 116r27
+31i4 freq_min{integer} 113m4 114m37 114r37
+32r4 max{11|87R9} 126m4 128m33 128r33 130r27
+33i4 temps_max{2|42I9} 127m4 128m38 128r38
+34r4 Interface_test{11|87R9} 178m4 179r19
+
