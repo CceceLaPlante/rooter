@@ -1,8 +1,6 @@
 with Ada.Unchecked_Deallocation;
 with cache_exception; use cache_exception;
-
 package body cache_ll is
-
 
    procedure Free is
      new Ada.Unchecked_Deallocation (Object => T_Cellule, Name => T_LCA);
@@ -31,7 +29,7 @@ package body cache_ll is
    end Supprimer_fifo;
 
 
-   procedure Chercher_min_freq(Cache : in out T_LCA; min: in out Unbounded_String; freq_min : in out Integer) is
+   procedure Chercher_min_freq(Cache : in T_LCA; min: in out Unbounded_String; freq_min : in out Integer) is
      --min : Unbounded_String;
      --freq_min : Integer ;
    begin
@@ -48,7 +46,7 @@ package body cache_ll is
    end Chercher_min_freq ;
 
 
-   procedure Supprimer_lfu(Cache : in out T_LCA; min : in Unbounded_String) is
+   procedure Supprimer_lfu(Cache : in T_LCA; min : in Unbounded_String) is
    begin
       if Est_Vide(Cache) then
          raise Adresse_Absente_Exception ;
@@ -59,7 +57,7 @@ package body cache_ll is
       end if ;
    end Supprimer_lfu;
 
-   procedure Chercher_max_temps(Cache : in out T_LCA; max : in out Unbounded_String; temps_max : in out Time) is
+   procedure Chercher_max_temps(Cache : in T_LCA; max : in out Unbounded_String; temps_max : in out Time) is
    begin
       if Est_Vide(Cache.all.Suivant) then
          max := Cache.all.Adresse ;
@@ -73,7 +71,7 @@ package body cache_ll is
       end if;
    end Chercher_max_temps ;
 
-   procedure Supprimer_lru(Cache : in out T_LCA; max : in Unbounded_String) is
+   procedure Supprimer_lru(Cache : in T_LCA; max : in Unbounded_String) is
    begin
       if Est_Vide(Cache) then
          raise Adresse_Absente_Exception ;

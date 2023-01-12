@@ -1,10 +1,7 @@
-with lca; 
 with Ada.Strings.Unbounded;     use Ada.Strings.Unbounded;
 with Ada.Calendar; use Ada.Calendar;
 
 package cache_ll is
-
-   package lca_cache is new lca (Cle => Integer, Donnee => Adresse)
 
    type T_Stats is record
       nb_demandes : Float ;
@@ -12,7 +9,7 @@ package cache_ll is
       taux_defauts : Float ;
    end record ;
 
-   capacite_cache : Integer ;
+   type T_Cellule;
 
    type T_LCA is access T_Cellule;
    type T_Cellule is record
@@ -25,6 +22,7 @@ package cache_ll is
       Suivant : T_LCA;
    end record;
 
+   capacite_cache : Integer ;
 
    procedure Initialiser(Cache : out T_LCA; Stats : out T_Stats) ;
 
@@ -32,13 +30,13 @@ package cache_ll is
 
    procedure Supprimer_fifo(Cache : in out T_LCA) ;
 
-   procedure Chercher_min_freq(Cache : in out T_LCA; min: in out Unbounded_String; freq_min : in out Integer);
+   procedure Chercher_min_freq(Cache : in T_LCA; min: in out Unbounded_String; freq_min : in out Integer);
 
-   procedure Supprimer_lfu(Cache : in out T_LCA; min : in Unbounded_String) ;
+   procedure Supprimer_lfu(Cache : in T_LCA; min : in Unbounded_String) ;
 
-   procedure Chercher_max_temps(Cache : in out T_LCA; max : in out Unbounded_String; temps_max : in out Time);
+   procedure Chercher_max_temps(Cache : in T_LCA; max : in out Unbounded_String; temps_max : in out Time);
 
-   procedure Supprimer_lru(Cache : in out T_LCA; max : in Unbounded_String) ;
+   procedure Supprimer_lru(Cache : in T_LCA; max : in Unbounded_String) ;
 
    procedure Enregistrer(Cache : in out T_LCA; Stats : in out T_Stats; Adresse_IP : in Unbounded_String; Interface_Adresse : in Unbounded_String; Masque_Adresse: Unbounded_String) ;
 

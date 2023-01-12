@@ -1,8 +1,6 @@
-with cache_ll ;
+with cache_ll ; use cache_ll;
 with Ada.Strings.Unbounded;     use Ada.Strings.Unbounded;
-with SDA_Exceptions;         use SDA_Exceptions;
 with Ada.Calendar; use Ada.Calendar;
-with cache_exception; use cache_exception ;
 with Ada.Text_IO; use Ada.Text_IO;
 
 
@@ -10,7 +8,6 @@ procedure test_cache_ll is
 
    --package cache_ll_utilisation is new cache_ll(capacite_cache => 5) ;
    --use cache_ll_utilisation;
-   
    
    procedure Afficher (adresse : in Unbounded_String ; Masque_Adresse: in Unbounded_String; interface_utilisation : in Unbounded_String) is
     begin
