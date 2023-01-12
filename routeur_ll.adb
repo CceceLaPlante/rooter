@@ -260,9 +260,9 @@ procedure routeur_ll is
          
          Close(fichier_table);
       elsif commande = "cache" then
-          Afficher_cache(Cache);
+         Afficher_cache(Cache);
       elsif commande = "stats" then
-            Afficher_Stats(Stats);
+         Afficher_Stats(Stats);
       else
          Null ;
       end if;
@@ -358,6 +358,9 @@ begin
             
             if not Adresse_Presente(Cache, Stats, Adresse_IP_Cache, Masque_Cache) then
                Enregistrer(Cache, Stats, Adresse_IP_Cache, Interface_Cache,Masque_Cache);
+            else 
+               Stats.nb_demandes := Stats.nb_demandes + 1.0 ;
+               Stats.taux_defauts := Stats.nb_defauts/Stats.nb_demandes ;
             end if ;
 
             a_ecrire := ligne_a_lire & To_Unbounded_String(" ")& Interface_Cache;
