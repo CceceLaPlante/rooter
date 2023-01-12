@@ -1,11 +1,6 @@
-with LCA;
-with Ada.Unchecked_Deallocation;
+with lca; 
 with Ada.Strings.Unbounded;     use Ada.Strings.Unbounded;
 with Ada.Calendar; use Ada.Calendar;
-with cache_exception; use cache_exception;
-
-generic
-   capacite_cache : Integer ;
 
 package cache_ll is
 
@@ -15,16 +10,9 @@ package cache_ll is
       taux_defauts : Float ;
    end record ;
 
-   type Horaire is record 
-      Annee    : Year_Number;
-      Mois     : Month_Number;
-      Jour     : Day_Number;
-      Secondes : Day_Duration;
-   end record ;
-
    type T_LCA is private ;
 
-   function Temps return Horaire;
+   capacite_cache : Integer ;
 
    procedure Initialiser(Cache : out T_LCA; Stats : out T_Stats) ;
 

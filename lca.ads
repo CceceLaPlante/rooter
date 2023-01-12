@@ -38,6 +38,8 @@ package LCA is
 	-- Savoir si une Cl� est pr�sente dans une Sda.
 	function Cle_Presente (Sda : in T_LCA ; Cle : in T_Cle) return Boolean;
 
+	function Precedente (Sda: in T_LCA; Cle : in T_Cle) return T_LCA;
+
 
 	-- Obtenir la donn�e associ�e � une Cle dans la Sda.
 	-- Exception : Cle_Absente_Exception si Cl� n'est pas utilis�e dans l'Sda

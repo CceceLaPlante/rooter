@@ -1,7 +1,6 @@
--- with Ada.Text_IO;            use Ada.Text_IO;
-with SDA_Exceptions;         use SDA_Exceptions;
+with SDA_Exceptions;        
 with Ada.Unchecked_Deallocation;
-with Ada.Text_IO; use Ada.Text_IO;
+
 
 package body LCA is
 
@@ -71,7 +70,7 @@ package body LCA is
 
 	
 	-- cette fonction n'est utilisee null part,mais pourrait s'aver utile
-	function Precedente (Sda: in out T_LCA; Cle : in T_Cle) return T_LCA is
+	function Precedente (Sda: in T_LCA; Cle : in T_Cle) return T_LCA is
 	begin
 		if Sda = Null then
 			raise SDA_Exceptions.Cle_Absente_Exception;
