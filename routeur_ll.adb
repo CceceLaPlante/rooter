@@ -33,6 +33,7 @@ procedure routeur_ll is
         Put("Interface : ");
         Put(To_String(interface_utilisation));
         Skip_Line;
+        Skip_Line;
     end Afficher ;
 
    procedure Afficher_cache is new cache_ll.Pour_Chaque(Afficher);
@@ -242,27 +243,36 @@ procedure routeur_ll is
    end Lire;
 
    --Fonction qui traite les commandes telles que "fin", "table"...
-   procedure Traiter_Commande(commande: in Unbounded_String; nom_table : in Unbounded_String; fichier_sortie: File_Type; Cache : in T_LCA; Stats : in T_Stats) is 
+   procedure Traiter_Commande(commande: in Unbounded_String; nom_table : in Unbounded_String; Cache : in T_LCA; Stats : in T_Stats) is 
       fichier_table : File_Type;
       ligne : Unbounded_String := To_Unbounded_String("");
    begin
       if commande = "table" then 
-         Open(fichier_table,In_File ,To_String(nom_table));  
-
+         Open(fichier_table,In_File ,To_String(nom_table)); 
          ligne := Lire(fichier_table);
-         Ecrire(fichier_sortie,To_Unbounded_String(""));
-         Ecrire(fichier_sortie,To_Unbounded_String("table : "));
+         Skip_Line;
+         Put_Line("-------------------------------- Table --------------------------------");
          while ligne /= To_Unbounded_String("") loop
-            Ecrire(fichier_sortie, ligne);
+            Put_Line(To_String(ligne));
             ligne := Lire(fichier_table);
          end loop;
-         Ecrire(fichier_sortie,To_Unbounded_String(""));
-         
+
          Close(fichier_table);
+         Skip_Line;
+         
+   
       elsif commande = "cache" then
+         Skip_Line;
+         Put_Line("-------------------------------- Cache --------------------------------");
          Afficher_cache(Cache);
+         Skip_Line;
+         
       elsif commande = "stats" then
+         Skip_Line;
+         Put_Line("-------------------------------- Statistiques --------------------------------");
          Afficher_Stats(Stats);
+         Skip_Line;
+         
       else
          Null ;
       end if;
@@ -367,7 +377,7 @@ begin
             Ecrire(fichier_sortie, a_ecrire);
 
          when others =>
-            Traiter_Commande(ligne_a_lire, To_Unbounded_String(nom_table), fichier_sortie, Cache, Stats);
+            Traiter_Commande(ligne_a_lire, To_Unbounded_String(nom_table), Cache, Stats);
       end case;
 
       ligne_a_lire := Lire(fichier_entree);
