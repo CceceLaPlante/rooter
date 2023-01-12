@@ -8,7 +8,7 @@ with Ada.Exceptions;            use Ada.Exceptions;
 with Ada.Unchecked_Deallocation; 
 with cache_ll; use cache_ll;
 
-procedure routeur_LL is 
+procedure routeur_ll is 
 
    type T_Table;
    type T_Liste is access T_Table;
@@ -23,6 +23,21 @@ procedure routeur_LL is
 
    type adr4 is array(1..4) of Unbounded_String;
 
+   procedure Afficher (adresse : in Unbounded_String ; Masque_Adresse: in Unbounded_String; interface_utilisation : in Unbounded_String) is
+    begin
+        Put("Adresse : ");
+        Put(To_String(adresse));
+        Skip_Line ;
+        Put("Masque: ");
+        Put(To_String(Masque_Adresse));
+        Skip_Line ;
+        Put("Interface : ");
+        Put(To_String(interface_utilisation));
+        Skip_Line;
+    end Afficher ;
+
+   procedure Afficher_cache is new cache_ll.Pour_Chaque(Afficher);
+   
    
    procedure Free
    is new Ada.Unchecked_Deallocation (Object => T_Table, Name => T_Liste);
@@ -285,7 +300,7 @@ procedure routeur_LL is
    end Lire;
 
    --Fonction qui traite les commandes telles que "fin", "table"...
-   procedure Traiter_Commande(commande: String;nom_table : String; fichier_sortie: File_Type) is 
+   procedure Traiter_Commande(commande: in Unbounded_String; nom_table : in Unbounded_String; fichier_sortie: out File_Type; Cache : in T_LCA; Stats : in T_Stats) is 
       fichier_table : File_Type;
       ligne : Unbounded_String := To_Unbounded_String("");
    begin
@@ -302,10 +317,12 @@ procedure routeur_LL is
          Ecrire(fichier_sortie,To_Unbounded_String(""));
          
          Close(fichier_table);
-      else
+      elsif commande = "cache" then
+          Afficher_cache(Cache);
+      elsif commande = "stats" then
             Null;
       end if;
-            
+               
    end Traiter_Commande; 
     
    --fonction qui libère tout élément de type T_Liste
@@ -389,15 +406,17 @@ begin
 
       case Element(ligne_a_lire,1) is 
          when '0'|'1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9' =>
+
             Adresse_IP_Cache := ligne_a_lire;
             Masque_Cache := Meilleur_Masque(table, ligne_a_lire, current_tab).mask;
             Interface_Cache := Meilleur_Masque(table, ligne_a_lire, current_tab).inter;
             
-            if Adresse_Presente(Cache, Stats) then
-               
-
-            a_ecrire := ligne_a_lire & To_Unbounded_String(" ")& Meilleur_Masque(table, ligne_a_lire, current_tab).mask & To_Unbounded_String(" ") & Meilleur_Masque(table, ligne_a_lire, current_tab).inter;
+            if not Adresse_Presente(Cache, Stats, Adresse_IP_Cache, Masque_Cache) then
+               Enregistrer(Cache, Stats, Adresse_IP_Cache, Meilleur_Masque(table, ligne_a_lire, current_tab).inter, Meilleur_Masque(table, ligne_a_lire, current_tab).mask);
+            end if ;
+            a_ecrire := ligne_a_lire & To_Unbounded_String(" ")& Interface_Cache(Cache, Stats, Adresse_IP_Cache, Masque_Cache);
             Ecrire(fichier_sortie, a_ecrire);
+
          when others =>
             Traiter_Commande(To_String(ligne_a_lire), nom_table, fichier_sortie);
       end case;
@@ -414,4 +433,4 @@ begin
    --Put_Line("convertire 0.0.0.3 "&Convertir_IP2B(To_Unbounded_String("0.0.0.3")));
    
 
-end routeur_LL;
+end routeur_ll;
