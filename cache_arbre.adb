@@ -29,8 +29,6 @@ package body  Cache_Arbre is
         return True;
     end equivalente_ligne;
 
-    function La_cle_cache is new La_Cle(equivalente_ligne);
-
     procedure Initialiser_cache (Cache : in out T_Cache) is
         stat : T_Stat := (nb_defaut => 0, tx_defaut => 0.0 , nb_demande => 0);
     begin
@@ -106,7 +104,11 @@ package body  Cache_Arbre is
          end case ;
       end loop ;
 
-      return adr(1) & adr(2) & adr(3) & adr(4) ; -- [!] on ne renvoi pas avec des points !!!!     
+        entier := Integer'Value (To_String(entier_string));
+        adr(idx) := Convertir_IP2B_4(entier) ;
+               --Put_Line("entier, puis entier en binaire : "&entier_string&" , "&adr(idx));
+
+      return  adr(1) & adr(2) & adr(3) & adr(4) ; -- [!] on ne renvoi pas avec des points !!!!     
 
     end Convertir_IP2B;
 
@@ -160,6 +162,7 @@ package body  Cache_Arbre is
     end Trouver;
 
     function Trouver_global(Cache: in  T_Cache; IP : in Unbounded_String) return T_ligne is
+        function La_cle_cache is new La_Cle(equivalente_ligne);
         cle : String(1..32);
         --ip_bin : String(1..32) := To_String(Convertir_IP2B(IP));
         ligne_factis : T_Ligne;
@@ -211,11 +214,9 @@ package body  Cache_Arbre is
     end Ajouter;
 
     procedure Supprimer_IP (Cache : in out T_Cache; IP : in Unbounded_String) is
-        IP_Bin : Unbounded_String := Convertir_IP2B(IP);
-        Cle : String(1..32);
+        IP_Bin : String(1..32) := To_String(Convertir_IP2B(IP));
     begin
-        Cle := To_String(IP_Bin);
-        Supprimer(Cache.Arbre, Cle);
+        Supprimer(Cache.Arbre, IP_Bin);
     end Supprimer_IP;
 
     procedure Supprimer_LRU (Cache : in out T_Cache; max_taille: in Integer) is
@@ -272,7 +273,7 @@ package body  Cache_Arbre is
         if Cle =  nuls then
             Put("");
         else 
-            Put_Line (Ligne.destination & " : " & Ligne.mask & " : " & Ligne.inter);
+            Put_Line (CLe &"|-> "&Ligne.destination & " : " & Ligne.mask & " : " & Ligne.inter);
         end if;
     end afficher_inter;
 

@@ -1,4 +1,4 @@
-with Cache_Arbre; use Cache_Arbre;
+with cache_arbre; use cache_arbre;
 with Ada.Strings;               use Ada.Strings;
 with Ada.Text_IO;               use Ada.Text_IO;
 with Ada.Integer_Text_IO;       use Ada.Integer_Text_IO;
@@ -27,9 +27,24 @@ procedure test_cache_LA is
     inter3 : Unbounded_String := To_Unbounded_String("lo");
 
     tp : Time := Clock;
+    l1 : T_ligne := (dest1, mask1, inter1, tp);
+    l2 : T_ligne := (dest2, mask2, inter2, tp);
+    l3 : T_ligne := (dest3, mask3, inter3, tp);
 
     Cache_rooter : T_Cache;
+    cle1 : String(1..32) := To_String(Convertir_IP2B(dest1));
     
 begin
     Initialiser_cache(Cache_rooter);
+    Ajouter(Cache_rooter, l1);
+    Ajouter(Cache_rooter, l2);
+    Ajouter(Cache_rooter, l3);
+    Afficher(Cache_rooter);
+    if IP_Presente(Cache_rooter,cle1) then
+        Put_Line("IP 1 presente : "&To_String(Trouver(Cache_rooter,dest1).inter));
+    else
+        Put_Line("IP 1 non presente");
+    end if;
+    Supprimer_IP(Cache_rooter,dest1);
+    Afficher(Cache_rooter);
 end test_cache_LA;

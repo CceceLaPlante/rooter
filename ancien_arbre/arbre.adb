@@ -1,5 +1,6 @@
 -- with Ada.Text_IO;            use Ada.Text_IO;
 with Ada.Unchecked_Deallocation;
+with Ada.Text_IO; use Ada.Text_IO;
 
 --fonctionnement de l'arbre : 
 -- c'est un arbre binaire de recherche particulier, les noeuds sont
@@ -12,9 +13,9 @@ with Ada.Unchecked_Deallocation;
 package body arbre is
 
    procedure Free is
-     new Ada.Unchecked_Deallocation (Object => T_Cellule, Name => T_Arbre);
+     new Ada.Unchecked_Deallocation (Object => T_Node, Name => T_Arbre);
    -- On initialise l'Arbre étant vide.
-   procedure Initialiser(Arbre: T_Arbre) is
+   procedure Initialiser(Arbre: out T_Arbre) is
    begin
       Arbre := Null;	
    end Initialiser;
@@ -27,36 +28,39 @@ package body arbre is
    -- On calcule la taille en parcourant récursivement l'Arbre et en ajoutant 1 à chaque pointeur non vide.
    function Taille (Arbre : T_Arbre) return Integer is
    begin
-      if Arbre = Null then
+      if Est_Vide(Arbre) then
          return 0;
       else 
          return ( 1 + Taille(Arbre.Suivant_G) + Taille(Arbre.Suivant_D) );
       end if;
    end Taille;
 
-   procedure Enregistrer (Arbre : T_Arbre ; Cle : String ; Donnee : T_Donnee) is
+   procedure Enregistrer (Arbre : in out T_Arbre ; Cle : String ; Donnee : T_Donnee;nul_donnee : in T_Donnee) is
       -- On crée une fonction récursive qui va parcourir l'Arbre et enregistrer la clé mais qui prend en compte le 
       -- soucis de relation d'ordre entre les clés.
-      procedure Enregistrer_r (Arbre : T_Arbre ; Cle : String ; Donnee : in T_Donnee; idx : in Integer ) is
+      procedure Enregistrer_r (Arbre : in out T_Arbre ; Cle : String ; Donnee : in T_Donnee;nul_donnee : in T_Donnee; idx : in Integer ) is
+        nuls : String(1..32) := (others => Character'Val(0));
+        feuille : Boolean := False;
       begin
 
          if Est_Vide(Arbre) then
-            Arbre := New T_Node'(Null, Null, Null, Null);  
+            Arbre := New T_Node'(feuille,nuls, nul_donnee, Null, Null);  --les valeurs par défaut...
          end if;
-
+         
          if idx > 32 then 
             Arbre.all.Cle := Cle;
             Arbre.all.Donnee := Donnee;
+            Arbre.all.leaf := True;
          elsif Cle(idx) = '0' then
-            Enregistrer_r(Arbre.all.Suivant_G,Cle,Donnee,idx+1) ; -- on parcourt à gauche
+            Enregistrer_r(Arbre.all.Suivant_G,Cle,Donnee,nul_donnee,idx+1) ; -- on parcourt à gauche
          else
-            Enregistrer_r(Arbre.all.Suivant_D,Cle,Donnee, idx+1); -- on parcourt à droite
+            Enregistrer_r(Arbre.all.Suivant_D,Cle,Donnee, nul_donnee,idx+1); -- on parcourt à droite
          end if;
 
       end Enregistrer_r;
 
       begin
-         Enregistrer_r(Arbre,Cle,Donnee,0);
+         Enregistrer_r(Arbre,Cle,Donnee,nul_donnee,1);
    end Enregistrer;
 
 
@@ -80,16 +84,14 @@ package body arbre is
       end Cle_Presente_r;
 
    begin
-      return Cle_Presente_r(Arbre,Cle,0);
+      return Cle_Presente_r(Arbre,Cle,1);
    end Cle_Presente;
-
-
 
    function La_Donnee (Arbre : in T_Arbre ; Cle : in String) return T_Donnee is
       function La_Donnee_r (Arbre : in T_Arbre ; Cle : in String; idx : in Integer) return T_Donnee is
       begin
          if Est_Vide(Arbre) then
-            raise Cle_Absente_Exception;
+            null;
          elsif  Arbre.all.Cle = Cle then
             return Arbre.all.Donnee;  -- On renvoie la donnee associée à la clé souhaitée.
          elsif Cle(idx) = '0' then
@@ -100,7 +102,12 @@ package body arbre is
       end La_Donnee_r;
 
    begin
-      return La_Donnee_r(Arbre,Cle,0);
+
+      if not Cle_Presente(Arbre,Cle) then
+         raise Constraint_Error with "cle inexistante"; -- La clé n'est pas présente car la liste est vide
+      else 
+         return La_Donnee_r(Arbre,Cle,1);
+      end if;
    end La_Donnee;
 
 
@@ -111,26 +118,26 @@ package body arbre is
       procedure Supprimer_r (Arbre : in out T_Arbre ; Cle : in String; idx : in Integer) is
       begin
          if Est_Vide(Arbre) then
-            raise Cle_Absente_Exception;
+            null;
          elsif Arbre.all.Cle = Cle then
             Free(Arbre); -- On supprime l'Arbre
          else
             if Cle(idx) = '0' then 
-               Supprimer(Arbre.all.Suivant_G,Cle); -- On continue de chercher la bonne clé ou d'atteindre la dernière Arbre.
+               Supprimer_r(Arbre.all.Suivant_G,Cle,idx+1); -- On continue de chercher la bonne clé ou d'atteindre la dernière Arbre.
             else
-               Supprimer(Arbre.all.Suivant_D,Cle);
+               Supprimer_r(Arbre.all.Suivant_D,Cle,idx+1);
             end if;
          end if;
       end Supprimer_r;
    begin
-      Supprimer_r(Arbre,Cle,0);
 
+      Supprimer_r(Arbre,Cle,1);
    end Supprimer;
 
 
    procedure Vider (Arbre : in out T_Arbre) is
    begin
-      if Arbre /= Null then
+      if not Est_Vide(Arbre) then
          Vider(Arbre.all.Suivant_G); -- On parcours l'Arbre récursivement pour arriver à la dernière.
          Vider(Arbre.all.Suivant_D);
       end if;
@@ -154,5 +161,20 @@ package body arbre is
       end if ;
    end Pour_Chaque;
 
+   function La_Cle(Arbre : in T_Arbre; donnee : in T_Donnee) return String is
+      function La_Cle_r(Arbre : in T_Arbre; donnee : in T_Donnee) return String is
+      begin
+         if Est_vide(Arbre)then
+            return "";
+         elsif equivalente(Arbre.all.Donnee,donnee) then
+            return Arbre.all.Cle;
+         else
+            return La_Cle_r(Arbre.all.Suivant_G, donnee) & La_Cle_r(Arbre.all.Suivant_D, donnee);
+         end if;
+      end La_CLe_r;
+   begin
+      -- normalement, on ne devrait pas avoir de doublons, mais on anticipe une erreure de l'utilisateur
+      return La_Cle_r(Arbre, donnee)(1..32); 
+   end La_Cle;
 
-end Arbre;
+end arbre;
