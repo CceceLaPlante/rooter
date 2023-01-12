@@ -29,7 +29,7 @@ package body cache_ll is
    end Supprimer_fifo;
 
 
-   procedure Chercher_min_freq(Cache : in out T_LCA; min: in out Unbounded_String; freq_min : in out Integer) is
+   procedure Chercher_min_freq(Cache : in T_LCA; min: in out Unbounded_String; freq_min : in out Integer) is
      --min : Unbounded_String;
      --freq_min : Integer ;
    begin
@@ -46,7 +46,7 @@ package body cache_ll is
    end Chercher_min_freq ;
 
 
-   procedure Supprimer_lfu(Cache : in out T_LCA; min : in Unbounded_String) is
+   procedure Supprimer_lfu(Cache : in T_LCA; min : in Unbounded_String) is
    begin
       if Est_Vide(Cache) then
          raise Adresse_Absente_Exception ;
@@ -57,7 +57,7 @@ package body cache_ll is
       end if ;
    end Supprimer_lfu;
 
-   procedure Chercher_max_temps(Cache : in out T_LCA; max : in out Unbounded_String; temps_max : in out Time) is
+   procedure Chercher_max_temps(Cache : in T_LCA; max : in out Unbounded_String; temps_max : in out Time) is
    begin
       if Est_Vide(Cache.all.Suivant) then
          max := Cache.all.Adresse ;
@@ -71,7 +71,7 @@ package body cache_ll is
       end if;
    end Chercher_max_temps ;
 
-   procedure Supprimer_lru(Cache : in out T_LCA; max : in Unbounded_String) is
+   procedure Supprimer_lru(Cache : in T_LCA; max : in Unbounded_String) is
    begin
       if Est_Vide(Cache) then
          raise Adresse_Absente_Exception ;
@@ -89,6 +89,7 @@ package body cache_ll is
          Stats.nb_demandes := Stats.nb_demandes + 1.0 ;
          Stats.nb_defauts := Stats.nb_defauts + 1.0 ;
          Stats.taux_defauts := Stats.nb_defauts / Stats.nb_demandes ;
+         Cache.all.Nombre_utilisation := 1;
       elsif (Cache.all.Adresse /= Adresse_IP) or ((Cache.all.Adresse = Adresse_IP) and (Cache.all.Masque /= Masque_Adresse)) then
          Enregistrer(Cache.all.Suivant, Stats, Adresse_IP, Interface_Adresse, Masque_Adresse);
       else 
@@ -143,8 +144,21 @@ package body cache_ll is
    begin
       return (Taille(Cache) = capacite_cache) ;
    end Est_Pleine ;
-        
 
+   function Interface_Cache(Cache: in T_LCA; Stats: T_Stats; Adresse: in Unbounded_String; Masque: Unbounded_String) return Unbounded_String is
+   begin
+      if not Est_Vide(Cache) and Adresse_Presente(Cache, Stats, Adresse, Masque) then
+
+         if (Cache.all.Adresse /= Adresse) or ((Cache.all.Adresse = Adresse) and (Cache.all.Masque /= Masque)) then
+            return Interface_Cache(Cache.all.Suivant,Stats, Adresse, Masque);
+         else 
+            return Cache.all.interface_utilisation;
+         end if;
+      else
+         return To_Unbounded_String("Null");
+      end if;
+   end Interface_Cache;
+        
    procedure Pour_Chaque(Cache: in T_LCA) is
    begin
       if Est_Vide(Cache) then

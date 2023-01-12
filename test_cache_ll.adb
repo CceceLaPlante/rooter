@@ -1,16 +1,13 @@
-with cache_ll ;
+with cache_ll ; use cache_ll;
 with Ada.Strings.Unbounded;     use Ada.Strings.Unbounded;
-with SDA_Exceptions;         use SDA_Exceptions;
 with Ada.Calendar; use Ada.Calendar;
-with cache_exception; use cache_exception ;
 with Ada.Text_IO; use Ada.Text_IO;
 
 
 procedure test_cache_ll is 
 
-   package cache_ll_utilisation is new cache_ll(capacite_cache => 5) ;
-   use cache_ll_utilisation;
-   
+   --package cache_ll_utilisation is new cache_ll(capacite_cache => 5) ;
+   --use cache_ll_utilisation;
    
    procedure Afficher (adresse : in Unbounded_String ; Masque_Adresse: in Unbounded_String; interface_utilisation : in Unbounded_String) is
     begin
@@ -25,7 +22,7 @@ procedure test_cache_ll is
         Skip_Line;
     end Afficher ;
 
-   procedure Afficher_cache is new cache_ll_utilisation.Pour_Chaque(Afficher);
+   procedure Afficher_cache is new cache_ll.Pour_Chaque(Afficher);
 
    Un_Cache : T_LCA ;
    Stats : T_Stats ;
@@ -34,6 +31,7 @@ procedure test_cache_ll is
    freq_min : Integer ;
    max : Unbounded_String ;
    temps_max : Time ;
+   Interface_test : Unbounded_String;
    
 begin
    
@@ -175,6 +173,10 @@ begin
    pragma assert (not Est_Vide(Un_Cache)) ;
    pragma assert (not Est_Pleine(Un_Cache, capacite_cache)) ;
    pragma assert (Adresse_Presente(Un_Cache, Stats, To_Unbounded_String("147.255.32.57"), To_Unbounded_String("255.255.0.0")));
+   
+   Put_Line("Début du troisième test");
+   Interface_test := Interface_Cache(Un_Cache,Stats, To_Unbounded_String("147.255.32.57"), To_Unbounded_String("255.255.0.0"));
+   pragma assert (Interface_test =To_Unbounded_String("eth0"));
 
    
 end test_cache_ll;

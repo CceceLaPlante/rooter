@@ -2,9 +2,9 @@ with SDA_Exceptions;
 with Ada.Unchecked_Deallocation;
 
 
-package body LCA is
+package body lca is
 
-	procedure Free is
+	procedure Free_lca is
 		new Ada.Unchecked_Deallocation (Object => T_Cellule, Name => T_LCA);
 
 
@@ -138,4 +138,4 @@ package body LCA is
 	end Pour_Chaque;
 
 
-end LCA;
+end lca;
