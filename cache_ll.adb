@@ -1,33 +1,10 @@
-with LCA ;
-with SDA_Exceptions;         use SDA_Exceptions;
-with Ada.Calendar; use Ada.Calendar;
-with cache_exception;  use cache_exception;
-with Ada.Text_IO; use Ada.Text_IO;
-
+with Ada.Unchecked_Deallocation;
+with cache_exception; use cache_exception;
 package body cache_ll is
-
 
    procedure Free is
      new Ada.Unchecked_Deallocation (Object => T_Cellule, Name => T_LCA);
-
-   --(Annee : out Year_Number; Mois : out Month_Number; Jour : out Day_Number; Secondes : out Day_Duration) 
-   function Temps return Horaire is
-      Mon_Time : Time :=  Clock ;
-      Annee    : Year_Number;
-      Mois     : Month_Number;
-      Jour     : Day_Number;
-      Secondes : Day_Duration;
-      Date : Horaire;
-   begin
-      Split (Mon_Time, Annee, Mois, Jour, Secondes );
-      Date.Annee := Annee;
-      Date.Mois := Mois;
-      Date.Jour := Jour;
-      Date.Secondes := Secondes;
-      return Date;
-   end Temps;
         
-
    procedure Initialiser(Cache : out T_LCA; Stats : out T_Stats) is
    begin
       Cache := Null ;
@@ -81,8 +58,6 @@ package body cache_ll is
    end Supprimer_lfu;
 
    procedure Chercher_max_temps(Cache : in out T_LCA; max : in out Unbounded_String; temps_max : in out Time) is
-      --max : Unbounded_String ;
-      --temps_max : Horaire ;
    begin
       if Est_Vide(Cache.all.Suivant) then
          max := Cache.all.Adresse ;
