@@ -26,17 +26,18 @@ procedure tests is
 
     t : Time;
     t2: Time;
-    t3 : Time := Null;
+    t3 : Time;
+
+    type rec is record
+        a : Integer;
+        b : Integer;
+    end record;
+
+    essais : rec;
 
 begin
 
-    t := Clock;
-    Skip_Line;
-    t2 := Clock;
-    if t>t2 then
-        Put_Line("t>t2");
-    else
-        Put_Line("t<t2");
-    end if;
+    essais.a := 12;
+    essais.b := 12;
 
 end tests;

@@ -35,12 +35,11 @@ package body arbre is
       end if;
    end Taille;
 
-   procedure Enregistrer (Arbre : in out T_Arbre ; Cle : String ; Donnee : T_Donnee) is
+   procedure Enregistrer (Arbre : in out T_Arbre ; Cle : String ; Donnee : T_Donnee;nul_donnee : in T_Donnee) is
       -- On crée une fonction récursive qui va parcourir l'Arbre et enregistrer la clé mais qui prend en compte le 
       -- soucis de relation d'ordre entre les clés.
-      procedure Enregistrer_r (Arbre : in out T_Arbre ; Cle : String ; Donnee : in T_Donnee; idx : in Integer ) is
+      procedure Enregistrer_r (Arbre : in out T_Arbre ; Cle : String ; Donnee : in T_Donnee;nul_donnee : in T_Donnee; idx : in Integer ) is
         nuls : String(1..32) := (others => Character'Val(0));
-        nul_donnee : T_Donnee;
         feuille : Boolean := False;
       begin
 
@@ -53,15 +52,15 @@ package body arbre is
             Arbre.all.Donnee := Donnee;
             Arbre.all.leaf := True;
          elsif Cle(idx) = '0' then
-            Enregistrer_r(Arbre.all.Suivant_G,Cle,Donnee,idx+1) ; -- on parcourt à gauche
+            Enregistrer_r(Arbre.all.Suivant_G,Cle,Donnee,nul_donnee,idx+1) ; -- on parcourt à gauche
          else
-            Enregistrer_r(Arbre.all.Suivant_D,Cle,Donnee, idx+1); -- on parcourt à droite
+            Enregistrer_r(Arbre.all.Suivant_D,Cle,Donnee, nul_donnee,idx+1); -- on parcourt à droite
          end if;
 
       end Enregistrer_r;
 
       begin
-         Enregistrer_r(Arbre,Cle,Donnee,1);
+         Enregistrer_r(Arbre,Cle,Donnee,nul_donnee,1);
    end Enregistrer;
 
 

@@ -13,9 +13,6 @@ with Ada.Text_IO;             use Ada.Text_IO;
 
 
 -- toutes les adresses ip et masques donnés par le client sont en base 10.
-generic
-    politic : Unbounded_String
-   
 package Cache_Arbre is
 
 	-- ça c'est qu'on mettras dans chaques noeuds de l'arbre
@@ -28,7 +25,6 @@ package Cache_Arbre is
             inter : Unbounded_String;
 			temps : Time;
         end record;
-	
     package Arbre_LA is 
 	    new Arbre (T_Donnee => T_ligne);
 	use Arbre_LA;
@@ -58,17 +54,17 @@ package Cache_Arbre is
 
 	-- permet d'initialiser le cache
 	procedure Initialiser_cache (Cache : in out T_Cache)
-		with Post => Est_Vide (Cache) = True;
+		with Post => Est_Vide_cache (Cache) = True;
 
 	-- pretty self explanatory
-	function Est_Vide_cache (Cache : in T_Arbre) return Boolean;
+	function Est_Vide_cache (Cache : in T_Cache) return Boolean;
 
 	-- permet une conversion 4bits de l'ip en binaire
 	function Convertir_IP2B_4 (adr: Integer) return Unbounded_String;
 
 	-- permet une conversion totale de l'ip en binaire
 	--[!] elle renvoie sans les . (point)
-	function IP2B (Adresse_IP : in Unbounded_String) return Unbounded_String;
+	function Convertir_IP2B (Adresse_IP : in Unbounded_String) return Unbounded_String;
   
   	-- operation inverse de IP2B
   	function B2IP_4 (IP : in Unbounded_String) return Unbounded_String;
@@ -81,29 +77,30 @@ package Cache_Arbre is
 	function Trouver (Cache : in T_Cache; IP : in Unbounded_String) return T_ligne;
 
 	-- permet d'ajouter une ligne dans le cache
-	procedure Ajouter (Cache : in out T_Cache; Ligne : in T_ligne);
+	procedure Ajouter (Cache : in out T_Cache; Ligne : in out T_ligne);
 
 	-- permet de supprimer une ligne du cache
 	procedure Supprimer_IP (Cache : in out T_Cache; IP : in Unbounded_String);
 
 	-- permet de supprimer la ligne la plus ancienne du cache
-	procedure Supprimer_LRU (Cache : in out T_Cache; Ligne : in T_ligne);
+	procedure Supprimer_LRU (Cache : in out T_Cache; max_taille : in Integer);
 
 	-- permet de savoir si une ip est dans le cache, attention, l'ip dois être un binaire masqué
 	function IP_Presente (Cache : in T_Cache; IP : in String) return Boolean;
 
 	-- permet de vider le cache
 	procedure Vider (Cache : in out T_Cache)
-		with Post => Est_Vide (Cache);
+		with Post => Est_Vide_cache (Cache);
 
 	-- procedure "traiter" de arbre
-	procedure afficher_inter (Cle : in String(1..32); Ligne : in T_ligne);
+	procedure afficher_inter (Cle : in String; Ligne : in T_ligne);
 
 	-- permet d'afficher le cache
 	procedure Afficher (Cache : in T_Cache);
 
 	-- permet de retourner la taille du cache (le nb de feuilles,pas de noeuds)
 	function Taille_cache(Cache : in T_Cache) return Integer;
+
 
 
 
