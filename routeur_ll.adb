@@ -1,10 +1,9 @@
 with Ada.Strings;               use Ada.Strings;
 with Ada.Text_IO;               use Ada.Text_IO;
-with Ada.Integer_Text_IO;       use Ada.Integer_Text_IO;
 with Ada.Strings.Unbounded;     use Ada.Strings.Unbounded;
 with Ada.Text_IO.Unbounded_IO;  use Ada.Text_IO.Unbounded_IO;
-with Ada.Command_Line;          use Ada.Command_Line;
-with Ada.Exceptions;            use Ada.Exceptions;
+--with Ada.Command_Line;          use Ada.Command_Line;
+--with Ada.Exceptions;            use Ada.Exceptions;
 with Ada.Unchecked_Deallocation; 
 with cache_ll; use cache_ll;
 
@@ -38,6 +37,18 @@ procedure routeur_ll is
 
    procedure Afficher_cache is new cache_ll.Pour_Chaque(Afficher);
    
+   procedure Afficher_Stats (Stats: in T_Stats) is
+    begin
+        Put("Nombre de défauts de Cache: ");
+        Put(Float'Image(Stats.nb_defauts));
+        Skip_Line ;
+        Put("Nombre de demandes: ");
+        Put(Float'Image(Stats.nb_demandes));
+        Skip_Line ;
+        Put("Taux de défauts: ");
+        Put(Float'Image(Stats.taux_defauts));
+        Skip_Line;
+    end Afficher_Stats;
    
    procedure Free
    is new Ada.Unchecked_Deallocation (Object => T_Table, Name => T_Liste);
@@ -46,22 +57,6 @@ procedure routeur_ll is
    begin
       table := Null;
    end Initialiser_Table;
-    
-   Type T_adresse_IP is mod 2 ** 32;
-   -- renvois la taille d'une T_Liste
-   
-   function length(lst : T_Liste) return Integer is
-   begin
-      if lst /= Null then
-         return 1 + length(lst.Suivant); -- appel réccursif de la fonction classique ...
-      else
-         return 0;
-      end if;
-   end length;
-
--- Fonction qui converti les adresses IP en nombre binaire.
-   -- Elle servira à appliquer les masques.
-
 
    -- d'abord on s'occupe d'une conversion 4bit 
    function Convertir_IP2B_4 (adr : Integer) return Unbounded_String is 
@@ -96,7 +91,7 @@ procedure routeur_ll is
       entier_string : Unbounded_String := To_Unbounded_String("");
       adr : adr4 ;
       idx : Integer := 1;
-      Adresse_IP_S : String := To_String(Adresse_IP);
+      --Adresse_IP_S : String := To_String(Adresse_IP);
         
    begin
       for i in 1..Length(Adresse_IP) loop
@@ -124,59 +119,6 @@ procedure routeur_ll is
       return adr(1) & adr(2) & adr(3) & adr(4) ; -- [!] on ne renvoi pas avec des points !!!! 
         
    end Convertir_IP2B;
-
-   -- Fonction qui convertie les adresses IP en entier.
-   -- je ne crois pas qu'on l'utilise donc.. bon.. [!] par contre, je pense que la fonction est buggée, parce que si on a un . 
-   -- l'adresse IP, il continue de s'incrémenter et dcp l'adresse IP est fucked up
-   function Convertir_IP2I(Adresse_IP : in Unbounded_String) return Integer is
-      entier : Integer := 0;
-   begin
-      for i in 1..Length(Adresse_IP) loop
-         case Element(Adresse_IP, i) is
-            when '0'|'1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9' =>
-               entier := entier + Integer(Character'Pos(Element(Adresse_IP,i))*(10**i)) ;
-            when others =>
-               null ;
-         end case ;
-      end loop ;
-      return entier ;
-   end Convertir_IP2I;
-
-   -- Fonction qui convertie les adresses binaires en adresses IP.
-   -- alors je crois que c'est pas grave parce qu'on ne l'utilise pas (pour l'instant), mais elle n'est pas compatible avec 
-   -- la conversion IP2B (présence de points...)
-   function Convertir_B2IP(Adresse_IP : in Unbounded_String) return Unbounded_String is
-      puissance : Integer;
-      nombre_entier : Integer;
-      nombre : Unbounded_String;
-      indice : Integer;
-      octet : Integer;
-
-   begin
-      indice := 1 ;
-      octet := 1 ;
-      nombre := To_Unbounded_String("");
-
-      while octet /= 4 loop 
-         -- on descend les puissances, de 7 à 0, parce que les nombres binaire se lisent de droite à gauche
-         puissance := 7 ; 
-         nombre_entier := 0 ;
-
-         while puissance /= 0 loop
-            nombre_entier := nombre_entier + Integer((Character'Pos(Element(Adresse_IP,indice))-Character'Pos('0'))*(2**puissance)) ;
-            puissance := puissance - 1 ;
-            indice := indice + 1 ;
-
-         end loop ;
-         if octet /= 1 then
-            nombre := nombre & "." & To_Unbounded_String(nombre_entier)  ;
-         else
-            nombre := To_Unbounded_String(nombre_entier) ;
-         end if ;
-         octet := octet + 1 ;
-      end loop ;
-      return nombre ;
-   end Convertir_B2IP;
 
    --Fonction prenant une ligne de la table de routage et la convertie en T_Table.
    --Attention cependant, tout est stocké sous forme de Unbounded_String.*
@@ -212,12 +154,12 @@ procedure routeur_ll is
 
    -- Fonction qui renvoie True si le masque et l'adresse IP coïncident.
    function Masque(Adresse_IP : in Unbounded_String; ligne : in T_Table) return Boolean is 
-      msk : Unbounded_String := ligne.mask;
-      dest : Unbounded_String := ligne.destination;
+      msk : constant Unbounded_String := ligne.mask;
+      dest : constant Unbounded_String := ligne.destination;
       -- pour masquer il faut que l'adresse soit en binaire
-      dest_binaire : Unbounded_String := Convertir_IP2B(dest);
-      msk_binaire : Unbounded_String := Convertir_IP2B(msk);
-      adr_binaire : Unbounded_String := Convertir_IP2B(Adresse_IP);
+      dest_binaire : constant Unbounded_String := Convertir_IP2B(dest);
+      msk_binaire : constant Unbounded_String := Convertir_IP2B(msk);
+      adr_binaire : constant Unbounded_String := Convertir_IP2B(Adresse_IP);
 
       a_return : Boolean := True;
    begin
@@ -249,7 +191,7 @@ procedure routeur_ll is
 
    end somme_masque;
 
-   function Meilleur_Masque(lst : in out T_Liste; Adresse_IP : in Unbounded_String; current : in out T_Table) return T_Table is --Fonction qui renvoie le masque le plus long qui correspond avec l'adresse.
+   function Meilleur_Masque(lst : in T_Liste; Adresse_IP : in Unbounded_String; current : in out T_Table) return T_Table is --Fonction qui renvoie le masque le plus long qui correspond avec l'adresse.
    begin 
       -- condition d'arrêt : si on est arrivé au bout de la liste...
 
@@ -300,12 +242,12 @@ procedure routeur_ll is
    end Lire;
 
    --Fonction qui traite les commandes telles que "fin", "table"...
-   procedure Traiter_Commande(commande: in Unbounded_String; nom_table : in Unbounded_String; fichier_sortie: out File_Type; Cache : in T_LCA; Stats : in T_Stats) is 
+   procedure Traiter_Commande(commande: in Unbounded_String; nom_table : in Unbounded_String; fichier_sortie: File_Type; Cache : in T_LCA; Stats : in T_Stats) is 
       fichier_table : File_Type;
       ligne : Unbounded_String := To_Unbounded_String("");
    begin
       if commande = "table" then 
-         Open(fichier_table,In_File ,nom_table);  
+         Open(fichier_table,In_File ,To_String(nom_table));  
 
          ligne := Lire(fichier_table);
          Ecrire(fichier_sortie,To_Unbounded_String(""));
@@ -320,7 +262,9 @@ procedure routeur_ll is
       elsif commande = "cache" then
           Afficher_cache(Cache);
       elsif commande = "stats" then
-            Null;
+            Afficher_Stats(Stats);
+      else
+         Null ;
       end if;
                
    end Traiter_Commande; 
@@ -361,9 +305,9 @@ procedure routeur_ll is
 
    table : T_Liste := Null;
    ligne_a_lire : Unbounded_String;
-   nom_entree : String := "paquets.txt";
-   nom_table : String := "table.txt";
-   nom_sortie : String := "resultats.txt";
+   nom_entree : constant String := "paquets.txt";
+   nom_table : constant String := "table.txt";
+   nom_sortie : constant String := "resultats.txt";
 
    -- pour la fonction Lire, il faut pré-ouvrire les fichiers
    fichier_table : File_Type;
@@ -389,7 +333,8 @@ begin
    Open(fichier_entree,In_File,nom_entree);
    Create(fichier_sortie,Out_File,nom_sortie);
 
-   table := New T_Table;
+   Initialiser_Table(table);
+   --table := New T_Table;
    -- on donne table Null, et 0 comme clé, parce que la fonction est réccurssive et à besoin de ces paramètres.
    Chargement_Table(table, fichier_table,0);
    Close(fichier_table);
@@ -412,13 +357,14 @@ begin
             Interface_Cache := Meilleur_Masque(table, ligne_a_lire, current_tab).inter;
             
             if not Adresse_Presente(Cache, Stats, Adresse_IP_Cache, Masque_Cache) then
-               Enregistrer(Cache, Stats, Adresse_IP_Cache, Meilleur_Masque(table, ligne_a_lire, current_tab).inter, Meilleur_Masque(table, ligne_a_lire, current_tab).mask);
+               Enregistrer(Cache, Stats, Adresse_IP_Cache, Interface_Cache,Masque_Cache);
             end if ;
-            a_ecrire := ligne_a_lire & To_Unbounded_String(" ")& Interface_Cache(Cache, Stats, Adresse_IP_Cache, Masque_Cache);
+
+            a_ecrire := ligne_a_lire & To_Unbounded_String(" ")& Interface_Cache;
             Ecrire(fichier_sortie, a_ecrire);
 
          when others =>
-            Traiter_Commande(To_String(ligne_a_lire), nom_table, fichier_sortie);
+            Traiter_Commande(ligne_a_lire, To_Unbounded_String(nom_table), fichier_sortie, Cache, Stats);
       end case;
 
       ligne_a_lire := Lire(fichier_entree);
