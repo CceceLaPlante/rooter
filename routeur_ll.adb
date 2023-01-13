@@ -1,33 +1,13 @@
-with Ada.Strings;               use Ada.Strings;
-with Ada.Text_IO;               use Ada.Text_IO;
-with Ada.Strings.Unbounded;     use Ada.Strings.Unbounded;
+with Ada.Calendar; use Ada.Calendar;
 with Ada.Text_IO.Unbounded_IO;  use Ada.Text_IO.Unbounded_IO;
---with Ada.Command_Line;          use Ada.Command_Line;
---with Ada.Exceptions;            use Ada.Exceptions;
-with Ada.Unchecked_Deallocation; 
-with cache_ll; use cache_ll;
-
-procedure routeur_ll is 
-
-   type T_Table;
-   type T_Liste is access T_Table;
-   type T_Table is 
-      record 
-         destination : Unbounded_String;
-         mask : Unbounded_String;
-         inter : Unbounded_String;
-         Suivant : T_Liste;
-         cle : Integer;
-      end record;
-
-   type adr4 is array(1..4) of Unbounded_String;
+package body routeur_ll is 
 
    procedure Afficher (adresse : in Unbounded_String ; Masque_Adresse: in Unbounded_String; interface_utilisation : in Unbounded_String) is
     begin
         Put_Line(To_String(adresse)& " " & To_String(Masque_Adresse) & " " & To_String(interface_utilisation));
     end Afficher ;
 
-   procedure Afficher_cache is new cache_ll.Pour_Chaque(Afficher);
+   procedure Afficher_cache is new Pour_Chaque(Afficher);
    
    procedure Afficher_Stats (Stats: in T_Stats) is
     begin
@@ -42,7 +22,7 @@ procedure routeur_ll is
         Skip_Line;
     end Afficher_Stats;
    
-   procedure Free
+   procedure Free_Tab
    is new Ada.Unchecked_Deallocation (Object => T_Table, Name => T_Liste);
    
    procedure Initialiser_Table(table : Out  T_Liste) is
@@ -233,23 +213,35 @@ procedure routeur_ll is
       return ligne_a_lire;
    end Lire;
 
-   procedure Supprimer(Cache: in T_LCA; Politique: in Unbounded_String) is
+   procedure Supprimer(Cache: in out T_LCA; Politique: in Unbounded_String) is
       Temps_max: Time;
       Freq_min: Integer;
       Adresse_min: Unbounded_String;
       Adresse_max: Unbounded_String;
+      Politique_Integer: Integer;
    begin 
-      Adresse_max := To_Unbounded_String("00000000000000000000000000000000");
-      temps_max := Clock ;
-      Adresse_min := To_Unbounded_String("00000000000000000000000000000000") ;
-      freq_min := 0 ;
-      case Politique is
-         when To_Unbounded_String("FIFO") => 
+
+      if Politique = To_Unbounded_String("FIFO") then
+         Politique_Integer := 1;
+      elsif Politique = To_Unbounded_String("LRU") then
+         Politique_Integer := 2;
+      elsif Politique = To_Unbounded_String("LFU") then
+         Politique_Integer := 3;
+      else
+         Null;
+      end if;
+
+      case Politique_Integer is
+         when 1 => 
             Supprimer_fifo(Cache);
-         when To_Unbounded_String("LRU") =>
+         when 2 =>
+            Adresse_max := To_Unbounded_String("00000000000000000000000000000000");
+            temps_max := Clock ;
             Chercher_max_temps(Cache, Adresse_max, Temps_max);
             Supprimer_lru(Cache, Adresse_max);
-         when To_Unbounded_String("LFU") =>
+         when 3 =>
+            Adresse_min := To_Unbounded_String("00000000000000000000000000000000") ;
+            freq_min := 0 ;
             Chercher_min_freq(Cache, Adresse_min, Freq_min);
             Supprimer_lfu(Cache, Adresse_min);
          when others => 
@@ -301,7 +293,7 @@ procedure routeur_ll is
       if table /= Null then
          Liberer(table.all.suivant);
       end if;
-      Free(table);
+      Free_Tab(table);
    end Liberer;
    
    --Fonction qui permet de charger la table de routage dans une liste chaînée.
@@ -383,6 +375,9 @@ begin
             Interface_Cache := Meilleur_Masque(table, ligne_a_lire, current_tab).inter;
             
             if not Adresse_Presente(Cache, Stats, Adresse_IP_Cache, Masque_Cache) then
+               if Est_Pleine(Cache, capacite_cache) then
+                  Supprimer(Cache, Politique);
+               end if;
                Enregistrer(Cache, Stats, Adresse_IP_Cache, Interface_Cache,Masque_Cache);
             else 
                Stats.nb_demandes := Stats.nb_demandes + 1.0 ;

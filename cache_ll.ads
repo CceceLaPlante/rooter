@@ -1,9 +1,10 @@
 with Ada.Strings.Unbounded;     use Ada.Strings.Unbounded;
 with Ada.Calendar; use Ada.Calendar;
-
 package cache_ll is
 
-   type T_Stats is record
+capacite_cache: Integer;
+
+type T_Stats is record
       nb_demandes : Float ;
       nb_defauts : Float ;
       taux_defauts : Float ;
@@ -21,8 +22,6 @@ package cache_ll is
       Temps_enregistrement : Time ;
       Suivant : T_LCA;
    end record;
-
-   capacite_cache : Integer ;
 
    procedure Initialiser(Cache : out T_LCA; Stats : out T_Stats) ;
 
