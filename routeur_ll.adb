@@ -1,10 +1,31 @@
 with Ada.Calendar; use Ada.Calendar;
 with Ada.Text_IO.Unbounded_IO;  use Ada.Text_IO.Unbounded_IO;
-package body routeur_ll is 
+with Ada.Strings.Unbounded;     use Ada.Strings.Unbounded;
+with Ada.Integer_Text_IO;       use Ada.Integer_Text_IO;
+with Ada.Text_IO;               use Ada.Text_IO;
+with Ada.Command_Line;          use Ada.Command_Line;
+with Ada.Unchecked_Deallocation;
+with cache_ll; use cache_ll;
+
+
+procedure routeur_ll is 
+
+   type T_Table;
+   type T_Liste is access T_Table;
+   type T_Table is 
+      record 
+         destination : Unbounded_String;
+         mask : Unbounded_String;
+         inter : Unbounded_String;
+         Suivant : T_Liste;
+         cle : Integer;
+      end record;
+
+   type adr4 is array(1..4) of Unbounded_String;
 
    procedure Afficher (adresse : in Unbounded_String ; Masque_Adresse: in Unbounded_String; interface_utilisation : in Unbounded_String) is
     begin
-        Put_Line(To_String(adresse)& " " & To_String(Masque_Adresse) & " " & To_String(interface_utilisation));
+      Put_Line(adresse & To_Unbounded_String(" ") & Masque_Adresse & To_Unbounded_String(" ")& interface_utilisation);
     end Afficher ;
 
    procedure Afficher_cache is new Pour_Chaque(Afficher);
@@ -218,40 +239,29 @@ package body routeur_ll is
       Freq_min: Integer;
       Adresse_min: Unbounded_String;
       Adresse_max: Unbounded_String;
-      Politique_Integer: Integer;
    begin 
 
       if Politique = To_Unbounded_String("FIFO") then
-         Politique_Integer := 1;
+         Supprimer_fifo(Cache);
       elsif Politique = To_Unbounded_String("LRU") then
-         Politique_Integer := 2;
+         Adresse_max := To_Unbounded_String("00000000000000000000000000000000");
+         temps_max := Clock ;
+         Chercher_max_temps(Cache, Adresse_max, Temps_max);
+         Supprimer_lru(Cache, Adresse_max);
       elsif Politique = To_Unbounded_String("LFU") then
-         Politique_Integer := 3;
+         Adresse_min := To_Unbounded_String("00000000000000000000000000000000") ;
+         freq_min := 0 ;
+         Chercher_min_freq(Cache, Adresse_min, Freq_min);
+         Supprimer_lfu(Cache, Adresse_min);
       else
          Null;
       end if;
 
-      case Politique_Integer is
-         when 1 => 
-            Supprimer_fifo(Cache);
-         when 2 =>
-            Adresse_max := To_Unbounded_String("00000000000000000000000000000000");
-            temps_max := Clock ;
-            Chercher_max_temps(Cache, Adresse_max, Temps_max);
-            Supprimer_lru(Cache, Adresse_max);
-         when 3 =>
-            Adresse_min := To_Unbounded_String("00000000000000000000000000000000") ;
-            freq_min := 0 ;
-            Chercher_min_freq(Cache, Adresse_min, Freq_min);
-            Supprimer_lfu(Cache, Adresse_min);
-         when others => 
-            Null;
-      end case;
    end Supprimer;
 
 
    --Fonction qui traite les commandes telles que "fin", "table"...
-   procedure Traiter_Commande(commande: in Unbounded_String; nom_table : in Unbounded_String; Cache : in T_LCA; Stats : in T_Stats) is 
+   procedure Traiter_Commande(commande: in Unbounded_String; nom_table : in Unbounded_String; Cache : in T_LCA; Affichage_Stats: in Boolean; Stats : in T_Stats; numero_ligne: in Integer) is 
       fichier_table : File_Type;
       ligne : Unbounded_String := To_Unbounded_String("");
    begin
@@ -259,7 +269,10 @@ package body routeur_ll is
          Open(fichier_table,In_File ,To_String(nom_table)); 
          ligne := Lire(fichier_table);
          Skip_Line;
-         Put_Line("-------------------------------- Table --------------------------------");
+         Put(To_Unbounded_String("table (ligne "));
+         Put(numero_ligne, 1);
+         Put(To_Unbounded_String(")") );
+         Skip_Line;
          while ligne /= To_Unbounded_String("") loop
             Put_Line(To_String(ligne));
             ligne := Lire(fichier_table);
@@ -271,11 +284,14 @@ package body routeur_ll is
    
       elsif commande = "cache" then
          Skip_Line;
-         Put_Line("-------------------------------- Cache --------------------------------");
+         Put(To_Unbounded_String("cache (ligne "));
+         Put(numero_ligne,1);
+         Put(To_Unbounded_String(")" ));
+         Skip_Line;
          Afficher_cache(Cache);
          Skip_Line;
          
-      elsif commande = "stats" then
+      elsif Affichage_Stats then
          Skip_Line;
          Put_Line("-------------------------------- Statistiques --------------------------------");
          Afficher_Stats(Stats);
@@ -286,6 +302,61 @@ package body routeur_ll is
       end if;
                
    end Traiter_Commande; 
+
+   procedure Traiter_Ligne_Commande (capacite_cache: out Integer; Politique: out Unbounded_String;
+    Nom_entree: out Unbounded_String; Nom_sortie: out Unbounded_String; Nom_table: out Unbounded_String; Affichage_Stats: out Boolean) is
+      politique_bool: Boolean;
+      capacite_cache_bool: Boolean;
+      entree_bool: Boolean;
+      sortie_bool: Boolean;
+      table_bool: Boolean;
+   
+   begin
+      politique_bool:= False;
+      capacite_cache_bool:= False;
+      entree_bool:= False;
+      sortie_bool:= False;
+      table_bool:= False;
+      Affichage_Stats := True;
+      Nom_entree := To_Unbounded_String("paquets.txt");
+      Nom_sortie := To_Unbounded_String("resultats.txt");
+      Nom_table := To_Unbounded_String("table.txt");
+      Politique := To_Unbounded_String("FIFO.txt");
+      capacite_cache := 10;
+      
+      for VarBoucle in 1..Argument_Count loop
+         if To_Unbounded_String(Argument(VarBoucle)) = To_Unbounded_String("-p") then
+            entree_bool:= True;      
+         elsif entree_bool then
+            Nom_entree := To_Unbounded_String(Argument(Varboucle));
+            entree_bool:= False;
+         elsif To_Unbounded_String(Argument(VarBoucle)) = To_Unbounded_String("-P") then
+            politique_bool := True;
+         elsif politique_bool then
+            Politique := To_Unbounded_String(Argument(Varboucle));
+            politique_bool:= False;
+         elsif To_Unbounded_String(Argument(VarBoucle)) = To_Unbounded_String("-S") then
+            Affichage_Stats := False;
+         elsif To_Unbounded_String(Argument(VarBoucle)) = To_Unbounded_String("-t") then
+            table_bool := True;
+         elsif table_bool then
+            Nom_table := To_Unbounded_String(Argument(Varboucle));
+            table_bool:= False;
+         elsif To_Unbounded_String(Argument(VarBoucle)) = To_Unbounded_String("-c") then
+            capacite_cache_bool := True;
+         elsif capacite_cache_bool then
+            capacite_cache := Integer'Value(Argument(Varboucle));
+            capacite_cache_bool:= False;
+         elsif To_Unbounded_String(Argument(VarBoucle)) = To_Unbounded_String("-r") then
+            sortie_bool := True;
+         elsif sortie_bool then
+            Nom_sortie := To_Unbounded_String(Argument(Varboucle));
+            sortie_bool:= False;
+         else
+            Null;
+         end if;
+      end loop;
+   end Traiter_Ligne_Commande;
     
    --fonction qui libère tout élément de type T_Liste
    procedure Liberer(table : in out T_Liste) is
@@ -323,9 +394,9 @@ package body routeur_ll is
 
    table : T_Liste := Null;
    ligne_a_lire : Unbounded_String;
-   nom_entree : constant String := "paquets.txt";
-   nom_table : constant String := "table.txt";
-   nom_sortie : constant String := "resultats.txt";
+   nom_entree: Unbounded_String;
+   nom_sortie: Unbounded_String;
+   nom_table: Unbounded_String;
 
    -- pour la fonction Lire, il faut pré-ouvrire les fichiers
    fichier_table : File_Type;
@@ -342,14 +413,20 @@ package body routeur_ll is
    Masque_Cache : Unbounded_String;
    Interface_Cache: Unbounded_String;
    Stats : T_Stats;
-   
+   numero_ligne: Integer;
+
+   Affichage_Stats: Boolean;
+   Politique: Unbounded_String;
+   capacite_cache: Integer;
      
 begin
+
+   Traiter_Ligne_Commande (capacite_cache, Politique, nom_entree, nom_sortie, nom_table, Affichage_Stats);
    Initialiser(Cache,Stats);
 
-   Open(fichier_table,In_File,nom_table);
-   Open(fichier_entree,In_File,nom_entree);
-   Create(fichier_sortie,Out_File,nom_sortie);
+   Open(fichier_table,In_File,To_String(nom_table));
+   Open(fichier_entree,In_File,To_String(nom_entree));
+   Create(fichier_sortie,Out_File,To_String(nom_sortie));
 
    Initialiser_Table(table);
    --table := New T_Table;
@@ -358,6 +435,7 @@ begin
    Close(fichier_table);
    ligne_a_lire := Lire(fichier_entree);
 
+   numero_ligne := 1;
    while (not (ligne_a_lire = "fin") and not End_Of_File(fichier_entree) and not (ligne_a_lire = To_Unbounded_String(""))) loop
 
       current_tab.cle := 0;
@@ -388,12 +466,15 @@ begin
             Ecrire(fichier_sortie, a_ecrire);
 
          when others =>
-            Traiter_Commande(ligne_a_lire, To_Unbounded_String(nom_table), Cache, Stats);
+            Traiter_Commande(ligne_a_lire, nom_table, Cache, Affichage_Stats, Stats, numero_ligne);
       end case;
 
       ligne_a_lire := Lire(fichier_entree);
+      numero_ligne := numero_ligne + 1; 
 
    end loop;
+
+   Put_Line(To_Unbounded_String("fin (ligne") & Integer'Image(numero_ligne) & To_Unbounded_String(")"));
 
    Close(fichier_entree);
    Close(fichier_sortie);

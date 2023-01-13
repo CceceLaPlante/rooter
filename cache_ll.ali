@@ -1,0 +1,226 @@
+V "GNAT Lib v10"
+A -gnatwa
+A -gnata
+A -g
+P SS ZX
+
+RN
+RV NO_ALLOCATORS
+RV NO_CALENDAR
+RV NO_DELAY
+RV NO_DIRECT_BOOLEAN_OPERATORS
+RV NO_EXCEPTION_HANDLERS
+RV NO_EXCEPTION_PROPAGATION
+RV NO_EXCEPTIONS
+RV NO_FLOATING_POINT
+RV NO_IMPLICIT_CONDITIONALS
+RV NO_LOCAL_ALLOCATORS
+RV NO_NESTED_FINALIZATION
+RV NO_RECURSION
+RV NO_SECONDARY_STACK
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_UNCHECKED_DEALLOCATION
+RV NO_DEFAULT_INITIALIZATION
+RV NO_ELABORATION_CODE
+RV SPARK_05
+
+U cache_ll%b		cache_ll.adb		d6cf67ba NE OO PK IL
+W ada%s			ada.ads			ada.ali
+Z ada.exceptions%s	a-except.adb		a-except.ali
+Z ada.tags%s		a-tags.adb		a-tags.ali
+W ada.unchecked_deallocation%s
+W cache_exception%s	cache_exception.ads	cache_exception.ali
+Z system%s		system.ads		system.ali
+Z system.pool_global%s	s-pooglo.adb		s-pooglo.ali
+Z system.secondary_stack%s  s-secsta.adb	s-secsta.ali
+Z system.soft_links%s	s-soflin.adb		s-soflin.ali
+Z system.standard_library%s  s-stalib.adb	s-stalib.ali
+Z system.storage_elements%s  s-stoele.adb	s-stoele.ali
+Z system.storage_pools%s  s-stopoo.adb		s-stopoo.ali
+Z system.storage_pools.subpools%s  s-stposu.adb	s-stposu.ali
+
+U cache_ll%s		cache_ll.ads		8d76af00 BN EE OO PF PK IL
+W ada%s			ada.ads			ada.ali
+W ada.calendar%s	a-calend.adb		a-calend.ali
+Z ada.exceptions%s	a-except.adb		a-except.ali
+W ada.strings%s		a-string.ads		a-string.ali
+W ada.strings.unbounded%s  a-strunb.adb		a-strunb.ali
+Z ada.tags%s		a-tags.adb		a-tags.ali
+Z system%s		system.ads		system.ali
+Z system.finalization_masters%s  s-finmas.adb	s-finmas.ali
+Z system.pool_global%s	s-pooglo.adb		s-pooglo.ali
+Z system.soft_links%s	s-soflin.adb		s-soflin.ali
+Z system.standard_library%s  s-stalib.adb	s-stalib.ali
+
+D ada.ads		20220628085427 76789da1 ada%s
+D a-calend.ads		20220628085427 474d9720 ada.calendar%s
+D a-charac.ads		20220628085427 2d3ec45b ada.characters%s
+D a-chlat1.ads		20220628085427 66457d31 ada.characters.latin_1%s
+D a-except.ads		20220628085427 a7106115 ada.exceptions%s
+D a-finali.ads		20220628085427 bf4f806b ada.finalization%s
+D a-stream.ads		20220628085427 119b8fb3 ada.streams%s
+D a-string.ads		20220628085427 90ac6797 ada.strings%s
+D a-strmap.ads		20220628085427 e8bb714a ada.strings.maps%s
+D a-strunb.ads		20220628085427 1656705b ada.strings.unbounded%s
+D a-tags.ads		20220628085427 491b781d ada.tags%s
+D a-unccon.ads		20220628085427 0e9b276f ada.unchecked_conversion%s
+D a-uncdea.ads		20220628085427 eff36322 ada.unchecked_deallocation%s
+D cache_exception.ads	20230112100519 fe9d1ae3 cache_exception%s
+D cache_ll.ads		20230113164542 dc6d487b cache_ll%s
+D cache_ll.adb		20230113163852 1bcc5600 cache_ll%b
+D system.ads		20220628085427 4635ec04 system%s
+D s-atocou.ads		20220628085427 b45c2d8d system.atomic_counters%s
+D s-exctab.ads		20220628085427 54135002 system.exception_table%s
+D s-finmas.ads		20220628085427 7811a767 system.finalization_masters%s
+D s-finroo.ads		20220628085427 4ff27390 system.finalization_root%s
+D s-memory.ads		20220628085427 597d6634 system.memory%s
+D s-parame.ads		20220628085427 48ec542b system.parameters%s
+D s-pooglo.ads		20220628085427 ede33ef8 system.pool_global%s
+D s-secsta.ads		20220628085427 20bbe636 system.secondary_stack%s
+D s-soflin.ads		20220628085427 a7318a92 system.soft_links%s
+D s-stache.ads		20220628085427 a37c21ec system.stack_checking%s
+D s-stalib.ads		20220628085427 09bd3940 system.standard_library%s
+D s-stalib.adb		20220628085427 f2fe2716 system.standard_library%b
+D s-stoele.ads		20220628085427 2dc34a04 system.storage_elements%s
+D s-stopoo.ads		20220628085427 b16154c2 system.storage_pools%s
+D s-stposu.ads		20220628085427 97a6219c system.storage_pools.subpools%s
+D s-stratt.ads		20220628085427 aedef97e system.stream_attributes%s
+D s-traent.ads		20220628085427 005bf670 system.traceback_entries%s
+D s-unstyp.ads		20220628085427 34867c83 system.unsigned_types%s
+G a e
+G c Z s b [initialiser cache_ll 26 14 none]
+G c Z s b [est_vide cache_ll 28 13 none]
+G c Z s b [supprimer_fifo cache_ll 30 14 none]
+G c Z s b [chercher_min_freq cache_ll 32 14 none]
+G c Z s b [supprimer_lfu cache_ll 34 14 none]
+G c Z s b [chercher_max_temps cache_ll 36 14 none]
+G c Z s b [supprimer_lru cache_ll 38 14 none]
+G c Z s b [enregistrer cache_ll 40 14 none]
+G c Z s b [vider cache_ll 42 14 none]
+G c Z s b [adresse_presente cache_ll 44 13 none]
+G c Z s b [taille cache_ll 46 13 none]
+G c Z s b [est_pleine cache_ll 48 13 none]
+G c Z s b [interface_cache cache_ll 50 13 none]
+G c Z s s [t_statsIP cache_ll 7 6 none]
+G c Z s s [t_celluleDI cache_ll 16 9 none]
+G c Z s s [t_celluleDA cache_ll 16 9 none]
+G c Z s s [t_celluleDF cache_ll 16 9 none]
+G c Z s s [t_celluleIP cache_ll 16 9 none]
+G c Z b b [free cache_ll 5 14 none]
+X 1 ada.ads
+16K9*Ada 20e8 15|1r6 1r37 2r6 2r24 16|1r6 6r10
+X 2 a-calend.ads
+36K13*Calendar 409e17 15|2w10 2r28
+42I9*Time<222I9> 15|22r30 36r101 16|60r101
+56V13*Clock{42I9} 16|88s221 99s44
+122V14*">"{boolean} 16|68s41
+222I9 Time_Rep<long_long_integer>
+X 8 a-string.ads
+16K13*Strings 35e16 15|1r10 1r41
+X 10 a-strunb.ads
+82K21*Unbounded 756e26 15|1w18 1r49
+87R9*Unbounded_String<6|43R9> 739e14 15|17r17 18r15 19r31 32r62 34r55 36r64
+. 38r55 40r88 40r129 40r163 44r81 44r118 50r77 50r103 50r128 53r42 53r86
+. 53r123 16|32r62 49r55 60r64 74r55 85r88 85r129 85r163 120r81 120r118 148r74
+. 148r100 148r125
+103V13*To_Unbounded_String{87R9} 16|158s17
+238V14*"="{boolean} 16|53s43 78s43 93s32 93s70 93s106 124s32 124s65 152s32
+. 152s67 152s100
+X 13 a-uncdea.ads
+17+9 Object 16|6r38
+18P9 Name(17+9) 16|6r59
+20u15*Unchecked_Deallocation 16|1w10 6r14
+X 14 cache_exception.ads
+1K9*cache_exception 5e20 16|2w6 2r27
+3X9*Adresse_Absente_Exception 16|52r16 77r16
+X 15 cache_ll.ads
+3K9*cache_ll 56l5 56e13 16|3b14 177l5 177t13
+5i1*capacite_cache{integer}
+7R6*T_Stats 11e15 26r57 40r63 42r57 44r59 50r56 16|8r57 85r63 104r57 120r59
+. 148r53
+8f7*nb_demandes{float} 16|11m13 89m16 89r37 91r57 96m16 96r37 97r57 112r17
+. 113m16
+9f7*nb_defauts{float} 16|12m13 90m16 90r36 91r38 97r38 112r48 114m16
+10f7*taux_defauts{float} 16|13m13 91m16 97m16 112r78 115m16
+13R9*T_Cellule 15r25 16c9 24e14 16|6r48 88r23
+15P9*T_LCA(13R9) 23r17 26r38 28r33 30r44 32r43 34r39 36r44 38r39 40r41 42r35
+. 44r41 46r31 48r35 50r39 54r37 16|6r67 8r38 17r33 23r44 24r24 32r43 49r39
+. 60r44 74r39 85r41 104r35 120r41 133r31 143r35 148r39 162r36
+17r7*Adresse{10|87R9} 16|37r30 43r30 53r35 63r27 69r27 78r35 88m34 93r24
+. 93r62 124r24 152r24 152r59 168r31
+18r7*Masque{10|87R9} 16|88m57 93r99 124r58 152r93 168r50
+19r7*Interface_utilisation{10|87R9} 16|88m153 155r30 168r68
+20i7*Nombre_utilisation{integer} 16|38r35 42r22 44r35 88m83 92m20 98m20 98r52
+21i7*Cle{integer} 16|88m108
+22i7*Temps_enregistrement{2|42I9} 16|64r33 68r20 70r33 88m197 99m20
+23p7*Suivant{15P9} 16|26r35 36r31 40r41 53r23 54m20 54r41 54r53 56r34 62r29
+. 66r39 78r23 79m20 79r41 79r53 81r34 88m136 94m32 109m26 127r44 138r37 153r46
+. 173r32
+26U14*Initialiser 26<26 26<45 16|8b14 14l8 14t19
+26p26 Cache{15P9} 16|8b26 10m7
+26r45 Stats{7R6} 16|8b45 11m7 12m7 13m7
+28V13*Est_Vide{boolean} 28>22 16|17b13 20l8 20t16 36s12 51s10 62s10 76s10
+. 87s10 106s10 122s10 135s10 150s14 164s10
+28p22 Cache{15P9} 16|17b22 19r15
+30U14*Supprimer_fifo 30=29 16|23b14 29l8 29t22
+30p29 Cache{15P9} 16|23b29 26r25 27m12 28m7
+32U14*Chercher_min_freq 32>32 32=50 32=80 16|32b14 40s13 46l8 46t25
+32p32 Cache{15P9} 16|32b32 36r21 37r20 38r25 40r31 42r12 43r20 44r25
+32r50 min{10|87R9} 16|32b50 37m13 40m50 43m13
+32i80 freq_min{integer} 16|32b80 38m13 40m55 42r43 44m13
+34U14*Supprimer_lfu 34>28 34>46 16|49b14 56s10 58l8 58t21
+34p28 Cache{15P9} 16|49b28 51r19 53r13 54r10 54r31 56r24
+34r46 min{10|87R9} 16|49b46 53r45 56r43
+36U14*Chercher_max_temps 36>33 36=51 36=82 16|60b14 66s10 72l8 72t26
+36p33 Cache{15P9} 16|60b33 62r19 63r17 64r23 66r29 68r10 69r17 70r23
+36r51 max{10|87R9} 16|60b51 63m10 66m48 69m10
+36i82 temps_max{2|42I9} 16|60b82 64m10 66m53 68r43 70m10
+38U14*Supprimer_lru 38>28 38>46 16|74b14 81s10 83l8 83t21
+38p28 Cache{15P9} 16|74b28 76r19 78r13 79r10 79r31 81r24
+38r46 max{10|87R9} 16|74b46 78r45 81r43
+40U14*Enregistrer 40=26 40=48 40>72 40>106 40>147 16|85b14 94s10 101l8 101t19
+40p26 Cache{15P9} 16|85b26 87r19 88m10 88r123 92r10 93r14 93r52 93r89 94r22
+. 98r10 98r42 99r10
+40r48 Stats{7R6} 16|85b48 89m10 89r31 90m10 90r30 91m10 91r32 91r51 94m41
+. 96m10 96r31 97m10 97r32 97r51
+40r72 Adresse_IP{10|87R9} 16|85b72 88r45 93r35 93r72 94r48
+40r106 Interface_Adresse{10|87R9} 16|85b106 88r178 94r60
+40r147 Masque_Adresse{10|87R9} 16|85b147 88r67 93r109 94r79
+42U14*Vider 42=20 42=42 16|104b14 109s10 117l8 117t13
+42p20 Cache{15P9} 16|104b20 106r19 109r16 111m12
+42r42 Stats{7R6} 16|104b42 109m35 112r11 112r42 112r72 113m10 114m10 115m10
+44V13*Adresse_Presente{boolean} 44>30 44>48 44>68 44>99 16|120b13 127s17
+. 131l8 131t24 150s34
+44p30 Cache{15P9} 16|120b30 122r19 124r14 124r48 127r34
+44r48 Stats{7R6} 16|120b48 127r53
+44r68 Adresse{10|87R9} 16|120b68 124r34 127r60
+44r99 Masque_Adresse{10|87R9} 16|120b99 124r67 127r69
+46V13*Taille{integer} 46>20 16|88s116 133b13 138s20 140l8 140t14 145s15
+46p20 Cache{15P9} 16|133b20 135r19 138r27
+48V13*Est_Pleine{boolean} 48>24 48>42 16|143b13 146l8 146t18
+48p24 Cache{15P9} 16|143b24 145r22
+48i42 capacite_cache{integer} 16|143b42 145r31
+50V13*Interface_Cache{10|87R9} 50>29 50>46 50>65 50>95 16|148b13 153s20 160l8
+. 160t23
+50p29 Cache{15P9} 16|148b29 150r23 150r51 152r14 152r49 152r83 153r36 155r20
+50r46 Stats{7R6} 16|148b46 150r58 153r54
+50r65 Adresse{10|87R9} 16|148b62 150r65 152r35 152r69 153r61
+50r95 Masque{10|87R9} 16|148b92 150r74 152r103 153r70
+53U22 Traiter 53>30 53>60 53>104 16|168s13
+53r30 Adresse{10|87R9}
+53r60 Interface_utilisation{10|87R9}
+53r104 Masque_Adresse{10|87R9}
+54u14*Pour_Chaque 54>26 16|162b14 173s10 175l8 175t19
+54p26 Cache{15P9} 16|162b26 164r19 168r21 168r40 168r58 173r22
+X 16 cache_ll.adb
+5U14 Free[13|20] 27s7 111s7
+24p7 pointeur_debut{15|15P9} 26m7 28r16
+X 17 system.ads
+67M9*Address
+X 22 s-memory.ads
+53V13*Alloc{17|67M9} 103i<c,__gnat_malloc>22
+68U14*Free 104i<c,__gnat_free>22
+76V13*Realloc{17|67M9} 105i<c,__gnat_realloc>22
+X 29 s-stalib.adb
+93U14 Break_Start 94i<c,__gnat_break_start>22
+
