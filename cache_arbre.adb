@@ -43,7 +43,7 @@ package body cache_arbre is
     end Est_vide_cache;
 
        -- d'abord on s'occupe d'une conversion 4bit 
-   function Convertir_IP2B_4 (adr : Integer) return Unbounded_String is 
+   function Convertir_IP2B_4 (adr : in Integer) return Unbounded_String is 
       a_return : Unbounded_String :=To_Unbounded_String("");
       a_return_reversed : Unbounded_String :=To_Unbounded_String("");
       adr_cp : Integer := adr;
@@ -68,7 +68,7 @@ package body cache_arbre is
    end Convertir_IP2B_4;
     
    -- puis on s'occupe de la conversion de l'adresse IP complète
-   function Convertir_IP2B (Adresse_IP : Unbounded_String) return Unbounded_String is
+   function Convertir_IP2B (Adresse_IP : in Unbounded_String) return Unbounded_String is
       entier : Integer := 0;
       entier_string : Unbounded_String := To_Unbounded_String("");
       type adr4 is array(1..4) of Unbounded_String;
@@ -168,7 +168,7 @@ package body cache_arbre is
         -- j'ai peur que modifier comme ça ne change pas dans l'arbre
         ligne.temps := Now;
         ligne.nb_utilisation := Ligne.nb_utilisation + 1;
-        Ajouter(Cache, ligne); -- on réactualise la ligne...
+        Remplacer(Cache.Arbre,Cle, ligne); -- on réactualise la ligne...
         return ligne;
     end Trouver;
 
@@ -232,14 +232,19 @@ package body cache_arbre is
         Ligne.temps := Now;
         Ligne.arrive := Now;
         Ligne.nb_utilisation := 1;
-        Enregistrer(Cache.Arbre, Cle, Ligne,nul_ligne);
+
+        if Cle_Presente(Cache.Arbre, Cle) then
+            Remplacer(Cache.Arbre, Cle, Ligne);
+        else
+            Enregistrer(Cache.Arbre, Cle, Ligne,nul_ligne);
+        end if;
     end Ajouter;
 
     procedure Supprimer_IP (Cache : in out T_Cache; IP : in Unbounded_String) is
         IP_Bin : String(1..32) := To_String(Convertir_IP2B(IP));
-    begin
-        Put_Line("Suppression de " & IP_Bin);
+    begin   
         Supprimer(Cache.Arbre, IP_Bin);
+        
     end Supprimer_IP;
 
     procedure Supprimer_LRU (Cache : in out T_Cache; max_taille: in Integer) is
@@ -288,8 +293,8 @@ package body cache_arbre is
         end if;
     end Supprimer_LRU;
         
-    function IP_Presente(Cache : in T_Cache; IP : in String) return Boolean is
-        IP_Bin : String(1..32) := To_String(Convertir_IP2B(To_Unbounded_String(IP)));
+    function IP_Presente(Cache : in T_Cache; IP : in Unbounded_String) return Boolean is
+        IP_Bin : String(1..32) := To_String(Convertir_IP2B(IP));
     begin
         return Cle_Presente(Cache.Arbre, IP_Bin);
     end IP_Presente;
@@ -303,6 +308,7 @@ package body cache_arbre is
             Put("");
         else 
             Put_Line (CLe &"|-> "&Ligne.destination & " : " & Ligne.mask & " : " & Ligne.inter);
+            Put_Line("    "&"Temps : "&Integer'Image(Ligne.temps)&" Arrive : "&Integer'Image(Ligne.arrive)&" Nb_utilisation : "&Integer'Image(Ligne.nb_utilisation));
         end if;
     end afficher_inter;
 

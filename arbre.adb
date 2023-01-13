@@ -24,6 +24,40 @@ package body arbre is
         end if;
     end Taille;
 
+    procedure Remplacer(Arbre : in out T_Arbre; Cle : in String; Donnee : in T_Donnee) is
+        function Remplacer_r(Arbre : in out T_Arbre; Cle : in String; Donnee : in T_Donnee; idx : in Integer) return Boolean is
+            trouve : Boolean;
+        begin
+            if Arbre = null then
+                return False;
+            elsif Arbre.all.Cle = Cle then
+                Arbre.all.Donnee := Donnee;
+                return True;
+            elsif not Arbre.leaf then
+                if Arbre.all.Cle(idx) = '1' then
+                    trouve :=  Remplacer_r(Arbre.all.Suivant_D, Cle, Donnee, idx + 1);
+                    if trouve then
+                        return True;
+                    else
+                        return Remplacer_r(Arbre.all.Suivant_G, Cle, Donnee, idx + 1);
+                    end if;
+                else
+                    trouve :=  Remplacer_r(Arbre.all.Suivant_G, Cle, Donnee, idx + 1);
+                    if trouve then
+                        return True;
+                    else
+                        return Remplacer_r(Arbre.all.Suivant_D, Cle, Donnee, idx + 1);
+                    end if;
+                end if;
+            else
+                return False;
+            end if;
+        end Remplacer_r;
+        a : Boolean;
+    begin
+        a := Remplacer_r(Arbre, Cle, Donnee, 1);
+    end Remplacer;
+
     procedure Enregistrer(Arbre : in out T_Arbre ; Cle : String ; Donnee : in T_Donnee;nul_donnee : in T_Donnee) is
 
         procedure Enregistrer_r (Arbre : in out T_Arbre ; Cle : String ; Donnee : in T_Donnee;nul_donnee : in T_Donnee; idx : in Integer;Cle_feuille : in String; Donnee_feuille : in T_Donnee ) is

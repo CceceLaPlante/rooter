@@ -32,6 +32,8 @@ package arbre is
    -- Est-ce qu'un Arbre est vide ?
   function Est_Vide (Arbre : T_Arbre) return Boolean;
 
+  -- procedure permettant d'ecraser une donnee dans l'arbre par une autre.
+  procedure Remplacer(Arbre : in out T_Arbre ; Cle : in String ; Donnee : in T_Donnee);
 
    -- Obtenir le nombre d'ï¿œlï¿œments d'un Arbre. 
   function Taille (Arbre : in T_Arbre) return Integer with
