@@ -377,9 +377,10 @@ begin
       case Element(ligne_a_lire,1) is 
          when '0'|'1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9' =>
 
-            Info_ligne.Adresse := ligne_a_lire;
-            Info_ligne.Masque := Meilleur_Masque(table, ligne_a_lire, current_tab).mask;
-            Info_ligne.interface := Meilleur_Masque(table, ligne_a_lire, current_tab).inter;
+            Info_ligne.destination := ligne_a_lire;
+            Info_ligne.mask := Meilleur_Masque(table, ligne_a_lire, current_tab).mask;
+            Info_ligne.inter := Meilleur_Masque(table, ligne_a_lire, current_tab).inter;
+            Info_Ligne.temps := Clock;
             
             if not IP_Presente(Cache, Adresse_IP_Cache) then
                Ajouter(Cache,Info_ligne)
