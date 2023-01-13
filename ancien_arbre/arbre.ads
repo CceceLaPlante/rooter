@@ -10,7 +10,20 @@ generic
 package arbre is
   -- on remarque qu'il n'éxiste pas de relation d'ordre pour la clé
   -- la relation d'ordre sera sur les éléments de la clé (les 32 charactere)
-  type T_Arbre is limited private;
+  type T_Node;
+
+  type T_Arbre is access T_Node;
+
+  type T_Node is record
+         leaf : Boolean;
+         Cle: String(1..32);
+         Donnee: T_Donnee;
+         Suivant_G: T_Arbre;
+         Suivant_D: T_Arbre;
+         -- Invariant :
+         --   Suivant = Null or else Suivant.all.Indice > Indice;
+         --   	-- les cellules sont stockÃ©s dans l'ordre croissant des indices.
+      end record;
 
    -- Initialiser un Arbre.  l'Arbre est vide.
   procedure Initialiser(Arbre: out T_Arbre) with
@@ -28,7 +41,7 @@ package arbre is
 
    -- Enregistrer une Donnï¿œe associï¿œe ï¿œ une Clï¿œ dans un Arbre.
    -- Si la clï¿œ est dï¿œjï¿œ prï¿œsente dans l'Arbre, sa donnï¿œe est changï¿œe.
-  procedure Enregistrer (Arbre : in out T_Arbre ; Cle : in String ; Donnee : in T_Donnee) with
+  procedure Enregistrer (Arbre : in out T_Arbre ; Cle : in String ; Donnee : in T_Donnee;nul_donnee : in T_Donnee) with
     Post => Cle_Presente (Arbre, Cle) and (La_Donnee (Arbre, Cle) = Donnee)   -- donnée insérée
     and (not (Cle_Presente (Arbre, Cle)'Old) or Taille (Arbre) = Taille (Arbre)'Old)
     and (Cle_Presente (Arbre, Cle)'Old or Taille (Arbre) = Taille (Arbre)'Old + 1);
@@ -58,21 +71,14 @@ package arbre is
      with procedure Traiter (Cle : in String; Donnee: in T_Donnee);
   procedure Pour_Chaque (Arbre : in T_Arbre);
 
+  -- cette fonction permet de savoir si une donnée a une donnée équivalente
+  -- dans l'arbre, elle en renvoie la cle
+  -- ça sert a gerrer les masques...
+  generic 
+    with function equivalente(D1 : in T_Donnee; D2 : in T_Donnee) return Boolean;
+  function La_Cle(Arbre: in T_Arbre ; donnee : in T_Donnee) return String;
 
-private
-  type T_Node;
 
-  type T_Arbre is access T_Node;
-
-  type T_Node is record
-         Cle: String;
-         Donnee: T_Donnee;
-         Suivant_G: T_Arbre;
-         Suivant_D: T_Arbre;
-         -- Invariant :
-         --   Suivant = Null or else Suivant.all.Indice > Indice;
-         --   	-- les cellules sont stockÃ©s dans l'ordre croissant des indices.
-      end record;
 
 end arbre;
 

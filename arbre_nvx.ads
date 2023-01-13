@@ -7,7 +7,7 @@
 generic
    type T_Donnee is private;
 
-package arbre is
+package arbre_nvx is
   -- on remarque qu'il n'éxiste pas de relation d'ordre pour la clé
   -- la relation d'ordre sera sur les éléments de la clé (les 32 charactere)
   type T_Node;
@@ -41,7 +41,10 @@ package arbre is
 
    -- Enregistrer une Donnï¿œe associï¿œe ï¿œ une Clï¿œ dans un Arbre.
    -- Si la clï¿œ est dï¿œjï¿œ prï¿œsente dans l'Arbre, sa donnï¿œe est changï¿œe.
-  procedure Enregistrer (Arbre : in out T_Arbre ; Cle : in String ; Donnee : in T_Donnee;nul_donnee : in T_Donnee) ;
+  procedure Enregistrer (Arbre : in out T_Arbre ; Cle : in String ; Donnee : in T_Donnee;nul_donnee : in T_Donnee) with
+    Post => Cle_Presente (Arbre, Cle) and (La_Donnee (Arbre, Cle) = Donnee)   -- donnée insérée
+    and (not (Cle_Presente (Arbre, Cle)'Old) or Taille (Arbre) = Taille (Arbre)'Old)
+    and (Cle_Presente (Arbre, Cle)'Old or Taille (Arbre) = Taille (Arbre)'Old + 1);
 
    -- Supprimer la Donnée associée à une Clé dans un Arbre.
    -- Exception : Cle_Absente_Exception si Clé n'est pas utilisï¿œe dans l'Arbre
@@ -55,7 +58,7 @@ package arbre is
 
    -- Obtenir la donnï¿œe associï¿œe ï¿œ une Cle dans l'Arbre.
    -- Exception : Cle_Absente_Exception si Clï¿œ n'est pas utilisï¿œe dans l'Arbre
-  function La_Donnee (Arbre : in T_Arbre ; Cle : in String;nul_donnee : in T_Donnee) return T_Donnee;
+  function La_Donnee (Arbre : in T_Arbre ; Cle : in String) return T_Donnee;
 
 
    -- Supprimer tous les ï¿œlï¿œments d'un Arbre.
@@ -66,18 +69,18 @@ package arbre is
    -- Appliquer un traitement (Traiter) pour chaque couple d'un Arbre.
  generic
      with procedure Traiter (Cle : in String; Donnee: in T_Donnee);
-  procedure Pour_Chaque (Arbre : in out T_Arbre);
+  procedure Pour_Chaque (Arbre : in T_Arbre);
 
   -- cette fonction permet de savoir si une donnée a une donnée équivalente
   -- dans l'arbre, elle en renvoie la cle
   -- ça sert a gerrer les masques...
   generic 
     with function equivalente(D1 : in T_Donnee; D2 : in T_Donnee) return Boolean;
-  function La_Cle(Arbre: in T_Arbre ; donnee : in T_Donnee;msk : in String) return String;
+  function La_Cle(Arbre: in T_Arbre ; donnee : in T_Donnee) return String;
 
 
 
-end arbre;
+end arbre_nvx;
 
 
 

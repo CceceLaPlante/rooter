@@ -4,7 +4,6 @@ with Arbre;
 
 procedure test_arbre is 
 
-
     package Arbre_Int is 
         new Arbre (T_Donnee => Integer);
     use Arbre_Int;
@@ -38,25 +37,30 @@ procedure test_arbre is
     ladonnee : Integer;
     
 begin
-    Enregistrer(tree, cle1, 1);
-    Enregistrer(tree, cle2, 2);
-    Enregistrer(tree, cle3, 3);
-    Enregistrer(tree, cle4, 4);
+    Enregistrer(tree, cle1, 1,0);
+    Enregistrer(tree, cle2, 2,0);
+    Enregistrer(tree, cle3, 3,0);
+    Enregistrer(tree, cle4, 4,0);
     Afficher(tree);
     Put_Line("---------------------");
     Supprimer(tree, cle1);
     Afficher(tree);
-    Put_Line("---------------------");
-    ladonnee := La_Donnee(tree, cle2);
-    Put_Line("La donnee de " & cle2 & " est " & Integer'Image(ladonnee));
-    Put_Line("---------------------");
-    if Cle_Presente(tree, cle1) then
-        Put_Line("La cle " & cle1 & " est presente");
+    if Cle_Presente(tree, cle2) then
+        Put_Line("La cle " & cle2 & " est presente");
     else
-        Put_Line("La cle " & cle1 & " n'est pas presente");
+        Put_Line("La cle " & cle2 & " n'est pas presente");
     end if;
     Put_Line("---------------------");
-    Put_Line("La_cle de 3 est :" & La_Cle_integer(tree, 8)) ;
+    ladonnee := La_Donnee(tree, cle2,0);
+    Put_Line("La donnee de " & cle2 & " est " & Integer'Image(ladonnee));
+    Put_Line("---------------------");
+    if Cle_Presente(tree, cle2) then
+        Put_Line("La cle " & cle2 & " est presente");
+    else
+        Put_Line("La cle " & cle2 & " n'est pas presente");
+    end if;
+    Put_Line("---------------------");
+    Put_Line("La_cle de 3 est :" & La_Cle_integer(tree, 8,cle2)) ;
     Put_Line("---------------------");
     Vider(tree);
     Put_Line("arbre vide : ");

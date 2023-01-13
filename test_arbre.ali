@@ -1,0 +1,105 @@
+V "GNAT Lib v10"
+M P W=b
+P SS ZX
+
+RN
+RV NO_ALLOCATORS
+RV NO_DIRECT_BOOLEAN_OPERATORS
+RV NO_EXCEPTIONS
+RV NO_IO
+RV NO_IMPLICIT_CONDITIONALS
+RV NO_LOCAL_ALLOCATORS
+RV NO_RECURSION
+RV NO_SECONDARY_STACK
+RV NO_STANDARD_ALLOCATORS_AFTER_ELABORATION
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_DEFAULT_INITIALIZATION
+RV NO_DYNAMIC_SIZED_OBJECTS
+RV SPARK_05
+
+U test_arbre%b		test_arbre.adb		d4f74dd5 NE OO SU IL
+W ada%s			ada.ads			ada.ali
+Z ada.exceptions%s	a-except.adb		a-except.ali
+Z ada.tags%s		a-tags.adb		a-tags.ali
+W ada.text_io%s		a-textio.adb		a-textio.ali
+Z ada.unchecked_deallocation%s
+W arbre%s		arbre.adb		arbre.ali
+Z system.concat_2%s	s-conca2.adb		s-conca2.ali
+Z system.concat_3%s	s-conca3.adb		s-conca3.ali
+Z system.concat_4%s	s-conca4.adb		s-conca4.ali
+Z system.img_int%s	s-imgint.adb		s-imgint.ali
+Z system.secondary_stack%s  s-secsta.adb	s-secsta.ali
+
+D ada.ads		20220628085427 76789da1 ada%s
+D a-except.ads		20220628085427 a7106115 ada.exceptions%s
+D a-ioexce.ads		20220628085427 e4a01f64 ada.io_exceptions%s
+D a-stream.ads		20220628085427 119b8fb3 ada.streams%s
+D a-tags.ads		20220628085427 491b781d ada.tags%s
+D a-textio.ads		20220628085427 aef4d56d ada.text_io%s
+D a-unccon.ads		20220628085427 0e9b276f ada.unchecked_conversion%s
+D a-uncdea.ads		20220628085427 eff36322 ada.unchecked_deallocation%s
+D arbre.ads		20230112162348 bc9e25bf arbre%s
+D arbre.adb		20230112164628 e124bae6 arbre%b
+D interfac.ads		20220628085427 5ab55268 interfaces%s
+D i-cstrea.ads		20220628085427 e53d8b8e interfaces.c_streams%s
+D system.ads		20220628085427 4635ec04 system%s
+D s-conca2.ads		20220628085427 02a0d7d0 system.concat_2%s
+D s-conca3.ads		20220628085427 0b705ca5 system.concat_3%s
+D s-conca4.ads		20220628085427 7e642b20 system.concat_4%s
+D s-crtl.ads		20220628085427 0ebbdb71 system.crtl%s
+D s-exctab.ads		20220628085427 54135002 system.exception_table%s
+D s-ficobl.ads		20220628085427 078245e4 system.file_control_block%s
+D s-imgint.ads		20220628085427 02dbe0c2 system.img_int%s
+D s-parame.ads		20220628085427 48ec542b system.parameters%s
+D s-secsta.ads		20220628085427 20bbe636 system.secondary_stack%s
+D s-soflin.ads		20220628085427 a7318a92 system.soft_links%s
+D s-stache.ads		20220628085427 a37c21ec system.stack_checking%s
+D s-stalib.ads		20220628085427 09bd3940 system.standard_library%s
+D s-stoele.ads		20220628085427 2dc34a04 system.storage_elements%s
+D s-traent.ads		20220628085427 005bf670 system.traceback_entries%s
+D s-unstyp.ads		20220628085427 34867c83 system.unsigned_types%s
+D s-wchcon.ads		20220628085427 1b7d22d2 system.wch_con%s
+D test_arbre.adb	20230112162303 c69dbd07 test_arbre%b
+G a e
+G c Z b b [test_arbre standard 5 11 none]
+G r i none [test_arbre standard 5 11 none] [arbre standard 10 9 none]
+X 1 ada.ads
+16K9*Ada 20e8 30|1r6 1r23
+X 6 a-textio.ads
+57K13*Text_IO 727e16 30|1w10 1r27
+465U14*Put 30|15s13
+508U14*Put_Line 30|17s13 45s5 49s9 51s9 53s5 55s5 56s5 58s9 60s9 62s5 63s5
+. 64s5 66s5 68s5
+X 9 arbre.ads
+8+9 T_Donnee 30|8r20
+10k9*arbre 80e10 30|3w6 8r13
+13R8 T_Node
+15P8 T_Arbre(13R8[30|7]) 30|32r12[7]
+44U13 Enregistrer 30|40s5[7] 41s5[7] 42s5[7] 43s5[7]
+48U13 Supprimer 30|46s5[7]
+54V12 Cle_Presente{boolean} 30|48s8[7] 57s8[7]
+58V12 La_Donnee{integer} 30|54s17[7]
+62U13 Vider 30|65s5[7]
+69u13 Pour_Chaque 30|30r13[7]
+76v12 La_Cle 30|27r36[7]
+X 30 test_arbre.adb
+5U11*test_arbre 5b11 70l5 70t15
+7K13 Arbre_Int[9|10] 9r9
+11U15 afficher 11b15 11>24 11>38 20l9 20t17 30r25
+11a24 Cle{string} 14r12 17r23
+11i38 Donnee{integer} 17r51
+12a9 nuls{string} 14r19
+22V14 equivalente_integer{boolean} 22b14 22>34 22>48 25l9 25t28 27r43
+22i34 D1{integer} 24r16 24r27
+22i48 D2{integer} 24r21
+27V14 La_Cle_integer[9|76]{string} 63s36
+29U15 Afficher[9|69] 44s5 47s5 67s5
+32p5 tree{9|15P8[7]} 40m17 40r17 41m17 41r17 42m17 42r17 43m17 43r17 44m14
+. 44r14 46m15 46r15 47m14 47r14 48r21 54r27 57r21 63r51 65m11 65r11 67m14
+. 67r14
+33a5 cle1{string} 40r23 46r21
+34a5 cle2{string} 41r23 48r27 49r30 51r30 54r33 55r32 57r27 58r30 60r30 63r59
+35a5 cle3{string} 42r23
+36a5 cle4{string} 43r23
+37i5 ladonnee{integer} 54m5 55r63
+
