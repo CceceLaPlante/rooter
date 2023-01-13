@@ -310,6 +310,7 @@ procedure routeur_ll is
       entree_bool: Boolean;
       sortie_bool: Boolean;
       table_bool: Boolean;
+      arg_count: Integer;
    
    begin
       politique_bool:= False;
@@ -321,10 +322,11 @@ procedure routeur_ll is
       Nom_entree := To_Unbounded_String("paquets.txt");
       Nom_sortie := To_Unbounded_String("resultats.txt");
       Nom_table := To_Unbounded_String("table.txt");
-      Politique := To_Unbounded_String("FIFO.txt");
+      Politique := To_Unbounded_String("FIFO");
       capacite_cache := 10;
+      arg_count := Argument_Count;
       
-      for VarBoucle in 1..Argument_Count loop
+      for VarBoucle in 1..arg_count loop
          if To_Unbounded_String(Argument(VarBoucle)) = To_Unbounded_String("-p") then
             entree_bool:= True;      
          elsif entree_bool then
@@ -356,6 +358,7 @@ procedure routeur_ll is
             Null;
          end if;
       end loop;
+
    end Traiter_Ligne_Commande;
     
    --fonction qui libère tout élément de type T_Liste
