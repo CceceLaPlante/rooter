@@ -233,6 +233,31 @@ procedure routeur_ll is
       return ligne_a_lire;
    end Lire;
 
+   procedure Supprimer(Cache: in T_LCA; Politique: in Unbounded_String) is
+      Temps_max: Time;
+      Freq_min: Integer;
+      Adresse_min: Unbounded_String;
+      Adresse_max: Unbounded_String;
+   begin 
+      Adresse_max := To_Unbounded_String("00000000000000000000000000000000");
+      temps_max := Clock ;
+      Adresse_min := To_Unbounded_String("00000000000000000000000000000000") ;
+      freq_min := 0 ;
+      case Politique is
+         when To_Unbounded_String("FIFO") => 
+            Supprimer_fifo(Cache);
+         when To_Unbounded_String("LRU") =>
+            Chercher_max_temps(Cache, Adresse_max, Temps_max);
+            Supprimer_lru(Cache, Adresse_max);
+         when To_Unbounded_String("LFU") =>
+            Chercher_min_freq(Cache, Adresse_min, Freq_min);
+            Supprimer_lfu(Cache, Adresse_min);
+         when others => 
+            Null;
+      end case;
+   end Supprimer;
+
+
    --Fonction qui traite les commandes telles que "fin", "table"...
    procedure Traiter_Commande(commande: in Unbounded_String; nom_table : in Unbounded_String; Cache : in T_LCA; Stats : in T_Stats) is 
       fichier_table : File_Type;
