@@ -29,9 +29,9 @@ procedure test_arbre is
         new Pour_Chaque(afficher);
 
     tree : T_Arbre;
-    cle1 : String(1..32) := "00000000000000000000000000000000";
-    cle2 : String(1..32) := "11111111111111111111111111111111";
-    cle3 : String(1..32) := "00000000000000000000000000000001";
+    cle1 : String(1..32) := "11000000101010000000000000000000";
+    cle2 : String(1..32) := "01111111000000010000000100000001";
+    cle3 : String(1..32) := "00000000000000000000000000000000";
     cle4 : String(1..32) := "00000000000000000000000000000010";
     ladonnee : Integer;
     
@@ -39,11 +39,11 @@ begin
     Enregistrer(tree, cle1, 1,0);
     Enregistrer(tree, cle2, 2,0);
     Enregistrer(tree, cle3, 3,0);
-    Enregistrer(tree, cle4, 4,0);
+    --Enregistrer(tree, cle4, 4,0);
     Afficher(tree);
     Put_Line("---------------------");
-    Put_line("suppression  de " & cle3);
-    Supprimer(tree, cle3);
+    Put_line("suppression  de " & cle1);
+    Supprimer(tree, cle1);
     Afficher(tree);
     Put_Line("---------------------");
     if Cle_Presente(tree, cle1) then

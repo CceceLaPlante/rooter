@@ -63,7 +63,7 @@ package cache_arbre is
 	function Est_Vide_cache (Cache : in T_Cache) return Boolean;
 
 	-- permet une conversion 4bits de l'ip en binaire
-	function Convertir_IP2B_4 (adr: Integer) return Unbounded_String;
+	function Convertir_IP2B_4 (adr: in Integer) return Unbounded_String;
 
 	-- permet une conversion totale de l'ip en binaire
 	--[!] elle renvoie sans les . (point)
@@ -89,7 +89,7 @@ package cache_arbre is
 	procedure Supprimer_LRU (Cache : in out T_Cache; max_taille : in Integer);
 
 	-- permet de savoir si une ip est dans le cache, attention, l'ip dois être un binaire masqué
-	function IP_Presente (Cache : in T_Cache; IP : in String) return Boolean;
+	function IP_Presente (Cache : in T_Cache; IP : in Unbounded_String) return Boolean;
 
 	-- permet de vider le cache
 	procedure Vider (Cache : in out T_Cache)
