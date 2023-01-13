@@ -26,10 +26,11 @@ procedure test_cache_LA is
     mask3 : Unbounded_String := To_Unbounded_String("255.255.255.255");
     inter3 : Unbounded_String := To_Unbounded_String("lo");
 
-    tp : Time := Clock;
-    l1 : T_ligne := (dest1, mask1, inter1, tp);
-    l2 : T_ligne := (dest2, mask2, inter2, tp);
-    l3 : T_ligne := (dest3, mask3, inter3, tp);
+    tp :Integer := 0;
+
+    l1 : T_ligne := (dest1, mask1, inter1, 0,0,0);
+    l2 : T_ligne := (dest2, mask2, inter2, 0,0,0);
+    l3 : T_ligne := (dest3, mask3, inter3, 0,0,0);
 
     Cache_rooter : T_Cache;
     cle1 : String(1..32) := To_String(Convertir_IP2B(dest1));
@@ -45,6 +46,7 @@ begin
     else
         Put_Line("IP 1 non presente");
     end if;
+    Put_Line("------------------");
     Supprimer_IP(Cache_rooter,dest1);
     Afficher(Cache_rooter);
 end test_cache_LA;

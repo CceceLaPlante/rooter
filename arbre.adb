@@ -92,64 +92,63 @@ package body arbre is
     end Enregistrer;
 
     procedure Supprimer (Arbre : in out T_Arbre; Cle : in String) is
-
-        procedure Supprimer_r (Arbre : in out T_Arbre; Cle : in String; idx : in Integer; oldest : in out T_Arbre;G : in Boolean) is
-            updater : Boolean := False;
-        begin
-            if Arbre = null then
-                null;
+        function Supprimer_r (Arbre: in out T_Arbre; Cle : in String; idx : in Integer) return Boolean is
+        begin 
+            if Arbre = null then 
+                return False;
             else 
-                if Arbre.all.leaf then 
-                    if Arbre.all.Cle = Cle then
-                        if G then 
-                            Vider(oldest.all.Suivant_G);
+                if Arbre.all.Cle = Cle then 
+                    return True;
+                elsif not Arbre.leaf then
+                    if Cle(idx) = '1' then 
+                        if Supprimer_r(Arbre.all.Suivant_D, Cle, idx+1) then 
+                            if Arbre.all.Suivant_G = null then 
+                                return True;
+                            else
+                                Vider(Arbre.all.Suivant_D);
+                                return False;
+                            end if;
                         else 
-                            Vider(oldest.all.Suivant_D);
+                            if Supprimer_r(Arbre.all.Suivant_G, Cle, idx+1) then 
+                                if Arbre.all.Suivant_D = null then 
+                                    return True;
+                                else
+                                    Vider(Arbre.all.Suivant_G);
+                                    return False;
+                                end if;
+                            else 
+                                return False;
+                            end if;
+                        end if;
+                    else
+                        if Supprimer_r(Arbre.all.Suivant_G, Cle, idx+1) then 
+                            if Arbre.all.Suivant_D = null then 
+                                return True;
+                            else
+                                Vider(Arbre.all.Suivant_G);
+                                return False;
+                            end if;
+                        else 
+                            if Supprimer_r(Arbre.all.Suivant_D, Cle, idx+1) then 
+                                if Arbre.all.Suivant_G = null then 
+                                    return True;
+                                else
+                                    Vider(Arbre.all.Suivant_D);
+                                    return False;
+                                end if;
+                            else 
+                                return False;
+                            end if;
                         end if;
                     end if;
                 else 
-                    if Arbre.all.Suivant_D = null  or Arbre.all.Suivant_G = null then
-                        Free(Arbre);
-                    else
-                        if Arbre.all.Suivant_D.leaf = True and Arbre.all.Suivant_G.leaf = True then
-                            updater := True;
-                        end if;
-                        
-                    end if;
-                    if Cle(idx) = '1' then
-                        if Arbre.all.Suivant_D /= null then 
-                            if updater then 
-                                Supprimer_r(Arbre.all.Suivant_D, Cle, idx + 1, Arbre,False);
-                            else 
-                                Supprimer_r(Arbre.all.Suivant_D, Cle, idx + 1, oldest,G);
-                            end if;
-                        end if;
-                    else 
-                        if Arbre.all.Suivant_G /= null then
-                            if updater then
-                                Supprimer_r(Arbre.all.Suivant_G, Cle, idx + 1, Arbre,True);
-                            else
-                                Supprimer_r(Arbre.all.Suivant_G, Cle, idx + 1, oldest,G);
-                            end if;
-                        end if;
-                    end if;
+                    return False;
                 end if;
             end if;
         end Supprimer_r;
+        a : Boolean;
     begin
-        if Arbre.all.Cle = Cle then
-            Free(Arbre);
-        else 
-            if Arbre.all.Suivant_D = null then 
-                Supprimer_r(Arbre.all.Suivant_G, Cle, 2, Arbre,True);
-            elsif Arbre.all.Suivant_G = null then 
-                Supprimer_r(Arbre.all.Suivant_D, Cle, 2, Arbre,False);
-            elsif Cle(1) = '1' then 
-                Supprimer_r(Arbre.all.Suivant_D, Cle, 2, Arbre,False);
-            else
-                Supprimer_r(Arbre.all.Suivant_G, Cle, 2, Arbre,True);
-            end if;
-        end if;
+        a := Supprimer_r(Arbre, Cle, 1);
     end Supprimer;
 
     function Cle_Presente (Arbre : in T_Arbre; Cle : in String) return Boolean is
@@ -162,9 +161,17 @@ package body arbre is
                     return True;
                 elsif not Arbre.leaf then
                     if Arbre.all.Cle(idx) = '1' then
-                        return Cle_Presente_r(Arbre.all.Suivant_D, Cle, idx + 1);
+                        if not  Cle_Presente_r(Arbre.all.Suivant_D, Cle, idx + 1) then
+                            return Cle_Presente_r(Arbre.all.Suivant_G, Cle, idx + 1);
+                        else
+                            return True;
+                        end if;
                     else
-                        return Cle_Presente_r(Arbre.all.Suivant_G, Cle, idx + 1);
+                        if not Cle_Presente_r(Arbre.all.Suivant_G, Cle, idx + 1) then 
+                            return Cle_Presente_r(Arbre.all.Suivant_D, Cle, idx + 1);
+                        else
+                            return True;
+                        end if;
                     end if;
                 else 
                     return False;
@@ -178,20 +185,27 @@ package body arbre is
     function La_Donnee (Arbre : in T_Arbre; Cle : in String;nul_donnee : in T_Donnee) return T_Donnee is
         function Donnee_r (Arbre :in T_Arbre; Cle : in String; idx : in Integer;nul_donnee : in T_Donnee) return T_Donnee is
         begin
-            if Arbre = null then
-                null;
-            else
+            if Arbre /= null then
                 if Arbre.all.Cle = Cle then
                     return Arbre.all.Donnee;
-                elsif not Arbre.leaf then
-                    if Arbre.all.Cle(idx) = '1' then
-                        return Donnee_r(Arbre.all.Suivant_D, Cle, idx + 1, nul_donnee);
-                    else
-                        return Donnee_r(Arbre.all.Suivant_G, Cle, idx + 1,nul_donnee);
-                    end if;
                 else 
-                    return nul_donnee;
+                    if Arbre.all.Cle(idx) = '1' then
+                        if Donnee_r(Arbre.all.Suivant_D, Cle, idx + 1, nul_donnee) = nul_donnee then
+                            return Donnee_r(Arbre.all.Suivant_G, Cle, idx + 1, nul_donnee);
+                        else
+                            return Donnee_r(Arbre.all.Suivant_D, Cle, idx + 1, nul_donnee);
+                        end if;
+                    else
+                        if Donnee_r(Arbre.all.Suivant_G, Cle, idx + 1,nul_donnee) = nul_donnee then
+                            return Donnee_r(Arbre.all.Suivant_D, Cle, idx + 1, nul_donnee);
+                        else
+                            return Donnee_r(Arbre.all.Suivant_G, Cle, idx + 1, nul_donnee);
+                        end if; 
+                    end if;
+
                 end if;
+            else
+                return nul_donnee;
             end if;
         end Donnee_r;
 
@@ -206,14 +220,13 @@ package body arbre is
     procedure Vider (Arbre : in out T_Arbre) is
     begin
         if Arbre = null then
-            null;
+            Free(Arbre);
         else
-            if not Arbre.leaf then
-                Vider(Arbre.all.Suivant_D);
-                Vider(Arbre.all.Suivant_G);
-            end if;
+            Vider(Arbre.all.Suivant_D);
+            Vider(Arbre.all.Suivant_G);
             Free(Arbre);
         end if;
+
     end Vider;
 
     procedure Pour_Chaque (Arbre : in out T_Arbre) is
@@ -231,30 +244,38 @@ package body arbre is
         end if;
     end Pour_Chaque;
 
-    function La_Cle (Arbre : in T_Arbre;donnee : in T_Donnee;msk : in String) return String is
+    function La_Cle (Arbre : in T_Arbre;donnee : in T_Donnee) return String is
     
-        function La_Cle_r (Arbre : in T_Arbre;donnee : in T_Donnee;msk : in String; idx : in Integer) return String is
+        function La_Cle_r (Arbre : in T_Arbre;donnee : in T_Donnee; idx : in Integer) return String is
+        nuls : String(1..32) := (others => Character'Val(0));
+        the_key : String(1..32);
         begin
             if Arbre = null then
-                return "";
+                return nuls;
             else
                 if equivalente(Arbre.all.Donnee, donnee) then
                     return Arbre.all.Cle;
                 end if; 
 
-                if msk(idx) = '1' then 
-                    if Arbre.all.Cle(idx) = '1' then
-                        return La_Cle_r(Arbre.all.Suivant_D, donnee,msk, idx + 1);
+                if Arbre.all.Cle(idx) = '1' then
+                    the_key := La_Cle_r(Arbre.all.Suivant_D, donnee, idx + 1);
+                    if the_key = nuls then
+                        return La_Cle_r(Arbre.all.Suivant_G, donnee, idx + 1);
                     else
-                        return La_Cle_r(Arbre.all.Suivant_G, donnee,msk, idx + 1);
+                        return the_key;
                     end if;
-                else 
-                    return La_Cle_r(Arbre.all.Suivant_D, donnee, msk, idx + 1) & La_Cle_r(Arbre.all.Suivant_G, donnee, msk, idx + 1);
+                else
+                    the_key := La_Cle_r(Arbre.all.Suivant_G, donnee, idx + 1);
+                    if the_key = nuls then
+                        return La_Cle_r(Arbre.all.Suivant_D, donnee, idx + 1);
+                    else
+                        return the_key;
+                    end if;
                 end if;
             end if;
         end La_Cle_r;
     begin
-        return La_Cle_r(Arbre,donnee, msk, 1);
+        return La_Cle_r(Arbre,donnee, 1);
     end La_Cle;
 
 end arbre;
