@@ -73,7 +73,7 @@ package arbre is
   -- ça sert a gerrer les masques...
   generic 
     with function equivalente(D1 : in T_Donnee; D2 : in T_Donnee) return Boolean;
-  function La_Cle(Arbre: in T_Arbre ; donnee : in T_Donnee;msk : in String) return String;
+  function La_Cle(Arbre: in T_Arbre ; donnee : in T_Donnee) return String;
 
 
 

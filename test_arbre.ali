@@ -17,7 +17,7 @@ RV NO_DEFAULT_INITIALIZATION
 RV NO_DYNAMIC_SIZED_OBJECTS
 RV SPARK_05
 
-U test_arbre%b		test_arbre.adb		d4f74dd5 NE OO SU IL
+U test_arbre%b		test_arbre.adb		9a87f855 NE OO SU IL
 W ada%s			ada.ads			ada.ali
 Z ada.exceptions%s	a-except.adb		a-except.ali
 Z ada.tags%s		a-tags.adb		a-tags.ali
@@ -38,8 +38,8 @@ D a-tags.ads		20220628085427 491b781d ada.tags%s
 D a-textio.ads		20220628085427 aef4d56d ada.text_io%s
 D a-unccon.ads		20220628085427 0e9b276f ada.unchecked_conversion%s
 D a-uncdea.ads		20220628085427 eff36322 ada.unchecked_deallocation%s
-D arbre.ads		20230112162348 bc9e25bf arbre%s
-D arbre.adb		20230112164628 e124bae6 arbre%b
+D arbre.ads		20230113171739 ba0907f6 arbre%s
+D arbre.adb		20230113172335 5a85dec6 arbre%b
 D interfac.ads		20220628085427 5ab55268 interfaces%s
 D i-cstrea.ads		20220628085427 e53d8b8e interfaces.c_streams%s
 D system.ads		20220628085427 4635ec04 system%s
@@ -59,47 +59,47 @@ D s-stoele.ads		20220628085427 2dc34a04 system.storage_elements%s
 D s-traent.ads		20220628085427 005bf670 system.traceback_entries%s
 D s-unstyp.ads		20220628085427 34867c83 system.unsigned_types%s
 D s-wchcon.ads		20220628085427 1b7d22d2 system.wch_con%s
-D test_arbre.adb	20230112162303 c69dbd07 test_arbre%b
+D test_arbre.adb	20230113172522 8e7a2ace test_arbre%b
 G a e
-G c Z b b [test_arbre standard 5 11 none]
-G r i none [test_arbre standard 5 11 none] [arbre standard 10 9 none]
+G c Z b b [test_arbre standard 4 11 none]
+G r i none [test_arbre standard 4 11 none] [arbre standard 10 9 none]
 X 1 ada.ads
 16K9*Ada 20e8 30|1r6 1r23
 X 6 a-textio.ads
 57K13*Text_IO 727e16 30|1w10 1r27
-465U14*Put 30|15s13
-508U14*Put_Line 30|17s13 45s5 49s9 51s9 53s5 55s5 56s5 58s9 60s9 62s5 63s5
-. 64s5 66s5 68s5
+465U14*Put 30|14s13
+508U14*Put_Line 30|16s13 44s5 48s9 50s9 52s5 54s5 55s5 57s9 59s9 61s5 62s5
+. 63s5 65s5 67s5
 X 9 arbre.ads
-8+9 T_Donnee 30|8r20
-10k9*arbre 80e10 30|3w6 8r13
+8+9 T_Donnee 30|7r20
+10k9*arbre 80e10 30|2w6 7r13
 13R8 T_Node
-15P8 T_Arbre(13R8[30|7]) 30|32r12[7]
-44U13 Enregistrer 30|40s5[7] 41s5[7] 42s5[7] 43s5[7]
-48U13 Supprimer 30|46s5[7]
-54V12 Cle_Presente{boolean} 30|48s8[7] 57s8[7]
-58V12 La_Donnee{integer} 30|54s17[7]
-62U13 Vider 30|65s5[7]
-69u13 Pour_Chaque 30|30r13[7]
-76v12 La_Cle 30|27r36[7]
+15P8 T_Arbre(13R8[30|6]) 30|31r12[6]
+44U13 Enregistrer 30|39s5[6] 40s5[6] 41s5[6] 42s5[6]
+48U13 Supprimer 30|45s5[6]
+54V12 Cle_Presente{boolean} 30|47s8[6] 56s8[6]
+58V12 La_Donnee{integer} 30|53s17[6]
+62U13 Vider 30|64s5[6]
+69u13 Pour_Chaque 30|29r13[6]
+76v12 La_Cle 30|26r36[6]
 X 30 test_arbre.adb
-5U11*test_arbre 5b11 70l5 70t15
-7K13 Arbre_Int[9|10] 9r9
-11U15 afficher 11b15 11>24 11>38 20l9 20t17 30r25
-11a24 Cle{string} 14r12 17r23
-11i38 Donnee{integer} 17r51
-12a9 nuls{string} 14r19
-22V14 equivalente_integer{boolean} 22b14 22>34 22>48 25l9 25t28 27r43
-22i34 D1{integer} 24r16 24r27
-22i48 D2{integer} 24r21
-27V14 La_Cle_integer[9|76]{string} 63s36
-29U15 Afficher[9|69] 44s5 47s5 67s5
-32p5 tree{9|15P8[7]} 40m17 40r17 41m17 41r17 42m17 42r17 43m17 43r17 44m14
-. 44r14 46m15 46r15 47m14 47r14 48r21 54r27 57r21 63r51 65m11 65r11 67m14
-. 67r14
-33a5 cle1{string} 40r23 46r21
-34a5 cle2{string} 41r23 48r27 49r30 51r30 54r33 55r32 57r27 58r30 60r30 63r59
-35a5 cle3{string} 42r23
-36a5 cle4{string} 43r23
-37i5 ladonnee{integer} 54m5 55r63
+4U11*test_arbre 4b11 69l5 69t15
+6K13 Arbre_Int[9|10] 8r9
+10U15 afficher 10b15 10>24 10>38 19l9 19t17 29r25
+10a24 Cle{string} 13r12 16r23
+10i38 Donnee{integer} 16r51
+11a9 nuls{string} 13r19
+21V14 equivalente_integer{boolean} 21b14 21>34 21>48 24l9 24t28 26r43
+21i34 D1{integer} 23r16
+21i48 D2{integer} 23r21
+26V14 La_Cle_integer[9|76]{string} 62s36
+28U15 Afficher[9|69] 43s5 46s5 66s5
+31p5 tree{9|15P8[6]} 39m17 39r17 40m17 40r17 41m17 41r17 42m17 42r17 43m14
+. 43r14 45m15 45r15 46m14 46r14 47r21 53r27 56r21 62r51 64m11 64r11 66m14
+. 66r14
+32a5 cle1{string} 39r23 45r21 47r27 48r30 50r30
+33a5 cle2{string} 40r23 53r33 54r32 56r27 57r30 59r30
+34a5 cle3{string} 41r23
+35a5 cle4{string} 42r23
+36i5 ladonnee{integer} 53m5 54r63
 

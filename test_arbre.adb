@@ -1,5 +1,4 @@
 with Ada.Text_IO; use Ada.Text_IO;
-
 with Arbre;
 
 procedure test_arbre is 
@@ -21,7 +20,7 @@ procedure test_arbre is
 
     function equivalente_integer(D1 : Integer; D2 : Integer) return Boolean is
     begin
-        return D1 = D2 or D1 = 2;
+        return D1 = D2+1;
     end equivalente_integer;
 
     function La_Cle_integer is new La_Cle(equivalente_integer);
@@ -45,13 +44,13 @@ begin
     Put_Line("---------------------");
     Supprimer(tree, cle1);
     Afficher(tree);
-    if Cle_Presente(tree, cle2) then
-        Put_Line("La cle " & cle2 & " est presente");
+    if Cle_Presente(tree, cle1) then
+        Put_Line("La cle " & cle1 & " est presente");
     else
-        Put_Line("La cle " & cle2 & " n'est pas presente");
+        Put_Line("La cle " & cle1 & " n'est pas presente");
     end if;
     Put_Line("---------------------");
-    ladonnee := La_Donnee(tree, cle2,0);
+    ladonnee := La_Donnee(tree, cle2,32);
     Put_Line("La donnee de " & cle2 & " est " & Integer'Image(ladonnee));
     Put_Line("---------------------");
     if Cle_Presente(tree, cle2) then
@@ -60,7 +59,7 @@ begin
         Put_Line("La cle " & cle2 & " n'est pas presente");
     end if;
     Put_Line("---------------------");
-    Put_Line("La_cle de 3 est :" & La_Cle_integer(tree, 8,cle2)) ;
+    Put_Line("La_cle equivalente de 2 est :" & La_Cle_integer(tree, 2)) ;
     Put_Line("---------------------");
     Vider(tree);
     Put_Line("arbre vide : ");
