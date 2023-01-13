@@ -1,13 +1,33 @@
-with Ada.Calendar; use Ada.Calendar;
+with Ada.Strings;               use Ada.Strings;
+with Ada.Text_IO;               use Ada.Text_IO;
+with Ada.Strings.Unbounded;     use Ada.Strings.Unbounded;
 with Ada.Text_IO.Unbounded_IO;  use Ada.Text_IO.Unbounded_IO;
-package body routeur_ll is 
+--with Ada.Command_Line;          use Ada.Command_Line;
+--with Ada.Exceptions;            use Ada.Exceptions;
+with Ada.Unchecked_Deallocation; 
+with cache_la; use cache_la;
+
+procedure routeur_la is 
+
+   type T_Table;
+   type T_Liste is access T_Table;
+   type T_Table is 
+      record 
+         destination : Unbounded_String;
+         mask : Unbounded_String;
+         inter : Unbounded_String;
+         Suivant : T_Liste;
+         cle : Integer;
+      end record;
+
+   type adr4 is array(1..4) of Unbounded_String;
 
    procedure Afficher (adresse : in Unbounded_String ; Masque_Adresse: in Unbounded_String; interface_utilisation : in Unbounded_String) is
     begin
         Put_Line(To_String(adresse)& " " & To_String(Masque_Adresse) & " " & To_String(interface_utilisation));
     end Afficher ;
 
-   procedure Afficher_cache is new Pour_Chaque(Afficher);
+   procedure Afficher_cache is new cache_ll.Pour_Chaque(Afficher);
    
    procedure Afficher_Stats (Stats: in T_Stats) is
     begin
@@ -22,7 +42,7 @@ package body routeur_ll is
         Skip_Line;
     end Afficher_Stats;
    
-   procedure Free_Tab
+   procedure Free
    is new Ada.Unchecked_Deallocation (Object => T_Table, Name => T_Liste);
    
    procedure Initialiser_Table(table : Out  T_Liste) is
@@ -213,35 +233,23 @@ package body routeur_ll is
       return ligne_a_lire;
    end Lire;
 
-   procedure Supprimer(Cache: in out T_LCA; Politique: in Unbounded_String) is
+   procedure Supprimer(Cache: in T_LCA; Politique: in Unbounded_String) is
       Temps_max: Time;
       Freq_min: Integer;
       Adresse_min: Unbounded_String;
       Adresse_max: Unbounded_String;
-      Politique_Integer: Integer;
    begin 
-
-      if Politique = To_Unbounded_String("FIFO") then
-         Politique_Integer := 1;
-      elsif Politique = To_Unbounded_String("LRU") then
-         Politique_Integer := 2;
-      elsif Politique = To_Unbounded_String("LFU") then
-         Politique_Integer := 3;
-      else
-         Null;
-      end if;
-
-      case Politique_Integer is
-         when 1 => 
+      Adresse_max := To_Unbounded_String("00000000000000000000000000000000");
+      temps_max := Clock ;
+      Adresse_min := To_Unbounded_String("00000000000000000000000000000000") ;
+      freq_min := 0 ;
+      case Politique is
+         when To_Unbounded_String("FIFO") => 
             Supprimer_fifo(Cache);
-         when 2 =>
-            Adresse_max := To_Unbounded_String("00000000000000000000000000000000");
-            temps_max := Clock ;
+         when To_Unbounded_String("LRU") =>
             Chercher_max_temps(Cache, Adresse_max, Temps_max);
             Supprimer_lru(Cache, Adresse_max);
-         when 3 =>
-            Adresse_min := To_Unbounded_String("00000000000000000000000000000000") ;
-            freq_min := 0 ;
+         when To_Unbounded_String("LFU") =>
             Chercher_min_freq(Cache, Adresse_min, Freq_min);
             Supprimer_lfu(Cache, Adresse_min);
          when others => 
@@ -293,7 +301,7 @@ package body routeur_ll is
       if table /= Null then
          Liberer(table.all.suivant);
       end if;
-      Free_Tab(table);
+      Free(table);
    end Liberer;
    
    --Fonction qui permet de charger la table de routage dans une liste chaînée.
@@ -337,15 +345,14 @@ package body routeur_ll is
    a_ecrire : Unbounded_String;
 
    -- Variables relatives au cache
-   Cache : T_LCA;  
+   Cache : T_Cache;  
    Adresse_IP_Cache : Unbounded_String;
-   Masque_Cache : Unbounded_String;
+   -- Masque_Cache : Unbounded_String;
    Interface_Cache: Unbounded_String;
-   Stats : T_Stats;
-   
+   Info_ligne : T_ligne;
      
 begin
-   Initialiser(Cache,Stats);
+   Initialiser_cache(Cache);
 
    Open(fichier_table,In_File,nom_table);
    Open(fichier_entree,In_File,nom_entree);
@@ -370,25 +377,23 @@ begin
       case Element(ligne_a_lire,1) is 
          when '0'|'1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9' =>
 
-            Adresse_IP_Cache := ligne_a_lire;
-            Masque_Cache := Meilleur_Masque(table, ligne_a_lire, current_tab).mask;
-            Interface_Cache := Meilleur_Masque(table, ligne_a_lire, current_tab).inter;
+            Info_ligne.destination := ligne_a_lire;
+            Info_ligne.mask := Meilleur_Masque(table, ligne_a_lire, current_tab).mask;
+            Info_ligne.inter := Meilleur_Masque(table, ligne_a_lire, current_tab).inter;
+            Info_Ligne.temps := Clock;
             
-            if not Adresse_Presente(Cache, Stats, Adresse_IP_Cache, Masque_Cache) then
-               if Est_Pleine(Cache, capacite_cache) then
-                  Supprimer(Cache, Politique);
-               end if;
-               Enregistrer(Cache, Stats, Adresse_IP_Cache, Interface_Cache,Masque_Cache);
+            if not IP_Presente(Cache, Adresse_IP_Cache) then
+               Ajouter(Cache,Info_ligne)
             else 
-               Stats.nb_demandes := Stats.nb_demandes + 1.0 ;
-               Stats.taux_defauts := Stats.nb_defauts/Stats.nb_demandes ;
+               Cache.Stats.nb_demandes := Stats.nb_demandes + 1.0 ;
+               Cache.Stats.taux_defauts := Stats.nb_defauts/Stats.nb_demandes ;
             end if ;
 
             a_ecrire := ligne_a_lire & To_Unbounded_String(" ")& Interface_Cache;
             Ecrire(fichier_sortie, a_ecrire);
 
          when others =>
-            Traiter_Commande(ligne_a_lire, To_Unbounded_String(nom_table), Cache, Stats);
+            Traiter_Commande(ligne_a_lire, To_Unbounded_String(nom_table), Cache.Arbre, Cache.Stats);
       end case;
 
       ligne_a_lire := Lire(fichier_entree);
@@ -403,4 +408,4 @@ begin
    --Put_Line("convertire 0.0.0.3 "&Convertir_IP2B(To_Unbounded_String("0.0.0.3")));
    
 
-end routeur_ll;
+end routeur_la;
