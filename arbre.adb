@@ -92,67 +92,63 @@ package body arbre is
     end Enregistrer;
 
     procedure Supprimer (Arbre : in out T_Arbre; Cle : in String) is
-
-        procedure Supprimer_r (Arbre : in out T_Arbre; Cle : in String; idx : in Integer; oldest : in out T_Arbre;G : in Boolean) is
-            updater : Boolean := False;
-        begin
-            if Arbre = null then
-                null;
+        function Supprimer_r (Arbre: in out T_Arbre; Cle : in String; idx : in Integer) return Boolean is
+        begin 
+            if Arbre = null then 
+                return False;
             else 
-                if Arbre.all.leaf then 
-                    if Arbre.all.Cle = Cle then
-                        if G then 
-                            Vider(oldest.all.Suivant_G);
+                if Arbre.all.Cle = Cle then 
+                    return True;
+                elsif not Arbre.leaf then
+                    if Cle(idx) = '1' then 
+                        if Supprimer_r(Arbre.all.Suivant_D, Cle, idx+1) then 
+                            if Arbre.all.Suivant_G = null then 
+                                return True;
+                            else
+                                Vider(Arbre.all.Suivant_D);
+                                return False;
+                            end if;
                         else 
-                            Vider(oldest.all.Suivant_D);
+                            if Supprimer_r(Arbre.all.Suivant_G, Cle, idx+1) then 
+                                if Arbre.all.Suivant_D = null then 
+                                    return True;
+                                else
+                                    Vider(Arbre.all.Suivant_G);
+                                    return False;
+                                end if;
+                            else 
+                                return False;
+                            end if;
                         end if;
-                        Free(Arbre);
+                    else
+                        if Supprimer_r(Arbre.all.Suivant_G, Cle, idx+1) then 
+                            if Arbre.all.Suivant_D = null then 
+                                return True;
+                            else
+                                Vider(Arbre.all.Suivant_G);
+                                return False;
+                            end if;
+                        else 
+                            if Supprimer_r(Arbre.all.Suivant_D, Cle, idx+1) then 
+                                if Arbre.all.Suivant_G = null then 
+                                    return True;
+                                else
+                                    Vider(Arbre.all.Suivant_D);
+                                    return False;
+                                end if;
+                            else 
+                                return False;
+                            end if;
+                        end if;
                     end if;
                 else 
-                    if Arbre.all.Suivant_D = null  or Arbre.all.Suivant_G = null then
-                        updater := False;
-                    else
-                        if Arbre.all.Suivant_D.leaf = True and Arbre.all.Suivant_G.leaf = True then
-                            updater := True;
-                        end if;
-                        
-                    end if;
-                    if Cle(idx) = '1' and Arbre /= null then
-                        if Arbre.all.Suivant_D /= null then 
-                            if updater then 
-                                Supprimer_r(Arbre.all.Suivant_D, Cle, idx + 1, Arbre,False);
-                            else 
-                                Supprimer_r(Arbre.all.Suivant_D, Cle, idx + 1, oldest,G);
-                            end if;
-                        end if;
-                    elsif Cle(idx) = '0' and Arbre /= null then
-                        if Arbre.all.Suivant_G /= null then
-                            if updater then
-                                Supprimer_r(Arbre.all.Suivant_G, Cle, idx + 1, Arbre,True);
-                            else
-                                Supprimer_r(Arbre.all.Suivant_G, Cle, idx + 1, oldest,G);
-                            end if;
-                        end if;
-                    else 
-                        null;
-                    end if;
+                    return False;
                 end if;
             end if;
         end Supprimer_r;
+        a : Boolean;
     begin
-        if Arbre.all.Cle = Cle then
-            Free(Arbre);
-        else 
-            if Arbre.all.Suivant_D = null then 
-                Supprimer_r(Arbre.all.Suivant_G, Cle, 2, Arbre,True);
-            elsif Arbre.all.Suivant_G = null then 
-                Supprimer_r(Arbre.all.Suivant_D, Cle, 2, Arbre,False);
-            elsif Cle(Cle'First) = '1' then 
-                Supprimer_r(Arbre.all.Suivant_D, Cle, 2, Arbre,False);
-            else
-                Supprimer_r(Arbre.all.Suivant_G, Cle, 2, Arbre,True);
-            end if;
-        end if;
+        a := Supprimer_r(Arbre, Cle, 1);
     end Supprimer;
 
     function Cle_Presente (Arbre : in T_Arbre; Cle : in String) return Boolean is
@@ -226,13 +222,11 @@ package body arbre is
         if Arbre = null then
             Free(Arbre);
         else
-            if not Arbre.leaf then
-                Vider(Arbre.all.Suivant_D);
-                Vider(Arbre.all.Suivant_G);
-                Free(Arbre);
-            end if;
-           
+            Vider(Arbre.all.Suivant_D);
+            Vider(Arbre.all.Suivant_G);
+            Free(Arbre);
         end if;
+
     end Vider;
 
     procedure Pour_Chaque (Arbre : in out T_Arbre) is

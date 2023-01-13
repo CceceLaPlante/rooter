@@ -13,7 +13,7 @@ with Ada.Text_IO;             use Ada.Text_IO;
 
 
 -- toutes les adresses ip et masques donnés par le client sont en base 10.
-package Cache_Arbre is
+package cache_arbre is
 
 	-- ça c'est qu'on mettras dans chaques noeuds de l'arbre
 	-- [!] pas la même que dans rooter simple
@@ -23,7 +23,9 @@ package Cache_Arbre is
             destination : Unbounded_String;
             mask : Unbounded_String;
             inter : Unbounded_String;
-			temps : Time;
+			temps : Integer;
+			arrive : Integer; -- quantifie le moment ou la ligne est arrivée dans le cache
+			nb_utilisation : Integer;
         end record;
     package Arbre_LA is 
 	    new Arbre (T_Donnee => T_ligne);
@@ -34,6 +36,7 @@ package Cache_Arbre is
 			nb_defaut : Integer;
 			tx_defaut : Float; -- nb_defaut / nb_demande
 			nb_demande : Integer;
+			horloge : Integer;
 		end record;
 			
 
@@ -71,10 +74,10 @@ package Cache_Arbre is
 
 	function B2IP (IP : in Unbounded_String) return Unbounded_String;
 
-	function Trouver_global (Cache: in T_Cache; IP : Unbounded_String) return T_ligne;
+	function Trouver_global (Cache: in out T_Cache; IP : Unbounded_String) return T_ligne;
 
 	-- permet de trouver la ligne correspondante à l'ip
-	function Trouver (Cache : in T_Cache; IP : in Unbounded_String) return T_ligne;
+	function Trouver (Cache : in out T_Cache; IP : in Unbounded_String) return T_ligne;
 
 	-- permet d'ajouter une ligne dans le cache
 	procedure Ajouter (Cache : in out T_Cache; Ligne : in out T_ligne);
@@ -96,7 +99,7 @@ package Cache_Arbre is
 	procedure afficher_inter (Cle : in String; Ligne : in T_ligne);
 
 	-- permet d'afficher le cache
-	procedure Afficher (Cache : in T_Cache);
+	procedure Afficher (Cache : in out T_Cache);
 
 	-- permet de retourner la taille du cache (le nb de feuilles,pas de noeuds)
 	function Taille_cache(Cache : in T_Cache) return Integer;
@@ -105,4 +108,4 @@ package Cache_Arbre is
 
 
 
-end Cache_Arbre;
+end cache_arbre;
