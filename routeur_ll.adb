@@ -24,16 +24,7 @@ procedure routeur_ll is
 
    procedure Afficher (adresse : in Unbounded_String ; Masque_Adresse: in Unbounded_String; interface_utilisation : in Unbounded_String) is
     begin
-        Put("Adresse : ");
-        Put(To_String(adresse));
-        Skip_Line ;
-        Put("Masque: ");
-        Put(To_String(Masque_Adresse));
-        Skip_Line ;
-        Put("Interface : ");
-        Put(To_String(interface_utilisation));
-        Skip_Line;
-        Skip_Line;
+        Put_Line(To_String(adresse)& " " & To_String(Masque_Adresse) & " " & To_String(interface_utilisation));
     end Afficher ;
 
    procedure Afficher_cache is new cache_ll.Pour_Chaque(Afficher);
