@@ -286,24 +286,28 @@ package body arbre is
         begin
             if Arbre = null then
                 return nuls;
-            else
-                if equivalente(Arbre.all.Donnee, donnee) then
-                    return Arbre.all.Cle;
-                end if; 
-
-                if Arbre.all.Cle(idx) = '1' then
-                    the_key := La_Cle_r(Arbre.all.Suivant_D, donnee, idx + 1);
-                    if the_key = nuls then
-                        return La_Cle_r(Arbre.all.Suivant_G, donnee, idx + 1);
+            else   
+                if Arbre.all.leaf then 
+                    if equivalente(donnee, Arbre.all.Donnee) then
+                        return Arbre.all.Cle;
+                    else 
+                        return nuls;
+                    end if; 
+                else 
+                    if Arbre.all.Cle(idx) = '1' then
+                        the_key := La_Cle_r(Arbre.all.Suivant_D, donnee, idx + 1);
+                        if the_key = nuls then
+                            return La_Cle_r(Arbre.all.Suivant_G, donnee, idx + 1);
+                        else
+                            return the_key;
+                        end if;
                     else
-                        return the_key;
-                    end if;
-                else
-                    the_key := La_Cle_r(Arbre.all.Suivant_G, donnee, idx + 1);
-                    if the_key = nuls then
-                        return La_Cle_r(Arbre.all.Suivant_D, donnee, idx + 1);
-                    else
-                        return the_key;
+                        the_key := La_Cle_r(Arbre.all.Suivant_G, donnee, idx + 1);
+                        if the_key = nuls then
+                            return La_Cle_r(Arbre.all.Suivant_D, donnee, idx + 1);
+                        else
+                            return the_key;
+                        end if;
                     end if;
                 end if;
             end if;
