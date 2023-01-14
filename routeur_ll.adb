@@ -491,6 +491,9 @@ begin
    Liberer(table) ;
 
    --Put_Line("convertire 0.0.0.3 "&Convertir_IP2B(To_Unbounded_String("0.0.0.3")));
-   
+   if Affichage_Stats then
+      Afficher_Stats(Stats);
+   end if;
+   Vider(Cache);
 
 end routeur_ll;
