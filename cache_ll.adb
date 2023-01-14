@@ -1,7 +1,5 @@
 with Ada.Unchecked_Deallocation;
 with cache_exception; use cache_exception;
-with Ada.Text_IO; use Ada.Text_IO;
-WITH Ada.Integer_Text_IO ;    USE Ada.Integer_Text_IO ;
 package body cache_ll is
 
     procedure Free is
@@ -32,8 +30,6 @@ package body cache_ll is
 
 
     procedure Chercher_min_freq(Cache : in T_LCA; min: in out Unbounded_String; freq_min : in out Integer) is
-        --min : Unbounded_String;
-        --freq_min : Integer ;
     begin
         if Est_Vide(Cache.all.Suivant)  then
             min := Cache.all.adresse ;
@@ -171,9 +167,6 @@ package body cache_ll is
                 Adresse_IP_courante_masque := Adresse_IP_courante_masque & Element(Adresse_IP_courante,i);
                 Adresse_IP_entree_masque := Adresse_IP_entree_masque & Element(Adresse_IP_comparaison,i);
             end if;
-            Put_Line("Masque en binaire" & To_String(Masque_IP_courante));
-            Put_Line("Masque en IP 1" & To_String(B2IP(Masque_IP_courante)));
-            Put_Line("Masque en IP 2" & To_String(Convertir_B2IP(B2IP(Masque_IP_courante))));
         end loop;
         if Adresse_IP_courante_masque /= Adresse_IP_entree_masque then
             return Masquer_Cache(Cache.all.Suivant,Adresse);
@@ -244,8 +237,8 @@ package body cache_ll is
     begin
         for i in 1..8 loop
             if adr_cp mod 2 = 1 then
-                -- on fais à l'envers parce qu'en binaire on fais de droite à gauche
-                a_return := a_return & '1'; -- attention on vas inverser juste après !
+                -- on fait à l'envers parce qu'en binaire on fait de droite à gauche
+                a_return := a_return & '1'; -- attention on va inverser juste après !
             else
                 a_return := a_return & '0'; 
             end if;
@@ -269,8 +262,6 @@ package body cache_ll is
         entier_string : Unbounded_String := To_Unbounded_String("");
         adr : adr4 ;
         idx : Integer := 1;
-        --Adresse_IP_S : String := To_String(Adresse_IP);
-        
     begin
         for i in 1..Length(Adresse_IP) loop
             case Element(Adresse_IP, i) is
@@ -278,10 +269,9 @@ package body cache_ll is
                 --on fait une conversion en entier pour pouvoir appliquer la fonction Convertir_IP2B_4
                 entier_string := entier_string & Element(Adresse_IP, i);
             when '.' =>
-                --touts les points, on convertis l'entier ainsi calculé en binaire
+                --tous les points, on convertit l'entier ainsi calculé en binaire
                 entier := Integer'Value (To_String(entier_string));
                 adr(idx) := Convertir_IP2B_4(entier) ;
-                --Put_Line("entier, puis entier en binaire : "&entier_string&" , "&adr(idx));
                 entier_string := To_Unbounded_String("");
 
                 idx := idx + 1 ;
@@ -294,7 +284,7 @@ package body cache_ll is
         entier := Integer'Value (To_String(entier_string));
         adr(idx) := Convertir_IP2B_4(entier) ;
 
-        return adr(1) & adr(2) & adr(3) & adr(4) ; -- [!] on ne renvoi pas avec des points !!!! 
+        return adr(1) & adr(2) & adr(3) & adr(4) ; -- [!] on ne renvoit pas avec des points !!!! 
         
     end Convertir_IP2B;
     
