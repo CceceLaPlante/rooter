@@ -143,7 +143,32 @@ package body cache_ll is
             return True ;
          end if;
       end if;
-end Presence_masque;
+   end Presence_masque;
+   
+   function Masque_Cache(Cache: in T_LCA; Adresse: in Unbounded_String) return Unbounded_String is
+      Adresse_IP_entree_masque : Unbounded_String;
+      Adresse_IP_courante_masque : Unbounded_String;
+      Masque_IP_courante : Unbounded_String;
+      Adresse_IP_courante : Unbounded_String;
+   begin
+      Adresse_IP_courante := Cache.all.Adresse;
+      Masque_IP_courante := Cache.all.Masque;
+      Adresse_IP_entree_masque := Adresse_IP_entree;
+      Adresse_IP_courante_masque := Adresse_IP_courante;
+      for i in 1..length(Adresse_IP_courante) loop
+         if Masque_IP_courante(i) = 0 then
+            Adresse_IP_courante_masque(i) := 0;
+            Adresse_IP_entree_masque(i) := 0;
+         else
+            Null;
+         end if;
+      end loop;
+      if Adresse_IP_courante_masque /= Adresse_IP_entree_masque then
+         return Adresse_Correspondante(Cache.all.Suivant,Adresse_IP_entree);
+      else
+         return Masque_IP_courante ;
+      end if;
+   end Masque_Cache;
 
    function Adresse_Presente(Cache : in T_LCA; Stats : in T_Stats; Adresse : in Unbounded_String; Masque_Adresse: in Unbounded_String) return Boolean is
    begin
