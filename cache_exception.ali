@@ -14,7 +14,7 @@ Z system.standard_library%s  s-stalib.adb	s-stalib.ali
 
 D ada.ads		20220628085427 76789da1 ada%s
 D a-unccon.ads		20220628085427 0e9b276f ada.unchecked_conversion%s
-D cache_exception.ads	20230112100519 fe9d1ae3 cache_exception%s
+D cache_exception.ads	20230114182231 fe9d1ae3 cache_exception%s
 D system.ads		20220628085427 4635ec04 system%s
 D s-exctab.ads		20220628085427 54135002 system.exception_table%s
 D s-stalib.ads		20220628085427 09bd3940 system.standard_library%s
