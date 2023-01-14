@@ -54,8 +54,18 @@ type T_Stats is record
 
    function Interface_du_Cache(Cache: in T_LCA; Stats: in T_Stats; Adresse: in Unbounded_String; Masque: Unbounded_String) return Unbounded_String;
    
-   generic
-      with procedure Traiter(Adresse: in Unbounded_String; Interface_utilisation: in Unbounded_String; Masque_Adresse: in Unbounded_String);
-   procedure Pour_Chaque(Cache : in T_LCA);
+    generic
+        with procedure Traiter(Adresse: in Unbounded_String; Interface_utilisation: in Unbounded_String; Masque_Adresse: in Unbounded_String);
+    procedure Pour_Chaque(Cache : in T_LCA);
+    
+     function Convertir_IP2B_4 (adr : Integer) return Unbounded_String;
+    
+    function Convertir_IP2B(Adresse_IP : Unbounded_String) return Unbounded_String;
+    
+    function B2IP_4 (Adresse_IP : in Unbounded_String) return Unbounded_String;
+    
+    function B2IP(Adresse_IP : in Unbounded_String) return Unbounded_String;
+    
+    function Convertir_B2IP(Adresse_IP : in Unbounded_String) return Unbounded_String;
 
 end cache_ll;
