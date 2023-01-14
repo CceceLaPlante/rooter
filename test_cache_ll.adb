@@ -158,10 +158,27 @@ begin
     Put_Line("Test OK"); 
     Skip_Line;
    
+    --Début du test sur les fonctions annexes appelées directement par le routeur
+    Skip_Line;
     Put_Line("Début du troisième test");
+    Skip_Line;
     
-    Interface_test := Interface_Cache(Un_Cache,Stats, To_Unbounded_String("147.255.32.57"), To_Unbounded_String("255.255.0.0"));
+    Put_Line("Test recherche de l'interface à partir d'une adresse et d'un masque");
+    Interface_test := Interface_du_Cache(Un_Cache,Stats, To_Unbounded_String("147.255.32.57"), To_Unbounded_String("255.255.0.0"));
     pragma assert (Interface_test =To_Unbounded_String("eth0"));
-
+    Put_Line("Test OK"); 
+    
+    Put_Line("Test sur la présence d'un masque");
+    pragma assert(Presence_masque(Un_Cache,To_Unbounded_String("147.255.32.57")));
+    Put_Line("Test OK");
+    
+    Put_Line("Test sur masquer une adresse");
+    Enregistrer(Un_Cache,Stats,To_Unbounded_String("140.255.32.157"),To_Unbounded_String("eth0"), To_Unbounded_String("255.255.255.255")) ;
+    Enregistrer(Un_Cache,Stats,To_Unbounded_String("140.255.32.157"),To_Unbounded_String("eth0"), To_Unbounded_String("255.255.255.0")) ;
+    pragma assert(Masquer_Cache(Un_Cache,To_Unbounded_String("140.255.32.158"))= To_Unbounded_String("255.255.255.0"));
+    Put_Line("Test OK");
+                  
+    
    
 end test_cache_ll;
+
