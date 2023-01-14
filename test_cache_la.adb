@@ -29,7 +29,7 @@ procedure test_cache_LA is
     mask4 : Unbounded_String := To_Unbounded_String("255.255.255.255");
     inter4 : Unbounded_String := To_Unbounded_String("ether");
 
-    d : Unbounded_String := To_Unbounded_String("192.168.2.0");
+    d : Unbounded_String := To_Unbounded_String("192.0.2.0");
 
     tp :Integer := 0;
 
@@ -79,6 +79,10 @@ begin
     Put_Line("recherche de : "&To_String(d));
     ligne := Trouver_global(Cache_rooter,d );
     Put_Line("interface trouvee : "&To_String(ligne.inter));
+    if ligne.inter = "" then 
+        Put_Line("blip bloup");
+    end if;
+    
     Put_Line("------------------");
     Afficher(Cache_rooter);
     Put_Line("------------------");

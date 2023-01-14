@@ -453,7 +453,7 @@ begin
 
             Adresse_IP_Cache := ligne_a_lire;
             Masque_Cache := Meilleur_Masque(table, ligne_a_lire, current_tab).mask;
-            Interface_Cache := Meilleur_Masque(table, ligne_a_lire, current_tab).inter;
+            Interface_Cache := Meilleur_Masque(table, ligne_a_lire, current_tab).inter;ma
             
             if not Adresse_Presente(Cache, Stats, Adresse_IP_Cache, Masque_Cache) then
                if Est_Pleine(Cache, capacite_cache) then
