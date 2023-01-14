@@ -1,7 +1,7 @@
 with Ada.Unchecked_Deallocation;
 with cache_exception; use cache_exception;
 with Ada.Text_IO; use Ada.Text_IO;
-WITH Ada.Integer_Text_IO ;    USE Ada.Integer_Text_IO ;
+
 package body cache_ll is
 
     procedure Free is
@@ -300,7 +300,7 @@ package body cache_ll is
     function B2IP_4 (Adresse_IP : in Unbounded_String) return Unbounded_String is
         a_return : Unbounded_String := To_Unbounded_String("");
         a_return_reversed : Unbounded_String := To_Unbounded_String("");
-        IP_cp : Unbounded_String := Adresse_IP;
+        IP_cp : constant Unbounded_String := Adresse_IP;
     begin
         for i in 1..Length(Adresse_IP) loop
             if Element(IP_cp, i) = '1' then
@@ -350,13 +350,13 @@ package body cache_ll is
         troisieme_nombre := To_Unbounded_String(To_String(Adresse_IP)(19..26));
         quatrieme_nombre := To_Unbounded_String(To_String(Adresse_IP)(28..35));
         for i in 1..8 loop
-            premier_nombre_IP := To_Unbounded_String(To_String(premier_nombre_IP) & Integer'Image(Integer'Value(To_String(premier_nombre)(i))*2**(8-i)));
-            deuxieme_nombre_IP := To_Unbounded_String(To_String(deuxieme_nombre_IP) & Integer'Image(Integer'Value(To_String(deuxieme_nombre)(i))*2**(8-i)));
-            troisieme_nombre_IP := To_Unbounded_String(To_String(troisieme_nombre_IP) & Integer'Image(Integer'Value(To_String(troisieme_nombre)(i))*2**(8-i)));
-            quatrieme_nombre_IP := To_Unbounded_String(To_String(quatrieme_nombre_IP) & Integer'Image(Integer'Value(To_String(quatrieme_nombre)(i))*2**(8-i)));
+            premier_nombre_IP := To_Unbounded_String(To_String(premier_nombre_IP) & Integer'Image(Character'Pos(To_String(premier_nombre)(i))*2**(8-i)));
+            deuxieme_nombre_IP := To_Unbounded_String(To_String(deuxieme_nombre_IP) & Integer'Image(Character'Pos(To_String(deuxieme_nombre)(i))*2**(8-i)));
+            troisieme_nombre_IP := To_Unbounded_String(To_String(troisieme_nombre_IP) & Integer'Image(Character'Pos(To_String(troisieme_nombre)(i))*2**(8-i)));
+            quatrieme_nombre_IP := To_Unbounded_String(To_String(quatrieme_nombre_IP) & Integer'Image(Character'Pos(To_String(quatrieme_nombre)(i))*2**(8-i)));
         end loop;
-        adresse_retour := To_Unbounded_String(premier_nombre_IP & '.' & deuxieme_nombre_IP & '.' & troisieme_nombre_IP & '.' & quatrieme_nombre_IP);
-        return adresse_retour ;
+        adresse_retour := premier_nombre_IP & To_Unbounded_String(".") & deuxieme_nombre_IP & To_Unbounded_String(".") & troisieme_nombre_IP & To_Unbounded_String(".") & quatrieme_nombre_IP;
+        return adresse_retour;
     end Convertir_B2IP;
     
 end cache_ll ;
