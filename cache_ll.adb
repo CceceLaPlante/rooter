@@ -1,7 +1,7 @@
 with Ada.Unchecked_Deallocation;
 with cache_exception; use cache_exception;
 with Ada.Text_IO; use Ada.Text_IO;
-
+WITH Ada.Integer_Text_IO ;    USE Ada.Integer_Text_IO ;
 package body cache_ll is
 
     procedure Free is
@@ -172,12 +172,13 @@ package body cache_ll is
                 Adresse_IP_entree_masque := Adresse_IP_entree_masque & Element(Adresse_IP_comparaison,i);
             end if;
             Put_Line("Masque en binaire" & To_String(Masque_IP_courante));
-            Put_Line("Masque en IP" & To_String(Convertir_IP2B(Masque_IP_courante)));
+            Put_Line("Masque en IP 1" & To_String(B2IP(Masque_IP_courante)));
+            Put_Line("Masque en IP 2" & To_String(Convertir_B2IP(B2IP(Masque_IP_courante))));
         end loop;
         if Adresse_IP_courante_masque /= Adresse_IP_entree_masque then
             return Masquer_Cache(Cache.all.Suivant,Adresse);
         else
-            return Convertir_B2IP(Masque_IP_courante) ;
+            return Convertir_B2IP(B2IP(Masque_IP_courante)) ;
         end if;
     end Masquer_Cache;
 
@@ -339,24 +340,33 @@ package body cache_ll is
         deuxieme_nombre : Unbounded_String;
         troisieme_nombre : Unbounded_String;
         quatrieme_nombre : Unbounded_String;
-        premier_nombre_IP : Unbounded_String;
-        deuxieme_nombre_IP : Unbounded_String;
-        troisieme_nombre_IP : Unbounded_String;
-        quatrieme_nombre_IP : Unbounded_String;
+        premier_nombre_entier : Integer;
+        deuxieme_nombre_entier : Integer;
+        troisieme_nombre_entier : Integer;
+        quatrieme_nombre_entier : Integer;
         adresse_retour : Unbounded_String;
     begin
+        Put_Line("J'arrive au début de Convertir");
         premier_nombre := To_Unbounded_String(To_String(Adresse_IP)(1..8));
         deuxieme_nombre := To_Unbounded_String(To_String(Adresse_IP)(10..17));
         troisieme_nombre := To_Unbounded_String(To_String(Adresse_IP)(19..26));
         quatrieme_nombre := To_Unbounded_String(To_String(Adresse_IP)(28..35));
+        Put_Line("J'ai passé les affectations");
+        premier_nombre_entier := 0;
+        deuxieme_nombre_entier := 0;
+        troisieme_nombre_entier := 0;
+        quatrieme_nombre_entier := 0;
         for i in 1..8 loop
-            premier_nombre_IP := To_Unbounded_String(To_String(premier_nombre_IP) & Integer'Image(Character'Pos(To_String(premier_nombre)(i))*2**(8-i)));
-            deuxieme_nombre_IP := To_Unbounded_String(To_String(deuxieme_nombre_IP) & Integer'Image(Character'Pos(To_String(deuxieme_nombre)(i))*2**(8-i)));
-            troisieme_nombre_IP := To_Unbounded_String(To_String(troisieme_nombre_IP) & Integer'Image(Character'Pos(To_String(troisieme_nombre)(i))*2**(8-i)));
-            quatrieme_nombre_IP := To_Unbounded_String(To_String(quatrieme_nombre_IP) & Integer'Image(Character'Pos(To_String(quatrieme_nombre)(i))*2**(8-i)));
+            Put_Line("Passage");
+            premier_nombre_entier := premier_nombre_entier + Integer'Value(Character'Image(To_String(premier_nombre)(i)))*2**(8-i);
+            Put_Line("Pas de problème pour le premier");
+            deuxieme_nombre_entier := deuxieme_nombre_entier + Integer'Value(Character'Image(To_String(deuxieme_nombre)(i)))*2**(8-i);
+            troisieme_nombre_entier := troisieme_nombre_entier + Integer'Value(Character'Image(To_String(troisieme_nombre)(i)))*2**(8-i);
+            quatrieme_nombre_entier := quatrieme_nombre_entier + Integer'Value(Character'Image(To_String(quatrieme_nombre)(i)))*2**(8-i);
+            Put_Line("Tous les entiers sont calculés");
         end loop;
-        adresse_retour := premier_nombre_IP & To_Unbounded_String(".") & deuxieme_nombre_IP & To_Unbounded_String(".") & troisieme_nombre_IP & To_Unbounded_String(".") & quatrieme_nombre_IP;
-        return adresse_retour;
+        adresse_retour := To_Unbounded_String(Integer'Image(premier_nombre_entier) & '.' & Integer'Image(deuxieme_nombre_entier) & '.' & Integer'Image(troisieme_nombre_entier) & '.' & Integer'Image(quatrieme_nombre_entier));
+        return adresse_retour ;
     end Convertir_B2IP;
     
 end cache_ll ;
