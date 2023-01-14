@@ -460,6 +460,8 @@ begin
             end if;
             
             if not Adresse_Presente(Cache, Stats, Adresse_IP_Cache, Masque_Cache) then
+               Masque_Cache := Meilleur_Masque().mask;
+               Interface_Cache := Meilleur_Masque().inter;
                if Est_Pleine(Cache, capacite_cache) then
                   Supprimer(Cache, Politique);
                end if;
