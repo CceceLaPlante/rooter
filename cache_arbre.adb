@@ -208,6 +208,7 @@ package body cache_arbre is
         ligne_factis :=  La_Donnee(Cache.Arbre, cle,nul_ligne);
         ligne_factis.nb_utilisation := ligne_factis.nb_utilisation + 1;
         ligne_factis.temps := Now;
+        Cache.stats.nb_demande := Cache.stats.nb_demande + 1.0;
         Remplacer(Cache.Arbre, cle, ligne_factis);
         return ligne_factis;
     end Trouver_global;

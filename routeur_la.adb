@@ -39,12 +39,12 @@ procedure routeur_la is
       tx : Float;
     begin
         Put("Nombre de défauts de Cache: ");
-        Put_Line(Float'Image(Stats.nb_defaut));
+        Put_Line(Integer'Image(Integer(Stats.nb_defaut)));
         Put("Nombre de demandes: ");
-        Put(Float'Image(Stats.nb_demande));
-        Put_Line("Taux de défauts: ");
-        tx := Stats.nb_defaut / Stats.nb_demande;
-        Put_Line(Float'Image(tx));
+        Put_Line(Integer 'Image(Integer(Stats.nb_demande)));
+        Put("Taux de défauts: ");
+        tx := (Stats.nb_defaut / Stats.nb_demande)*100.0;
+        Put_Line(Integer'Image(Integer(tx)));
     end Afficher_Stats;
    
    procedure Free_Tab
@@ -475,7 +475,8 @@ begin
             else 
                -- sinon c'est quon a trouve
                Interface_Cache := ligne_cache.inter;
-               Masque_Cache := ligne_cache.mask;
+               Masque_Cache := 
+               ligne_cache.mask;
             end if;
 
             a_ecrire := ligne_a_lire & To_Unbounded_String(" ")& Interface_Cache;
@@ -489,7 +490,7 @@ begin
       numero_ligne := numero_ligne + 1; 
 
    end loop;
-
+   Traiter_Commande(ligne_a_lire, nom_table, Cache, Affichage_Stats, Cache.stats, numero_ligne);
    Put_Line(To_Unbounded_String("fin (ligne") & Integer'Image(numero_ligne) & To_Unbounded_String(")"));
 
    Close(fichier_entree);
