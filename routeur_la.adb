@@ -315,7 +315,7 @@ procedure routeur_la is
       Nom_entree := To_Unbounded_String("paquets.txt");
       Nom_sortie := To_Unbounded_String("resultats.txt");
       Nom_table := To_Unbounded_String("table.txt");
-      Politique := To_Unbounded_String("LRU");
+      Politique := To_Unbounded_String("FIFO");
       capacite_cache := 4;
       arg_count := Argument_Count;
       
