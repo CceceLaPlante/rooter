@@ -494,6 +494,6 @@ begin
    if Affichage_Stats then
       Afficher_Stats(Stats);
    end if;
-   Vider(Cache);
+   Vider(Cache,Stats);
 
 end routeur_ll;
