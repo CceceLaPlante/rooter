@@ -153,7 +153,6 @@ package body cache_ll is
         Adresse_IP_courante : Unbounded_String;
         Adresse_IP_comparaison : Unbounded_String;
     begin
-        Put_Line(To_String(Adresse));
         Adresse_IP_courante := Convertir_IP2B(Cache.all.Adresse);
         Masque_IP_courante := Convertir_IP2B(Cache.all.Masque);
         Adresse_IP_entree_masque := To_Unbounded_String("");
