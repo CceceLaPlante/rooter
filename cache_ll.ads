@@ -1,5 +1,6 @@
 with Ada.Strings.Unbounded;     use Ada.Strings.Unbounded;
 with Ada.Calendar; use Ada.Calendar;
+with Ada.Strings; use Ada.Strings;
 package cache_ll is
 
 capacite_cache: Integer;
@@ -45,13 +46,13 @@ type T_Stats is record
    
    function Presence_masque(Cache : in T_LCA; Adresse_IP_entree : in Unbounded_String) return Boolean;
    
-   function Masque_Cache(Cache: in T_LCA; Adresse: in Unbounded_String) return Unbounded_String ;
+   function Masquer_Cache(Cache: in T_LCA; Adresse: in Unbounded_String) return Unbounded_String ;
 
    function Taille(Cache : in T_LCA) return Integer ;
 
    function Est_Pleine(Cache : in T_LCA; capacite_cache : in Integer) return Boolean ;
 
-   function Interface_Cache(Cache: in T_LCA; Stats: in T_Stats; Adresse: in Unbounded_String; Masque: Unbounded_String) return Unbounded_String;
+   function Interface_du_Cache(Cache: in T_LCA; Stats: in T_Stats; Adresse: in Unbounded_String; Masque: Unbounded_String) return Unbounded_String;
    
    generic
       with procedure Traiter(Adresse: in Unbounded_String; Interface_utilisation: in Unbounded_String; Masque_Adresse: in Unbounded_String);
