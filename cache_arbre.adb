@@ -15,15 +15,26 @@ with Ada.Text_IO;             use Ada.Text_IO;
 package body cache_arbre is
 
     function equivalente_ligne (Ligne1 : in T_ligne; Ligne2 : in T_Ligne) return Boolean is
-        ip1 : String(1..32):=To_String(Convertir_IP2B(Ligne1.destination));
-        ip2 : String(1..32):=To_String(Convertir_IP2B(Ligne2.destination));
-        masque : String(1..32):=To_String(Convertir_IP2B(Ligne2.mask));
+        ip1 : String(1..32);
+        ip2 : String(1..32);
+        masque : String(1..32);
     begin  
+        --Afficher_inter("--------------------------------", Ligne2);
+        --Afficher_inter("________________________________", Ligne1);
+        ip1 := To_String(Convertir_IP2B(Ligne1.destination));
+        ip2 := To_String(Convertir_IP2B(Ligne2.destination));
+        masque := To_String(Convertir_IP2B(Ligne2.mask));
+
         for i in 1..32 loop 
+
             if masque(i) = '1' and ip1(i) = ip2(i) then 
                 null;
             else 
-                return False;
+                if masque (i) = '0' then 
+                    null;
+                else
+                    return False;
+                end if;
             end if;
         end loop;
         return True;
@@ -178,7 +189,15 @@ package body cache_arbre is
         --ip_bin : String(1..32) := To_String(Convertir_IP2B(IP));
         ligne_factis : T_Ligne;
         Now :Integer := Cache.stats.horloge;
+        nul_ligne : T_Ligne;
     begin
+        nul_ligne.destination := To_Unbounded_String("");
+        nul_ligne.mask := To_Unbounded_String("");
+        nul_ligne.inter := To_Unbounded_String("");
+        nul_ligne.temps := Now;
+        nul_ligne.arrive := 0;
+        nul_ligne.nb_utilisation := 0;
+
         ligne_factis.destination := IP;
         ligne_factis.mask := To_Unbounded_String("");
         ligne_factis.inter := To_Unbounded_String("");
@@ -186,7 +205,7 @@ package body cache_arbre is
         ligne_factis.arrive := 0;
         ligne_factis.nb_utilisation := 0;
         cle := La_cle_cache(Cache.Arbre, ligne_factis);
-        return Trouver(Cache, To_Unbounded_String(cle));
+        return La_Donnee(Cache.Arbre, cle,nul_ligne);
     end Trouver_global;
 
     function correspond(adr1 : in String; adr2 : in String; mask : in String) return Boolean is
@@ -247,20 +266,33 @@ package body cache_arbre is
         
     end Supprimer_IP;
 
-    procedure Supprimer_LRU (Cache : in out T_Cache; max_taille: in Integer) is
+    procedure Supprimer_Politic (Cache : in out T_Cache; max_taille: in Integer; politic : in String) is
         -- faut utiliser un pour chaques j'ai envie de me tirer une balle...
-        function minimum(a : T_Ligne; b : T_Ligne) return T_Ligne is
+        function minimum(a : in T_Ligne; b : in T_Ligne;politic : in String ) return T_Ligne is
         begin
-            if a.temps > b.temps then
-                return b;
-            else
-                return a;
+            if politic = "LRU" then
+                if a.temps > b.temps then
+                    return b;
+                else
+                    return a;
+                end if;
+            elsif politic = "LFU" then
+                if a.nb_utilisation > b.nb_utilisation then
+                    return b;
+                else
+                    return a;
+                end if;
+            else  
+                if a.arrive > b.arrive then
+                    return b;
+                else
+                    return a;
+                end if;
             end if;
         end minimum;
 
-        function min_rec (Cache: in T_Arbre) return T_Ligne is
+        function min_rec (Cache: in T_Arbre; politic : in String) return T_Ligne is
             nuls : String(1..32) := (others => Character'Val(0));
-            -- Clock est forcément le plus grand temps possible
             nul_ligne : T_Ligne;
         begin
             nul_ligne.destination := To_Unbounded_String("");
@@ -272,13 +304,13 @@ package body cache_arbre is
 
             if not Est_vide(Cache) and then Cache.all.leaf = False then
                 if Est_vide(Cache.all.Suivant_G) then 
-                    return min_rec(Cache.all.suivant_D);
+                    return min_rec(Cache.all.suivant_D,politic);
                 elsif Est_vide(Cache.all.Suivant_G) then 
-                    return min_rec(Cache.all.suivant_D);
+                    return min_rec(Cache.all.suivant_D,politic);
                 elsif Est_vide(Cache.all.Suivant_D) then
-                    return min_rec(Cache.all.suivant_G);
+                    return min_rec(Cache.all.suivant_G,politic);
                 else
-                    return minimum(min_rec(Cache.all.suivant_G),min_rec(Cache.all.suivant_D));
+                    return minimum(min_rec(Cache.all.suivant_G,politic),min_rec(Cache.all.suivant_D,politic),politic);
                 end if;
             elsif not Est_Vide(Cache) and then Cache.all.leaf = True then
                 return Cache.all.Donnee;
@@ -289,9 +321,9 @@ package body cache_arbre is
     begin
 
         if Taille(Cache.Arbre) > max_taille then
-            Supprimer_IP(Cache, min_rec(Cache.Arbre).destination);
+            Supprimer_IP(Cache, min_rec(Cache.Arbre,politic).destination);
         end if;
-    end Supprimer_LRU;
+    end Supprimer_Politic;
         
     function IP_Presente(Cache : in T_Cache; IP : in Unbounded_String) return Boolean is
         IP_Bin : String(1..32) := To_String(Convertir_IP2B(IP));

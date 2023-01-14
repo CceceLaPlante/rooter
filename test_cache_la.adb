@@ -11,8 +11,7 @@ with Ada.Calendar;            use Ada.Calendar;
 with Ada.Calendar.Formatting; use Ada.Calendar.Formatting;
 with Ada.Text_IO;             use Ada.Text_IO;
 
-procedure test_cache_LA is
-
+procedure test_cache_LA is        
 
     dest1 : Unbounded_String := To_Unbounded_String("192.168.0.0");
     mask1 : Unbounded_String := To_Unbounded_String("255.255.0.0");
@@ -30,6 +29,8 @@ procedure test_cache_LA is
     mask4 : Unbounded_String := To_Unbounded_String("255.255.255.255");
     inter4 : Unbounded_String := To_Unbounded_String("ether");
 
+    d : Unbounded_String := To_Unbounded_String("192.168.2.0");
+
     tp :Integer := 0;
 
     l1 : T_ligne := (dest1, mask1, inter1, 0,0,0);
@@ -39,6 +40,7 @@ procedure test_cache_LA is
 
     Cache_rooter : T_Cache;
     cle1 : String(1..32) := To_String(Convertir_IP2B(dest1));
+    ligne : T_ligne;
     
 begin
     Initialiser_cache(Cache_rooter);
@@ -69,7 +71,15 @@ begin
     Ajouter(Cache_rooter, l1);
     Afficher(Cache_rooter);
     Put_Line("------------------");
-    Supprimer_LRU(Cache_rooter, 3);
+    Put_Line("Suppression de 2 IP selon la politique FIFO");
+    Supprimer_Politic(Cache_rooter, 2,"fif");
+    Supprimer_Politic(Cache_rooter, 2,"fif");
+    Afficher(Cache_rooter);
+    Put_Line("------------------");
+    Put_Line("recherche de : "&To_String(d));
+    ligne := Trouver_global(Cache_rooter,d );
+    Put_Line("interface trouvee : "&To_String(ligne.inter));
+    Put_Line("------------------");
     Afficher(Cache_rooter);
     Put_Line("------------------");
 

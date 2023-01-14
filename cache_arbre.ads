@@ -86,7 +86,7 @@ package cache_arbre is
 	procedure Supprimer_IP (Cache : in out T_Cache; IP : in Unbounded_String);
 
 	-- permet de supprimer la ligne la plus ancienne du cache
-	procedure Supprimer_LRU (Cache : in out T_Cache; max_taille : in Integer);
+	procedure Supprimer_Politic(Cache : in out T_Cache; max_taille : in Integer; politic : in String);
 
 	-- permet de savoir si une ip est dans le cache, attention, l'ip dois être un binaire masqué
 	function IP_Presente (Cache : in T_Cache; IP : in Unbounded_String) return Boolean;
