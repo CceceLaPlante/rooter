@@ -492,6 +492,8 @@ begin
 
    --Put_Line("convertire 0.0.0.3 "&Convertir_IP2B(To_Unbounded_String("0.0.0.3")));
    if Affichage_Stats then
+      Skip_Line;
+      Put_Line("Statistiques");
       Afficher_Stats(Stats);
    end if;
    Vider(Cache,Stats);
