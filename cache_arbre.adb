@@ -41,7 +41,8 @@ package body cache_arbre is
     end equivalente_ligne;
 
     procedure Initialiser_cache (Cache : in out T_Cache) is
-        stat : T_Stat := (nb_defaut => 0, tx_defaut => 0.0 , nb_demande => 0,horloge => 0);
+        -- pour eviter la division par 0 on met nb_defaut a 1
+        stat : T_Stat := (nb_defaut => 1.0, tx_defaut => 0.0 , nb_demande => 0.0,horloge => 0);
     begin
         Cache.stats := stat;
         Cache.Arbre := null;
@@ -176,7 +177,6 @@ package body cache_arbre is
         Cache.stats.horloge := Cache.stats.horloge + 1;
         Cle := To_String(IP_Bin);
         ligne:= La_Donnee(Cache.Arbre, Cle, nul_ligne);
-        -- j'ai peur que modifier comme ça ne change pas dans l'arbre
         ligne.temps := Now;
         ligne.nb_utilisation := Ligne.nb_utilisation + 1;
         Remplacer(Cache.Arbre,Cle, ligne); -- on réactualise la ligne...
@@ -205,7 +205,11 @@ package body cache_arbre is
         ligne_factis.arrive := 0;
         ligne_factis.nb_utilisation := 0;
         cle := La_cle_cache(Cache.Arbre, ligne_factis);
-        return La_Donnee(Cache.Arbre, cle,nul_ligne);
+        ligne_factis :=  La_Donnee(Cache.Arbre, cle,nul_ligne);
+        ligne_factis.nb_utilisation := ligne_factis.nb_utilisation + 1;
+        ligne_factis.temps := Now;
+        Remplacer(Cache.Arbre, cle, ligne_factis);
+        return ligne_factis;
     end Trouver_global;
 
     function correspond(adr1 : in String; adr2 : in String; mask : in String) return Boolean is
@@ -245,7 +249,7 @@ package body cache_arbre is
         nul_ligne.temps := Now;
         nul_ligne.arrive := 0;
         nul_ligne.nb_utilisation := 0;
-        Cache.stats.nb_defaut := Cache.stats.nb_defaut + 1;
+        Cache.stats.nb_defaut := Cache.stats.nb_defaut + 1.0;
         Cache.stats.horloge := Cache.stats.horloge + 1;
         Cle := To_String(IP_Bin);
         Ligne.temps := Now;

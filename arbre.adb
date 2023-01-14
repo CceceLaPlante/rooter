@@ -247,7 +247,7 @@ package body arbre is
         if Cle_Presente(Arbre, Cle) then
             return Donnee_r(Arbre, Cle, 1,nul_donnee);
         else
-            raise Constraint_Error with "Cle non presente";
+            return nul_donnee;
         end if;
     end La_Donnee;
 

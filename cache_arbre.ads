@@ -33,9 +33,9 @@ package cache_arbre is
 
 	type T_Stat is 
 		record 
-			nb_defaut : Integer;
+			nb_defaut : Float;
 			tx_defaut : Float; -- nb_defaut / nb_demande
-			nb_demande : Integer;
+			nb_demande : Float;
 			horloge : Integer;
 		end record;
 			

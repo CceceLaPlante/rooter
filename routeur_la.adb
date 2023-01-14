@@ -36,21 +36,20 @@ procedure routeur_la is
    end table_to_ligne;
 
    procedure Afficher_Stats (Stats: in T_Stat) is
+      tx : Float;
     begin
         Put("Nombre de défauts de Cache: ");
-        Put(Float'Image(Stats.nb_defauts));
-        Skip_Line ;
+        Put_Line(Float'Image(Stats.nb_defaut));
         Put("Nombre de demandes: ");
-        Put(Float'Image(Stats.nb_demandes));
-        Skip_Line ;
-        Put("Taux de défauts: ");
-        Put(Float'Image(Stats.taux_defauts));
-        Skip_Line;
+        Put(Float'Image(Stats.nb_demande));
+        Put_Line("Taux de défauts: ");
+        tx := Stats.nb_defaut / Stats.nb_demande;
+        Put_Line(Float'Image(tx));
     end Afficher_Stats;
    
    procedure Free_Tab
    is new Ada.Unchecked_Deallocation (Object => T_Table, Name => T_Liste);
-   
+
    procedure Initialiser_Table(table : Out  T_Liste) is
    begin
       table := Null;
@@ -188,8 +187,27 @@ procedure routeur_la is
       return somme ;
 
    end somme_masque;
+   -- renvoie un T_Table tel que 
+   function Meilleur_Ip_Masque (lst : in T_Liste; table_comparer : in T_Table ; current : in out T_Table) return T_Table is
+   begin
+      if lst = Null then 
+         return current;
+      elsif lst.all.mask /= To_Unbounded_String("") and then Masque(lst.all.destination, table_comparer) then
+         -- on compare les masques, et on garde le plus long
+         if somme_masque(lst.all.mask) > somme_masque(current.mask) then
+            return Meilleur_Ip_Masque(lst.all.Suivant, table_comparer, lst.all);
+         else
+            return Meilleur_Ip_Masque(lst.all.Suivant, table_comparer, current);
+         end if;
+      else
+         return Meilleur_Ip_Masque(lst.all.Suivant, table_comparer, current);
+      end if;
 
-   function Meilleur_Masque(lst : in T_Liste; Adresse_IP : in Unbounded_String; current : in out T_Table) return T_Table is --Fonction qui renvoie le masque le plus long qui correspond avec l'adresse.
+
+   end Meilleur_Ip_Masque;
+
+    --Fonction qui renvoie le masque le plus long qui correspond avec l'adresse.
+   function Meilleur_Masque(lst : in T_Liste; Adresse_IP : in Unbounded_String; current : in out T_Table) return T_Table is
    begin 
       -- condition d'arrêt : si on est arrivé au bout de la liste...
 
@@ -201,14 +219,13 @@ procedure routeur_la is
       elsif lst.all.mask /= To_Unbounded_String("") and then Masque(Adresse_IP,lst.all) then
          -- on compare les masques, et on garde le plus long
          if somme_masque(lst.all.mask) > somme_masque(current.mask) then
-            current := lst.all;
-            return Meilleur_Masque(lst.suivant,Adresse_IP,current);
+            return Meilleur_Masque(lst.all.suivant,Adresse_IP,lst.all);
             -- dans les autres cas, on continue à chercher
          else
-            return Meilleur_Masque(lst.suivant,Adresse_IP,current);
+            return Meilleur_Masque(lst.all.suivant,Adresse_IP,current);
          end if;
       else 
-         return Meilleur_Masque(lst.suivant,Adresse_IP,current);
+         return Meilleur_Masque(lst.all.suivant,Adresse_IP,current);
       end if;
    end Meilleur_Masque;
 
@@ -239,44 +256,18 @@ procedure routeur_la is
       return ligne_a_lire;
    end Lire;
 
-   procedure Supprimer(Cache: in out T_LCA; Politique: in Unbounded_String) is
-      Temps_max: Time;
-      Freq_min: Integer;
-      Adresse_min: Unbounded_String;
-      Adresse_max: Unbounded_String;
-   begin 
-
-      if Politique = To_Unbounded_String("FIFO") then
-         Supprimer_fifo(Cache);
-      elsif Politique = To_Unbounded_String("LRU") then
-         Adresse_max := To_Unbounded_String("00000000000000000000000000000000");
-         temps_max := Clock ;
-         Chercher_max_temps(Cache, Adresse_max, Temps_max);
-         Supprimer_lru(Cache, Adresse_max);
-      elsif Politique = To_Unbounded_String("LFU") then
-         Adresse_min := To_Unbounded_String("00000000000000000000000000000000") ;
-         freq_min := 0 ;
-         Chercher_min_freq(Cache, Adresse_min, Freq_min);
-         Supprimer_lfu(Cache, Adresse_min);
-      else
-         Null;
-      end if;
-
-   end Supprimer;
-
-
    --Fonction qui traite les commandes telles que "fin", "table"...
-   procedure Traiter_Commande(commande: in Unbounded_String; nom_table : in Unbounded_String; Cache : in T_LCA; Affichage_Stats: in Boolean; Stats : in T_Stat; numero_ligne: in Integer) is 
+   procedure Traiter_Commande(commande: in Unbounded_String; nom_table : in Unbounded_String; Cache : in out T_Cache; Affichage_Stats: in Boolean; Stats : in T_Stat; numero_ligne: in Integer) is 
       fichier_table : File_Type;
       ligne : Unbounded_String := To_Unbounded_String("");
    begin
       if commande = "table" then 
          Open(fichier_table,In_File ,To_String(nom_table)); 
          ligne := Lire(fichier_table);
-         Skip_Line;
          Put(To_Unbounded_String("table (ligne "));
          Put(numero_ligne, 1);
          Put(To_Unbounded_String(")") );
+         Put_Line("*press enter to continue...*");
          Skip_Line;
          while ligne /= To_Unbounded_String("") loop
             Put_Line(To_String(ligne));
@@ -284,22 +275,19 @@ procedure routeur_la is
          end loop;
 
          Close(fichier_table);
-         Skip_Line;
-         
    
       elsif commande = "cache" then
-         Skip_Line;
          Put(To_Unbounded_String("cache (ligne "));
          Put(numero_ligne,1);
          Put(To_Unbounded_String(")" ));
+         Put_Line("*press enter to continue...*");
          Skip_Line;
-         Afficher_cache(Cache);
-         Skip_Line;
+         Afficher(Cache);
          
       elsif Affichage_Stats then
-         Skip_Line;
          Put_Line("-------------------------------- Statistiques --------------------------------");
          Afficher_Stats(Stats);
+         Put_Line("*press enter to continue...*");
          Skip_Line;
          
       else
@@ -327,8 +315,8 @@ procedure routeur_la is
       Nom_entree := To_Unbounded_String("paquets.txt");
       Nom_sortie := To_Unbounded_String("resultats.txt");
       Nom_table := To_Unbounded_String("table.txt");
-      Politique := To_Unbounded_String("FIFO");
-      capacite_cache := 10;
+      Politique := To_Unbounded_String("LRU");
+      capacite_cache := 4;
       arg_count := Argument_Count;
       
       for VarBoucle in 1..arg_count loop
@@ -420,17 +408,24 @@ procedure routeur_la is
    Adresse_IP_Cache : Unbounded_String;
    Masque_Cache : Unbounded_String;
    Interface_Cache: Unbounded_String;
-   Stats : T_Stat;
    numero_ligne: Integer;
 
    Affichage_Stats: Boolean;
    Politique: Unbounded_String;
    capacite_cache: Integer;
+
+   ligne_cache : T_ligne;
+   ligne_ecrire : T_ligne;
+   ligne_enregistrer : T_ligne;
+
+   tab_trouve : T_Table;
+   tab_masque_restrictif : T_Table;
+   tab_enregistrer : T_Table;
      
 begin
 
    Traiter_Ligne_Commande (capacite_cache, Politique, nom_entree, nom_sortie, nom_table, Affichage_Stats);
-   Initialiser(Cache,Stats);
+   Initialiser_cache(Cache);
 
    Open(fichier_table,In_File,To_String(nom_table));
    Open(fichier_entree,In_File,To_String(nom_entree));
@@ -445,31 +440,49 @@ begin
 
    numero_ligne := 1;
    while (not (ligne_a_lire = "fin") and not End_Of_File(fichier_entree) and not (ligne_a_lire = To_Unbounded_String(""))) loop
-
       current_tab.cle := 0;
       current_tab.mask := To_Unbounded_String("0.0.0.0");
       current_tab.inter := To_Unbounded_String("Adress does not match any known network");
       current_tab.suivant := Null;
       current_tab.destination := To_Unbounded_String("0.0.0.0");
-      
-      
+
+
       case Element(ligne_a_lire,1) is 
          when '0'|'1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9' =>
 
+            -- on regarde si l'adresse est dans le cache : 
             Adresse_IP_Cache := ligne_a_lire;
-            Masque_Cache := Meilleur_Masque(table, ligne_a_lire, current_tab).mask;
-            Interface_Cache := Meilleur_Masque(table, ligne_a_lire, current_tab).inter;
-            
-            if not Trouver_global(Cache, Stats, Adresse_IP_Cache, Masque_Cache) then
-               Supprimer_Politic(Cache, capacite_cache,Politique);
-               Enregistrer(Cache, Stats, Adresse_IP_Cache, Interface_Cache,Masque_Cache);
+            ligne_cache := Trouver_global(Cache, Adresse_IP_Cache);
 
+            if ligne_cache.inter = "" then 
+               tab_trouve := Meilleur_Masque(table, ligne_a_lire, current_tab);
+               tab_masque_restrictif := Meilleur_Ip_Masque(table, tab_trouve, current_tab);
+               Masque_Cache := tab_masque_restrictif.mask;
+               Interface_Cache := tab_trouve.inter;
+
+               tab_enregistrer.Suivant := Null;
+               tab_enregistrer.cle := 0;
+               tab_enregistrer.destination := ligne_a_lire;
+               tab_enregistrer.mask := tab_masque_restrictif.mask;
+               tab_enregistrer.inter := tab_trouve.inter;
+
+               -- on convertis la table en une ligne ajoutable...
+               ligne_ecrire := table_to_ligne(tab_trouve);
+               ligne_enregistrer := table_to_ligne(tab_enregistrer);
+
+               Supprimer_Politic(Cache, capacite_cache,To_String(Politique)); -- ne supprimeras pas si on ne dépasse pas la capacité
+               Ajouter(Cache, ligne_enregistrer);
+            else 
+               -- sinon c'est quon a trouve
+               Interface_Cache := ligne_cache.inter;
+               Masque_Cache := ligne_cache.mask;
+            end if;
 
             a_ecrire := ligne_a_lire & To_Unbounded_String(" ")& Interface_Cache;
             Ecrire(fichier_sortie, a_ecrire);
 
          when others =>
-            Traiter_Commande(ligne_a_lire, nom_table, Cache, Affichage_Stats, Stats, numero_ligne);
+            Traiter_Commande(ligne_a_lire, nom_table, Cache, Affichage_Stats, Cache.stats, numero_ligne);
       end case;
 
       ligne_a_lire := Lire(fichier_entree);
@@ -482,6 +495,7 @@ begin
    Close(fichier_entree);
    Close(fichier_sortie);
 
+   Vider(Cache);
    Liberer(table) ;
 
    --Put_Line("convertire 0.0.0.3 "&Convertir_IP2B(To_Unbounded_String("0.0.0.3")));

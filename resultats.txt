@@ -5,3 +5,13 @@
 192.168.0.1 eth0
 192.168.0.3 eth0
 192.168.0.32 waln0
+127.190.0.9 Adress does not match any known network
+136.189.0.23 blip0
+167.168.0.0 wlp2s0
+136.189.0.3 blip0
+198.90.34.2 blip0
+198.90.34.2 blip0
+198.90.34.2 blip0
+198.90.34.2 blip0
+198.90.34.2 blip0
+198.90.34.2 blip0
