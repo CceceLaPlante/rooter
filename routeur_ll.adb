@@ -452,10 +452,16 @@ begin
          when '0'|'1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9' =>
 
             Adresse_IP_Cache := ligne_a_lire;
-            Masque_Cache := Meilleur_Masque(table, ligne_a_lire, current_tab).mask;
-            Interface_Cache := Meilleur_Masque(table, ligne_a_lire, current_tab).inter;ma
+            if Presence_masque(Cache,Adresse_IP_Cache) then 
+               Masque_Cache := Masque_Cache(Cache,Adresse_IP_Cache);
+               Interface_Cache := Interface_Cache(Cache,Stats,Adresse_IP_Cache);
+            else
+               Null;
+            end if;
             
             if not Adresse_Presente(Cache, Stats, Adresse_IP_Cache, Masque_Cache) then
+               Masque_Cache := Meilleur_Masque(table, ligne_a_lire, current_tab).mask;
+               Interface_Cache := Meilleur_Masque(table, ligne_a_lire, current_tab).inter;
                if Est_Pleine(Cache, capacite_cache) then
                   Supprimer(Cache, Politique);
                end if;
