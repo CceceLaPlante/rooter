@@ -345,6 +345,7 @@ package body cache_ll is
         troisieme_nombre_entier : Integer;
         quatrieme_nombre_entier : Integer;
         adresse_retour : Unbounded_String;
+        adresse_sortie : Unbounded_String;
     begin
         premier_nombre := To_Unbounded_String(To_String(Adresse_IP)(1..8));
         deuxieme_nombre := To_Unbounded_String(To_String(Adresse_IP)(10..17));
@@ -354,10 +355,6 @@ package body cache_ll is
         deuxieme_nombre_entier := 0;
         troisieme_nombre_entier := 0;
         quatrieme_nombre_entier := 0;
-        Put_Line(To_String(premier_nombre));
-        Put_Line(To_String(deuxieme_nombre));
-        Put_Line(To_String(troisieme_nombre));
-        Put_Line(To_String(quatrieme_nombre));
         for i in 1..8 loop
             premier_nombre_entier := premier_nombre_entier + (Character'Pos(To_String(premier_nombre)(i))-Character'Pos('0'))*2**(8-i);
             deuxieme_nombre_entier := deuxieme_nombre_entier + (Character'Pos(To_String(deuxieme_nombre)(i))-Character'Pos('0'))*2**(8-i);
@@ -365,8 +362,12 @@ package body cache_ll is
             quatrieme_nombre_entier := quatrieme_nombre_entier + (Character'Pos(To_String(quatrieme_nombre)(i))-Character'Pos('0'))*2**(8-i);
         end loop;
         adresse_retour := To_Unbounded_String(Integer'Image(premier_nombre_entier) & '.' & Integer'Image(deuxieme_nombre_entier) & '.' & Integer'Image(troisieme_nombre_entier) & '.' & Integer'Image(quatrieme_nombre_entier));
-        Put_Line(To_String(adresse_retour));
-        return adresse_retour ;
+        for i in 1..length(adresse_retour) loop
+            if To_String(adresse_retour)(i) /= ' ' then
+                adresse_sortie := To_Unbounded_String(To_String(adresse_sortie)) & To_String(adresse_retour)(i);
+            end if;
+        end loop ;
+        return adresse_sortie ;
     end Convertir_B2IP;
     
 end cache_ll ;
