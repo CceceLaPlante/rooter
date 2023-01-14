@@ -454,7 +454,7 @@ begin
             Adresse_IP_Cache := ligne_a_lire;
             if Presence_masque(Cache,Adresse_IP_Cache) then 
                Masque_Cache :=
-               Interface_Cache :=
+               Interface_Cache := Interface_Cache(Cache,Stats,Adresse_IP_Cache);
             else
                Null;
             end if;
