@@ -138,14 +138,14 @@ package body cache_ll is
             end if;
          end loop;
          if Adresse_IP_courante_masque /= Adresse_IP_entree_masque then
-            return Adresse_Correspondante(Cache.all.Suivant,Adresse_IP_entree);
+            return Presence_masque(Cache.all.Suivant,Adresse_IP_entree);
          else
             return True ;
          end if;
       end if;
    end Presence_masque;
    
-   function Masque_Cache(Cache: in T_LCA; Adresse: in Unbounded_String) return Unbounded_String is
+   function Masquer_Cache(Cache: in T_LCA; Adresse: in Unbounded_String) return Unbounded_String is
       Adresse_IP_entree_masque : Unbounded_String;
       Adresse_IP_courante_masque : Unbounded_String;
       Masque_IP_courante : Unbounded_String;
@@ -153,7 +153,7 @@ package body cache_ll is
    begin
       Adresse_IP_courante := Cache.all.Adresse;
       Masque_IP_courante := Cache.all.Masque;
-      Adresse_IP_entree_masque := Adresse_IP_entree;
+      Adresse_IP_entree_masque := Adresse;
       Adresse_IP_courante_masque := Adresse_IP_courante;
       for i in 1..length(Adresse_IP_courante) loop
          if Masque_IP_courante(i) = 0 then
@@ -164,11 +164,11 @@ package body cache_ll is
          end if;
       end loop;
       if Adresse_IP_courante_masque /= Adresse_IP_entree_masque then
-         return Adresse_Correspondante(Cache.all.Suivant,Adresse_IP_entree);
+         return Masquer_Cache(Cache.all.Suivant,Adresse);
       else
          return Masque_IP_courante ;
       end if;
-   end Masque_Cache;
+   end Masquer_Cache;
 
    function Adresse_Presente(Cache : in T_LCA; Stats : in T_Stats; Adresse : in Unbounded_String; Masque_Adresse: in Unbounded_String) return Boolean is
    begin
@@ -198,19 +198,19 @@ package body cache_ll is
       return (Taille(Cache) = capacite_cache) ;
    end Est_Pleine ;
 
-   function Interface_Cache(Cache: in T_LCA; Stats: T_Stats; Adresse: in Unbounded_String; Masque: Unbounded_String) return Unbounded_String is
+   function Interface_du_Cache(Cache: in T_LCA; Stats: T_Stats; Adresse: in Unbounded_String; Masque: Unbounded_String) return Unbounded_String is
    begin
       if not Est_Vide(Cache) and Adresse_Presente(Cache, Stats, Adresse, Masque) then
 
          if (Cache.all.Adresse /= Adresse) or ((Cache.all.Adresse = Adresse) and (Cache.all.Masque /= Masque)) then
-            return Interface_Cache(Cache.all.Suivant,Stats, Adresse, Masque);
+            return Interface_du_Cache(Cache.all.Suivant,Stats, Adresse, Masque);
          else 
             return Cache.all.interface_utilisation;
          end if;
       else
          return To_Unbounded_String("Null");
       end if;
-   end Interface_Cache;
+   end Interface_du_Cache;
         
    procedure Pour_Chaque(Cache: in T_LCA) is
    begin
