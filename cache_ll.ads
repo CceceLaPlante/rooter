@@ -42,6 +42,8 @@ type T_Stats is record
    procedure Vider(Cache : in out T_LCA; Stats : in out T_Stats);
 
    function Adresse_Presente(Cache : in T_LCA; Stats : in T_Stats; Adresse : in Unbounded_String; Masque_Adresse: in Unbounded_String) return Boolean;
+   
+    function Presence_masque(Cache : in T_LCA; Adresse_IP_entree : in Unbounded_String) return Boolean;
 
    function Taille(Cache : in T_LCA) return Integer ;
 
