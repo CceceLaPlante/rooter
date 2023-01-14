@@ -1,16 +1,5 @@
-with Arbre;
-with Ada.Strings;               use Ada.Strings;
-with Ada.Text_IO;               use Ada.Text_IO;
-with Ada.Integer_Text_IO;       use Ada.Integer_Text_IO;
-with Ada.Strings.Unbounded;     use Ada.Strings.Unbounded;
 with Ada.Text_IO.Unbounded_IO;  use Ada.Text_IO.Unbounded_IO;
-with Ada.Exceptions;            use Ada.Exceptions;
-with Ada.Unchecked_Deallocation; 
-
-with Ada.Calendar;            use Ada.Calendar;
-with Ada.Calendar.Formatting; use Ada.Calendar.Formatting;
-with Ada.Text_IO;             use Ada.Text_IO;
-
+with Ada.Text_IO;               use Ada.Text_IO;
 
 package body cache_arbre is
 
@@ -42,7 +31,7 @@ package body cache_arbre is
 
     procedure Initialiser_cache (Cache : in out T_Cache) is
         -- pour eviter la division par 0 on met nb_defaut a 1
-        stat : T_Stat := (nb_defaut => 1.0, tx_defaut => 0.0 , nb_demande => 0.0,horloge => 0);
+        stat : constant T_Stat := (nb_defaut => 1.0, tx_defaut => 0.0 , nb_demande => 0.0,horloge => 0);
     begin
         Cache.stats := stat;
         Cache.Arbre := null;
@@ -86,7 +75,7 @@ package body cache_arbre is
       type adr4 is array(1..4) of Unbounded_String;
       adr : adr4 ;
       idx : Integer := 1;
-      Adresse_IP_S : String := To_String(Adresse_IP);
+      --Adresse_IP_S : constant String := To_String(Adresse_IP);
         
    begin
       for i in 1..Length(Adresse_IP) loop
@@ -127,7 +116,7 @@ package body cache_arbre is
     function B2IP_4 (IP : in Unbounded_String) return Unbounded_String is
         a_return : Unbounded_String := To_Unbounded_String("");
         a_return_reversed : Unbounded_String := To_Unbounded_String("");
-        IP_cp : Unbounded_String := IP;
+        IP_cp : constant Unbounded_String := IP;
     begin
         for i in 1..Length(IP) loop
             if Element(IP_cp, i) = '1' then
@@ -161,10 +150,10 @@ package body cache_arbre is
     end B2IP;
 
     function Trouver (Cache : in out T_Cache; IP : in Unbounded_String) return T_Ligne is 
-        IP_Bin : Unbounded_String := Convertir_IP2B(IP);
+        IP_Bin :constant  Unbounded_String := Convertir_IP2B(IP);
         Cle : String(1..32);
         ligne : T_Ligne;
-        Now : Integer := Cache.stats.horloge;
+        Now : constant Integer := Cache.stats.horloge;
         nul_ligne : T_Ligne;
     begin 
         nul_ligne.destination := To_Unbounded_String("");
@@ -188,7 +177,7 @@ package body cache_arbre is
         cle : String(1..32);
         --ip_bin : String(1..32) := To_String(Convertir_IP2B(IP));
         ligne_factis : T_Ligne;
-        Now :Integer := Cache.stats.horloge;
+        Now :constant Integer := Cache.stats.horloge;
         nul_ligne : T_Ligne;
     begin
         nul_ligne.destination := To_Unbounded_String("");
@@ -239,9 +228,9 @@ package body cache_arbre is
     end masquer;
 
     procedure Ajouter (Cache : in out T_Cache;Ligne : in out T_Ligne) is
-        IP_Bin : Unbounded_String := Convertir_IP2B(Ligne.destination);
+        IP_Bin : constant Unbounded_String := Convertir_IP2B(Ligne.destination);
         Cle : String(1..32);
-        Now : Integer := Cache.stats.horloge;
+        Now : constant Integer := Cache.stats.horloge;
         nul_ligne : T_Ligne;
     begin
         nul_ligne.destination := To_Unbounded_String("");
@@ -265,7 +254,7 @@ package body cache_arbre is
     end Ajouter;
 
     procedure Supprimer_IP (Cache : in out T_Cache; IP : in Unbounded_String) is
-        IP_Bin : String(1..32) := To_String(Convertir_IP2B(IP));
+        IP_Bin : constant String(1..32) := To_String(Convertir_IP2B(IP));
     begin   
         Supprimer(Cache.Arbre, IP_Bin);
         
@@ -297,7 +286,7 @@ package body cache_arbre is
         end minimum;
 
         function min_rec (Cache: in T_Arbre; politic : in String) return T_Ligne is
-            nuls : String(1..32) := (others => Character'Val(0));
+            --nuls : constant String(1..32) := (others => Character'Val(0));
             nul_ligne : T_Ligne;
         begin
             nul_ligne.destination := To_Unbounded_String("");
@@ -331,14 +320,14 @@ package body cache_arbre is
     end Supprimer_Politic;
         
     function IP_Presente(Cache : in T_Cache; IP : in Unbounded_String) return Boolean is
-        IP_Bin : String(1..32) := To_String(Convertir_IP2B(IP));
+        IP_Bin : constant String(1..32) := To_String(Convertir_IP2B(IP));
     begin
         return Cle_Presente(Cache.Arbre, IP_Bin);
     end IP_Presente;
     
     procedure afficher_inter(Cle : in String; Ligne : in T_Ligne) is
-        IP : Unbounded_String := B2IP(To_Unbounded_String(Cle));    
-        nuls:String(1..32) := (others => Character'Val(0));
+        --IP : constant Unbounded_String := B2IP(To_Unbounded_String(Cle));    
+        nuls:constant String(1..32) := (others => Character'Val(0));
 
     begin
         if Cle =  nuls then

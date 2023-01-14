@@ -1,4 +1,3 @@
-with Ada.Calendar; use Ada.Calendar;
 with Ada.Text_IO.Unbounded_IO;  use Ada.Text_IO.Unbounded_IO;
 with Ada.Strings.Unbounded;     use Ada.Strings.Unbounded;
 with Ada.Integer_Text_IO;       use Ada.Integer_Text_IO;
@@ -406,7 +405,6 @@ procedure routeur_la is
    -- Variables relatives au cache
    Cache : T_Cache;  
    Adresse_IP_Cache : Unbounded_String;
-   Masque_Cache : Unbounded_String;
    Interface_Cache: Unbounded_String;
    numero_ligne: Integer;
 
@@ -457,7 +455,6 @@ begin
             if ligne_cache.inter = "" then 
                tab_trouve := Meilleur_Masque(table, ligne_a_lire, current_tab);
                tab_masque_restrictif := Meilleur_Ip_Masque(table, tab_trouve, current_tab);
-               Masque_Cache := tab_masque_restrictif.mask;
                Interface_Cache := tab_trouve.inter;
 
                tab_enregistrer.Suivant := Null;
@@ -475,8 +472,6 @@ begin
             else 
                -- sinon c'est quon a trouve
                Interface_Cache := ligne_cache.inter;
-               Masque_Cache := 
-               ligne_cache.mask;
             end if;
 
             a_ecrire := ligne_a_lire & To_Unbounded_String(" ")& Interface_Cache;

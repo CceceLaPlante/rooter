@@ -1,16 +1,9 @@
 with Arbre;
 with Ada.Strings;               use Ada.Strings;
-with Ada.Text_IO;               use Ada.Text_IO;
-with Ada.Integer_Text_IO;       use Ada.Integer_Text_IO;
+--with Ada.Integer_Text_IO;       use Ada.Integer_Text_IO;
 with Ada.Strings.Unbounded;     use Ada.Strings.Unbounded;
-with Ada.Text_IO.Unbounded_IO;  use Ada.Text_IO.Unbounded_IO;
-with Ada.Exceptions;            use Ada.Exceptions;
-with Ada.Unchecked_Deallocation; 
-
-with Ada.Calendar;            use Ada.Calendar;
-with Ada.Calendar.Formatting; use Ada.Calendar.Formatting;
-with Ada.Text_IO;             use Ada.Text_IO;
-
+--with Ada.Exceptions;            use Ada.Exceptions;
+--with Ada.Unchecked_Deallocation; 
 
 -- toutes les adresses ip et masques donnés par le client sont en base 10.
 package cache_arbre is

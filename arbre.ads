@@ -33,7 +33,7 @@ package arbre is
   function Est_Vide (Arbre : T_Arbre) return Boolean;
 
   -- procedure permettant d'ecraser une donnee dans l'arbre par une autre.
-  procedure Remplacer(Arbre : in out T_Arbre ; Cle : in String ; Donnee : in T_Donnee);
+  procedure Remplacer(Arbre : in T_Arbre ; Cle : in String ; Donnee : in T_Donnee);
 
    -- Obtenir le nombre d'ï¿œlï¿œments d'un Arbre. 
   function Taille (Arbre : in T_Arbre) return Integer with
@@ -47,7 +47,7 @@ package arbre is
 
    -- Supprimer la Donnée associée à une Clé dans un Arbre.
    -- Exception : Cle_Absente_Exception si Clé n'est pas utilisï¿œe dans l'Arbre
-  procedure Supprimer (Arbre : in out T_Arbre ; Cle : in String) with
+  procedure Supprimer (Arbre : in T_Arbre ; Cle : in String) with
     Post =>  Taille (Arbre) = Taille (Arbre)'Old - 1 -- un élément de moins
     and not Cle_Presente (Arbre, Cle);         -- la clé a été supprimée
 
@@ -68,7 +68,7 @@ package arbre is
    -- Appliquer un traitement (Traiter) pour chaque couple d'un Arbre.
  generic
      with procedure Traiter (Cle : in String; Donnee: in T_Donnee);
-  procedure Pour_Chaque (Arbre : in out T_Arbre);
+  procedure Pour_Chaque (Arbre : in T_Arbre);
 
   -- cette fonction permet de savoir si une donnée a une donnée équivalente
   -- dans l'arbre, elle en renvoie la cle

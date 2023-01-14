@@ -24,8 +24,8 @@ package body arbre is
         end if;
     end Taille;
 
-    procedure Remplacer(Arbre : in out T_Arbre; Cle : in String; Donnee : in T_Donnee) is
-        function Remplacer_r(Arbre : in out T_Arbre; Cle : in String; Donnee : in T_Donnee; idx : in Integer) return Boolean is
+    procedure Remplacer(Arbre : in T_Arbre; Cle : in String; Donnee : in T_Donnee) is
+        function Remplacer_r(Arbre : in T_Arbre; Cle : in String; Donnee : in T_Donnee; idx : in Integer) return Boolean is
             trouve : Boolean;
         begin
             if Arbre = null then
@@ -53,15 +53,15 @@ package body arbre is
                 return False;
             end if;
         end Remplacer_r;
-        a : Boolean;
+        inutile : Boolean;
     begin
-        a := Remplacer_r(Arbre, Cle, Donnee, 1);
+        inutile := Remplacer_r(Arbre, Cle, Donnee, 1); -- a n'est jamais lu, mais nécéssaire pour que la fonction soit appelée...
     end Remplacer;
 
     procedure Enregistrer(Arbre : in out T_Arbre ; Cle : String ; Donnee : in T_Donnee;nul_donnee : in T_Donnee) is
 
         procedure Enregistrer_r (Arbre : in out T_Arbre ; Cle : String ; Donnee : in T_Donnee;nul_donnee : in T_Donnee; idx : in Integer;Cle_feuille : in String; Donnee_feuille : in T_Donnee ) is
-            nuls : String(1..32) := (others => Character'Val(0));
+            nuls : constant String(1..32) := (others => Character'Val(0));
             nv_arbre : T_Arbre;
 
             Cle_feuille_r : String(1..32);
@@ -120,13 +120,13 @@ package body arbre is
             end if;
         end Enregistrer_r;
 
-        nuls : String(1..32) := (others => Character'Val(0));
+        nuls : constant String(1..32) := (others => Character'Val(0));
     begin
         Enregistrer_r(Arbre, Cle, Donnee,nul_donnee, 1, nuls, nul_donnee);
     end Enregistrer;
 
-    procedure Supprimer (Arbre : in out T_Arbre; Cle : in String) is
-        function Supprimer_r (Arbre: in out T_Arbre; Cle : in String; idx : in Integer) return Boolean is
+    procedure Supprimer (Arbre : in T_Arbre; Cle : in String) is
+        function Supprimer_r (Arbre: in T_Arbre; Cle : in String; idx : in Integer) return Boolean is
         begin 
             if Arbre = null then 
                 return False;
@@ -180,9 +180,9 @@ package body arbre is
                 end if;
             end if;
         end Supprimer_r;
-        a : Boolean;
+        inutile : Boolean;
     begin
-        a := Supprimer_r(Arbre, Cle, 1);
+        inutile := Supprimer_r(Arbre, Cle, 1); -- a n'es jamais lu
     end Supprimer;
 
     function Cle_Presente (Arbre : in T_Arbre; Cle : in String) return Boolean is
@@ -263,7 +263,7 @@ package body arbre is
 
     end Vider;
 
-    procedure Pour_Chaque (Arbre : in out T_Arbre) is
+    procedure Pour_Chaque (Arbre : in T_Arbre) is
     begin
         if Arbre = null then
             null;
@@ -281,7 +281,7 @@ package body arbre is
     function La_Cle (Arbre : in T_Arbre;donnee : in T_Donnee) return String is
     
         function La_Cle_r (Arbre : in T_Arbre;donnee : in T_Donnee; idx : in Integer) return String is
-        nuls : String(1..32) := (others => Character'Val(0));
+        nuls : constant String(1..32) := (others => Character'Val(0));
         the_key : String(1..32);
         begin
             if Arbre = null then
