@@ -44,6 +44,8 @@ type T_Stats is record
    function Adresse_Presente(Cache : in T_LCA; Stats : in T_Stats; Adresse : in Unbounded_String; Masque_Adresse: in Unbounded_String) return Boolean;
    
    function Presence_masque(Cache : in T_LCA; Adresse_IP_entree : in Unbounded_String) return Boolean;
+   
+   function Masque_Cache(Cache: in T_LCA; Adresse: in Unbounded_String) return Unbounded_String ;
 
    function Taille(Cache : in T_LCA) return Integer ;
 
