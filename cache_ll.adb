@@ -346,28 +346,27 @@ package body cache_ll is
         quatrieme_nombre_entier : Integer;
         adresse_retour : Unbounded_String;
     begin
-        Put_Line("J'arrive au début de Convertir");
         premier_nombre := To_Unbounded_String(To_String(Adresse_IP)(1..8));
         deuxieme_nombre := To_Unbounded_String(To_String(Adresse_IP)(10..17));
         troisieme_nombre := To_Unbounded_String(To_String(Adresse_IP)(19..26));
         quatrieme_nombre := To_Unbounded_String(To_String(Adresse_IP)(28..35));
-        Put_Line("J'ai passé les affectations");
         premier_nombre_entier := 0;
         deuxieme_nombre_entier := 0;
         troisieme_nombre_entier := 0;
         quatrieme_nombre_entier := 0;
+        Put_Line(To_String(premier_nombre));
+        Put_Line(To_String(deuxieme_nombre));
+        Put_Line(To_String(troisieme_nombre));
+        Put_Line(To_String(quatrieme_nombre));
         for i in 1..8 loop
-            Put_Line("Passage");
-            premier_nombre_entier := premier_nombre_entier + Integer'Value(Character'Image(To_String(premier_nombre)(i)))*2**(8-i);
-            Put_Line("Pas de problème pour le premier");
-            deuxieme_nombre_entier := deuxieme_nombre_entier + Integer'Value(Character'Image(To_String(deuxieme_nombre)(i)))*2**(8-i);
-            troisieme_nombre_entier := troisieme_nombre_entier + Integer'Value(Character'Image(To_String(troisieme_nombre)(i)))*2**(8-i);
-            quatrieme_nombre_entier := quatrieme_nombre_entier + Integer'Value(Character'Image(To_String(quatrieme_nombre)(i)))*2**(8-i);
-            Put_Line("Tous les entiers sont calculés");
+            premier_nombre_entier := premier_nombre_entier + (Character'Pos(To_String(premier_nombre)(i))-Character'Pos('0'))*2**(8-i);
+            deuxieme_nombre_entier := deuxieme_nombre_entier + (Character'Pos(To_String(deuxieme_nombre)(i))-Character'Pos('0'))*2**(8-i);
+            troisieme_nombre_entier := troisieme_nombre_entier + (Character'Pos(To_String(troisieme_nombre)(i))-Character'Pos('0'))*2**(8-i);
+            quatrieme_nombre_entier := quatrieme_nombre_entier + (Character'Pos(To_String(quatrieme_nombre)(i))-Character'Pos('0'))*2**(8-i);
         end loop;
         adresse_retour := To_Unbounded_String(Integer'Image(premier_nombre_entier) & '.' & Integer'Image(deuxieme_nombre_entier) & '.' & Integer'Image(troisieme_nombre_entier) & '.' & Integer'Image(quatrieme_nombre_entier));
+        Put_Line(To_String(adresse_retour));
         return adresse_retour ;
     end Convertir_B2IP;
     
 end cache_ll ;
-
